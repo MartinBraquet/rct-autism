@@ -1,14 +1,48 @@
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts'
 import {Col} from 'web/components/layout/col'
 import {PageBase} from 'web/components/page-base'
 
 export default function ProfilesPage() {
   return (
-    <PageBase trackPageView={'home'} className={'col-span-10'}>
-      <Col className="items-center">
-        <Col className={'w-full rounded px-3 sm:px-4'}>
-          Welcome!
+    <PageBase className={''} hideSidebar={true}>
+      <h1 className={'text-2xl font-bold mb-4 justify-center items-center text-center'}>
+        Effect of pre-session prep on autistic children engagement
+      </h1>
+      <div className="items-center lg:grid lg:grid-cols-2 gap-4">
+        <Col className={'lg:col-span-1 break-words'}>
+          WelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcome!
         </Col>
-      </Col>
+        <Col className={'lg:col-span-1 break-words'}>
+          <h3 className="text-lg font-semibold mb-4">Sample Chart</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart
+              data={[
+                {name: 'Jan', value: 400},
+                {name: 'Feb', value: 300},
+                {name: 'Mar', value: 600},
+                {name: 'Apr', value: 800},
+                {name: 'May', value: 500},
+              ]}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="value" fill="#8884d8" />
+            </BarChart>
+          </ResponsiveContainer>
+        </Col>
+      </div>
     </PageBase>
   )
 }

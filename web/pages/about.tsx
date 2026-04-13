@@ -19,7 +19,7 @@ export const AboutBlock = (props: {text: ReactNode; title: string}) => {
 export default function About() {
   const t = useT()
   return (
-    <PageBase trackPageView={'about'}>
+    <PageBase>
       <SEO
         title={t('about.seo.title', 'About')}
         description={t('about.seo.description', 'About rct-autism')}
@@ -56,7 +56,7 @@ export default function About() {
                   title={t('about.block.notify.title', 'Get Notified About Searches')}
                   text={t(
                     'about.block.notify.text',
-                    'No need to constantly check the app! We\'ll contact you when new users fit your searches.',
+                    "No need to constantly check the app! We'll contact you when new users fit your searches.",
                   )}
                 />
 
@@ -166,7 +166,7 @@ export default function About() {
                     {t('about.join.title', 'Join the Community')}
                   </h5>
                   <p className="mb-4 text-center">
-                    {t('about.join.text', 'Let\'s shape the platform together.')}
+                    {t('about.join.text', "Let's shape the platform together.")}
                   </p>
                 </div>
                 <div className="rounded-xl shadow p-6 flex flex-col items-center">

@@ -39,7 +39,7 @@ const pressItems: PressItem[] = [
     id: 3,
     title:
       'Un Havelangeois lance rct-autism, une appli de rencontre qui mise avant tout sur la personnalité : "Les recherches se font via des mots-clés spécifiques"',
-    source: 'L\'Avenir',
+    source: "L'Avenir",
     date: '2026-01-21',
     url: 'https://www.lavenir.net/regions/namur/2026/01/21/un-havelangeois-lance-rct-autism-une-appli-de-rencontre-qui-mise-avant-tout-sur-la-personnalite-les-recherches-se-font-via-des-mots-cles-specifiques-LPAHVUX5VFAOFGZ4X3UJDXZD2Q/',
     language: 'fr',
@@ -109,7 +109,7 @@ export default function PressPage() {
   const {locale} = useLocale()
 
   return (
-    <PageBase trackPageView={'press'}>
+    <PageBase>
       <SEO
         title={t('press.seo.title', 'Press - rct-autism')}
         description={t(

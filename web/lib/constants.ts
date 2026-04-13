@@ -21,6 +21,8 @@ export type Locale = keyof typeof LOCALES
 export const isProd = () => {
   if (process.env.ENVIRONMENT) {
     return process.env.ENVIRONMENT?.toUpperCase() == 'PROD'
+  } else if (process.env.NEXT_PUBLIC_ENVIRONMENT) {
+    return process.env.NEXT_PUBLIC_ENVIRONMENT?.toUpperCase() == 'PROD'
   }
   return false
 }
@@ -38,10 +40,13 @@ export const HOSTING_ENV = IS_VERCEL
     ? 'local'
     : 'unknown'
 
-if (IS_LOCAL && !process.env.ENVIRONMENT && !process.env.NEXT_PUBLIC_FIREBASE_ENV) {
-  console.warn('No ENVIRONMENT set, defaulting to DEV')
+if (process.env.NEXT_PUBLIC_ENVIRONMENT === 'DEV')
   process.env.ENVIRONMENT = 'DEV'
-}
+
+if (IS_LOCAL && !process.env.ENVIRONMENT) {
+    console.warn('No ENVIRONMENT set, defaulting to DEV')
+    process.env.ENVIRONMENT = 'DEV'
+  }
 
 export const PNG_LOGO = 'https://www.compassmeet.com/icons/icon-512x512.png'
 

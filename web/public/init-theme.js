@@ -1,12 +1,15 @@
 // run this in <head> as blocking to prevent flash of unstyled content. See theme-provider.tsx
 {
+  const LIGHT_ONLY = true
   const localTheme = localStorage.getItem('theme')
   let theme = localTheme ? JSON.parse(localTheme) : 'auto'
   theme = theme.value ?? theme
 
   if (
-    theme === 'dark' ||
-    (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    !LIGHT_ONLY && (
+      theme === 'dark' ||
+        (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    )
   ) {
     document.documentElement.classList.add('dark')
   }

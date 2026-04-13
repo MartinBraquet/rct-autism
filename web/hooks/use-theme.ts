@@ -5,6 +5,8 @@ import {usePersistentLocalState} from './use-persistent-local-state'
 
 type theme_option = 'light' | 'dark' | 'auto'
 
+export const LIGHT_ONLY = true
+
 export const useTheme = () => {
   const [themeState, setThemeState] = usePersistentLocalState<theme_option>('auto', 'theme')
 
@@ -37,7 +39,7 @@ export const useThemeManager = () => {
 const reRenderTheme = () => {
   const theme: theme_option | null = getTheme()
 
-  if (isDark(theme)) {
+  if (isDark(theme) && !LIGHT_ONLY) {
     document.documentElement.classList.add('dark')
   } else {
     document.documentElement.classList.remove('dark')

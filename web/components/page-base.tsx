@@ -17,7 +17,6 @@ import {buildArray} from 'web/lib/util/array'
 import Sidebar from './nav/sidebar'
 
 export function PageBase(props: {
-  trackPageView?: string | false
   trackPageProps?: Record<string, any>
   className?: string
   children?: ReactNode
@@ -35,7 +34,8 @@ export function PageBase(props: {
 
   const [_, setIsAddFundsModalOpen] = useState(false)
 
-  const colSpan = className?.split(' ').find((c) => c.startsWith('col-span-')) ?? 'col-span-8'
+  const colSpan =
+    !hideSidebar && (className?.split(' ').find((c) => c.startsWith('col-span-')) ?? 'col-span-8')
   const restClassName = className
     ?.split(' ')
     .filter((c) => !c.startsWith('col-span-'))
@@ -47,16 +47,15 @@ export function PageBase(props: {
       <Col
         className={clsx(
           'pb-page-base lg:pb-0', // bottom bar padding
-          'text-ink-1000 mx-auto min-h-screen w-full lg:grid lg:grid-cols-12',
+          'text-ink-1000 mx-auto min-h-screen w-full',
+          !hideSidebar && 'lg:grid lg:grid-cols-12',
         )}
       >
         <Toaster
           position={isMobile ? 'bottom-center' : 'top-center'}
           containerClassName="!bottom-[70px]"
         />
-        {hideSidebar ? (
-          <div className="lg:col-span-2 lg:flex" />
-        ) : (
+        {!hideSidebar && (
           <Sidebar
             navigationOptions={desktopSidebarOptions}
             className="sticky top-0 hidden self-start px-2 lg:col-span-2 lg:flex sidebar-nav bg-canvas-50"
