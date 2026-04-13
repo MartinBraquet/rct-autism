@@ -1,0 +1,29 @@
+'use client'
+
+import clsx from 'clsx'
+import {LOCALES} from 'web/lib/constants'
+import {useLocale} from 'web/lib/locale'
+
+export function LanguagePicker(props: {className?: string} = {}) {
+  const {className} = props
+  const {locale, setLocale} = useLocale()
+
+  return (
+    <select
+      id="locale-picker"
+      data-testid="sidebar-locale-picker"
+      value={locale}
+      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setLocale(e.target.value)}
+      className={clsx(
+        'rounded-md border border-gray-300 px-2 py-1 text-sm bg-canvas-50',
+        className,
+      )}
+    >
+      {Object.entries(LOCALES).map(([key, v]) => (
+        <option key={key} value={key}>
+          {v}
+        </option>
+      ))}
+    </select>
+  )
+}

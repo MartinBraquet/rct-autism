@@ -1,0 +1,13 @@
+{
+  "headers": [
+    {
+      "source": "/service-worker.js",
+      "headers": [{"key": "Cache-Control", "value": "no-cache"}]
+    },
+    {
+      "source": "/manifest.json",
+      "headers": [{"key": "Cache-Control", "value": "no-cache"}]
+    }
+  ],
+  "ignoreCommand": "git fetch --unshallow 2>/dev/null && echo $VERCEL_GIT_PREVIOUS_SHA $VERCEL_GIT_COMMIT_SHA && git diff $VERCEL_GIT_PREVIOUS_SHA $VERCEL_GIT_COMMIT_SHA --quiet -- ./ ../common/"
+}

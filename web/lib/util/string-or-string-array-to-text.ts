@@ -1,0 +1,37 @@
+import {filterDefined} from 'web/lib/util/array'
+
+export default function stringOrStringArrayToText(fields: {
+  text: string[] | string | null | undefined
+  preText?: string
+  postText?: string
+  asSentence?: boolean
+  capitalizeFirstLetterOption?: boolean
+  t: any
+}): string | null {
+  const {text, preText = '', postText = '', asSentence, capitalizeFirstLetterOption, t} = fields
+
+  if (!text || text.length < 1) {
+    return null
+  }
+
+  const formatText = capitalizeFirstLetterOption
+    ? (text: string) => text.charAt(0).toUpperCase() + text.slice(1)
+    : (text: string) => text
+
+  if (Array.isArray(text)) {
+    let formattedText = ''
+
+    if (asSentence) {
+      formattedText =
+        text.slice(0, -1).map(formatText).join(', ') +
+        (text.length > 1 ? ` ${t('common.and', 'and')} ` : '') +
+        formatText(text[text.length - 1])
+    } else {
+      formattedText = filterDefined(text).map(formatText).join(' • ')
+    }
+
+    return `${preText} ${formattedText} ${postText}`.trim()
+  }
+
+  return `${preText} ${formatText(text)} ${postText}`.trim()
+}

@@ -1,0 +1,27 @@
+{
+  "tabWidth": 2,
+  "useTabs": false,
+  "semi": false,
+  "singleQuote": true,
+  "singleAttributePerLine": false,
+  "bracketSpacing": false,
+  "printWidth": 100,
+  "trailingComma": "all",
+  "plugins": ["prettier-plugin-sql", "prettier-plugin-packagejson"],
+  "overrides": [
+    {
+      "files": "*.sql",
+      "options": {
+        "language": "postgresql",
+        "keywordCase": "lower",
+        "logicalOperatorNewline": "before"
+      }
+    },
+    {
+      "files": "*.svg",
+      "options": {
+        "parser": "html"
+      }
+    }
+  ]
+}
