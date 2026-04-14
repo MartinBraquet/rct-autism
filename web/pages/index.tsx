@@ -10,6 +10,9 @@ import {
 } from 'recharts'
 import {Col} from 'web/components/layout/col'
 import {PageBase} from 'web/components/page-base'
+import ClinicalRCTChart from 'web/components/widgets/ClinicalRCTChart'
+import {Row} from 'web/components/layout/row'
+import VELA301 from 'web/components/widgets/vela-curves'
 
 export default function ProfilesPage() {
   return (
@@ -17,6 +20,10 @@ export default function ProfilesPage() {
       <h1 className={'text-2xl font-bold mb-4 justify-center items-center text-center'}>
         Effect of pre-session prep on autistic children engagement
       </h1>
+      <Row className={'text-center gap-24 justify-center text-lg font-semibold'}>
+        <p>Martin Braquet</p>
+        <p>Riki Dewan</p>
+      </Row>
       <div className="items-center lg:grid lg:grid-cols-2 gap-4">
         <Col className={'lg:col-span-1 break-words'}>
           WelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcome!
@@ -43,6 +50,9 @@ export default function ProfilesPage() {
           </ResponsiveContainer>
         </Col>
       </div>
+      <ClinicalRCTChart />
+      <div className="mt-24"></div>
+      <VELA301 />
     </PageBase>
   )
 }
