@@ -7,7 +7,19 @@ output: html_document
 library(brms)
 library(dplyr)
 library(tidyr)
+library(purrr)
+library(ggplot2)
+library(furrr)
+plan(multisession, workers = 4) # Adjust to your CPU
 
+# Define prior once — reused across all fits (saves compilation)
+shared_prior <- c(
+  prior(normal(0, 2),  class = b),
+  prior(normal(0, 3),  class = Intercept)
+)
+```
+
+```{r}
 # 1. Function to simulate one study
 simulate_study <- function(n_children = 1, n_sessions = 20) {
   expand_grid(
@@ -119,12 +131,6 @@ plot(session_counts, power_results, type = "b",
 ```
 
 ```{r}
-library(brms)
-library(dplyr)
-library(tidyr)
-library(purrr)
-library(ggplot2)
-
 # ── 1. Simulate one n-of-1 study ─────────────────────────────────────────────
 simulate_single_child <- function(n_sessions = 20, effect_size = 0.5) {
   
@@ -219,12 +225,6 @@ run_session_sweep <- function(
     comparison    = "control",
     target_power  = 0.95
 ) {
-  # Define prior once — reused across all fits (saves compilation)
-  shared_prior <- c(
-    prior(normal(0, 2),  class = b),
-    prior(normal(0, 3),  class = Intercept)
-  )
-  
   results <- map_dfr(
     session_range,
     power_for_n_sessions,
@@ -303,13 +303,25 @@ simulate_study_full <- function(n_children = 25, n_sessions = 20, effect_size = 
            re_stimulating = re[3], re_childchoice = re[4])
   })
   
+  session_level <- expand_grid(
+    child_id = factor(1:n_children),
+    session  = 1:n_sessions
+  ) %>%
+    mutate(
+      prep = sample(
+        factor(c("No Prep", "Calming", "Stimulating", "Child Choice"),
+               levels = c("No Prep", "Calming", "Stimulating", "Child Choice")),
+        n(), replace = TRUE
+      ),
+      baseline_state = sample(
+        factor(c("Tired", "Neutral", "Hyper")), n(), replace = TRUE
+      )
+    )
+  
+  # Then expand over time points only
   expand_grid(
-    child_id    = factor(1:n_children),
-    session     = 1:n_sessions,
-    prep        = factor(c("No Prep", "Calming", "Stimulating", "Child Choice"),
-                         levels = c("No Prep", "Calming", "Stimulating", "Child Choice")),
-    time_point  = c("5min", "15min", "30min"),
-    baseline_state = factor(c("Tired", "Neutral", "Hyper"))
+    session_level,
+    time_point = c("5min", "15min", "30min")
   ) %>%
     left_join(child_rfx, by = "child_id") %>%
     mutate(
@@ -357,7 +369,7 @@ check_individual_effect <- function(fit, comparison = "control") {
   } else if (comparison == "pairwise") {
     # Child Choice credibly beats every other condition
     hyp <- hypothesis(fit, c(
-      "prepChildChoice > 0",                       # vs No Prep
+      "prepChildChoice > 0",                        # vs No Prep
       "prepChildChoice - prepCalming > 0",          # vs Calming
       "prepChildChoice - prepStimulating > 0"       # vs Stimulating
     ))
@@ -366,12 +378,28 @@ check_individual_effect <- function(fit, comparison = "control") {
   }
 }
 
+check_all_children_effects <- function(fit) {
+  # 1. Extract child-specific estimates (Fixed + Random combined)
+  # This returns a summary table for every child
+  child_ests <- coef(fit)$child_id
+  
+  # 2. Extract the Lower Bound of the 95% Credible Interval for 'prepChildChoice'
+  # Logic: child_id is the first dimension, Q2.5 is the summary stat, prepChildChoice is the parameter
+  lower_cis <- child_ests[, "Q2.5", "prepChildChoice"]
+  
+  # 3. Calculate the percentage of children who have a "Significant" individualized effect
+  # i.e., their 95% CI is entirely above zero
+  proportion_detected <- mean(lower_cis > 0)
+  
+  return(proportion_detected)
+}
+
 # ── 3. Power for one session count ───────────────────────────────────────────
-power_for_n_sessions <- function(n_sessions, n_sims, effect_size, comparison,
+power_for_n_sessions <- function(n_sessions, n_sims, effect_size,
                                  shared_prior) {
   cat(sprintf("\n=== %d sessions ===\n", n_sessions))
   
-  detections <- map_lgl(seq_len(n_sims), function(i) {
+  detections <- future_map_dbl(seq_len(n_sims), function(i) {
     cat(sprintf("  sim %d/%d\r", i, n_sims))
     
     sim_data <- simulate_study_full(
@@ -379,42 +407,48 @@ power_for_n_sessions <- function(n_sessions, n_sims, effect_size, comparison,
       effect_size = effect_size
     )
     
-    print("simulate_study_full done")
+    # print("simulate_study_full done")
     
     fit <- tryCatch(
       brm(
-        engagement ~ prep + time_point + baseline_state + prep:baseline_state +
-                     (1 + prep | child_id),
-        data   = sim_data,
-        family = cumulative("logit", threshold = "flexible"),
-        prior  = shared_prior,
-        chains = 1, iter = 2000, warmup = 1000,
-        refresh = 0, silent = 2,
-        seed    = i * 2000 + n_sessions
+        engagement ~ prep + 
+          time_point +
+          baseline_state +
+          # prep:baseline_state + # overkill
+         (1 + prep || child_id), # The double bar tells brms to treat the slopes as independent. This is usually sufficient for power analysis.
+          data    = sim_data,
+          family  = cumulative("logit"),
+          prior   = shared_prior,
+          chains  = 2, 
+          iter    = 1000,
+          warmup  = 500,
+          backend = "cmdstanr",
+          threads = threading(2),
+          refresh = 0, 
+          silent  = 2
       ),
       error = function(e) NULL
     )
     
-    print("fit done")
+    # print("fit done")
     
     if (is.null(fit)) return(NA)
     
     tryCatch(
-      check_individual_effect(fit, comparison),
+      # check_individual_effect(fit),
+      check_all_children_effects(fit),
       error = function(e) NA
     )
-    
-    print("check_individual_effect done")
-  })
+  }, .options = furrr_options(seed = TRUE))
   
   print(mean(detections, na.rm = TRUE))
   
-  tibble(
+  return(tibble(
     n_sessions  = n_sessions,
     power       = mean(detections, na.rm = TRUE),
     n_detected  = sum(detections, na.rm = TRUE),
     n_valid     = sum(!is.na(detections))
-  )
+  ))
 }
 
 # ── 4. Session sweep ──────────────────────────────────────────────────────────
@@ -436,7 +470,6 @@ run_session_sweep <- function(
     power_for_n_sessions,
     n_sims      = n_sims,
     effect_size = effect_size,
-    comparison  = comparison,
     shared_prior = shared_prior
   )
   
@@ -475,7 +508,7 @@ run_session_sweep <- function(
       title    = "N-of-1 power analysis: sessions needed to detect individual prep effect",
       subtitle = sprintf("Effect size = %.1f | Comparison = %s | %d sims per point",
                          effect_size, comparison, n_sims),
-      x = "Sessions per prep condition per time point",
+      x = "Sessions per child",
       y = "Power"
     ) +
     theme_minimal(base_size = 13)
@@ -486,9 +519,56 @@ run_session_sweep <- function(
 
 # ── 5. Run ────────────────────────────────────────────────────────────────────
 sweep_results <- run_session_sweep(
-  session_range = c(40, 60, 80),
-  n_sims        = 20,          # bump to 50-100 for a final estimate
+  session_range = c(20, 30, 40, 50, 60),
+  n_sims        = 10,          # bump to 50-100 for a final estimate
   effect_size   = 0.5,
   comparison    = "control"    # or "pairwise"
 )
+```
+
+```{r}
+
+
+sim_data <- simulate_study_full(
+  n_sessions  = 40,
+  effect_size = 0.5
+)
+
+print("simulate_study_full done")
+
+fit <- tryCatch(
+  brm(
+    engagement ~ prep + 
+      time_point +
+      baseline_state +
+      # prep:baseline_state + # overkill
+      (1 + prep || child_id), # The double bar tells brms to treat the slopes as independent. This is usually sufficient for power analysis.
+    data    = sim_data,
+    family  = cumulative("logit"),
+    prior   = shared_prior,
+    chains  = 1, 
+    iter    = 100,
+    warmup  = 50,
+    backend = "cmdstanr",     # Use the new engine
+    threads = threading(4),   # Use 4 threads per chain
+    refresh = 0, 
+    silent  = 2
+  ),
+  error = function(e) NULL
+)
+
+print("fit done")
+
+if (is.null(fit)) return(NA)
+
+tryCatch(
+  check_individual_effect(fit),
+  error = function(e) NA
+)
+
+print("check_individual_effect done")
+```
+
+```{r}
+check_individual_effect(fit)
 ```

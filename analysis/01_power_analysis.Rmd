@@ -7,7 +7,7 @@ output: html_document
 # =============================================================================
 # Simulation-Based Power Analysis: Personalized Pre-Session Preparation
 # N-of-1 Crossover Trial | Maya Care and Grow, Agartala
-# PI: Martin Braquet | Collaborator: Lily
+# PI: Martin Braquet | Collaborator: Riki Dewan
 # =============================================================================
 #
 # STRUCTURE
@@ -27,6 +27,11 @@ output: html_document
 #   50 for a final estimate.  The `update()` trick avoids Stan recompilation
 #   after the first call — this is the single biggest speed-up available.
 # =============================================================================
+
+# NOTE: Selecting the best arm by posterior mean then checking its CrI
+# introduces selection bias (the winner is inflated by being the maximum).
+# This is partially mitigated by hierarchical shrinkage and the consecutive-
+# interim requirement. See pre-registration for full justification.
 
 
 # ── 0. Packages ───────────────────────────────────────────────────────────────
@@ -70,24 +75,22 @@ generate_blocked_sequence <- function(n_sessions,
 }
 
 
-# ── 2. Data Generation (CORRECTED) ───────────────────────────────────────────
+# ── 2. Data Generation ───────────────────────────────────────────
 #
 # One row per (child × session × time_point).
-# prep and baseline_state are drawn ONCE per session (not crossed).
 # time_point is the only variable expanded within a session.
 
-simulate_study_data <- function(n_children   = 25,
-                                n_sessions   = 20,
-                                effect_size  = 0.5) {
+simulate_study_data <- function(n_children  = 25,
+                                n_sessions  = 20,
+                                effect_size = 0.5) {
 
-  thresholds <- c(-1.5, -0.5, 0.5, 1.5)   # latent cuts → ordinal 1–5
+  thresholds  <- c(-1.5, -0.5, 0.5, 1.5)
 
-  # — Child-level random effects (intercept + 3 prep slopes, independent) —
   child_rfx <- map_dfr(seq_len(n_children), function(id) {
     re <- MASS::mvrnorm(
       n     = 1,
-      mu    = rep(0, 4),
-      Sigma = diag(c(0.5, 0.8, 0.8, 0.8))   # intercept variance < slope variance
+      mu    = c(0, effect_size, effect_size, effect_size),
+      Sigma = diag(c(0.2, 1.0, 1.0, 1.0))
     )
     tibble(
       child_id       = factor(id),
@@ -98,7 +101,6 @@ simulate_study_data <- function(n_children   = 25,
     )
   })
 
-  # — Session-level assignment: ONE prep + ONE baseline per session —
   session_level <- map_dfr(seq_len(n_children), function(id) {
     tibble(
       child_id       = factor(id),
@@ -114,15 +116,15 @@ simulate_study_data <- function(n_children   = 25,
     )
   })
 
-  # — Expand over time_point only, then add latent linear predictor —
   session_level %>%
     expand_grid(time_point = c("5min", "15min", "30min")) %>%
     left_join(child_rfx, by = "child_id") %>%
     mutate(
-      # Fixed effects
-      fe_prep = if_else(prep == "Child Choice", effect_size, 0),
+      # No fixed-effect winner — all active conditions treated equally
+      # Small shared benefit of any prep over nothing (optional but realistic)
+      fe_prep = if_else(prep == "No Prep", 0, 0.1),
 
-      fe_time = if_else(time_point == "15min", 0.1, 0),   # small carry-over
+      fe_time = if_else(time_point == "15min", 0.1, 0),
 
       fe_baseline = case_when(
         baseline_state == "Tired" ~ -0.3,
@@ -130,14 +132,7 @@ simulate_study_data <- function(n_children   = 25,
         TRUE                      ~  0
       ),
 
-      # Interaction: Child Choice works better for Hyper, worse for Tired
-      fe_interaction = case_when(
-        prep == "Child Choice" & baseline_state == "Hyper" ~  0.2,
-        prep == "Child Choice" & baseline_state == "Tired" ~ -0.2,
-        TRUE                                               ~  0
-      ),
-
-      # Child-specific slope deviation for the assigned prep
+      # Individual winner determined entirely by random slopes
       re_prep = case_when(
         prep == "Calming"      ~ re_calming,
         prep == "Stimulating"  ~ re_stimulating,
@@ -145,10 +140,8 @@ simulate_study_data <- function(n_children   = 25,
         TRUE                   ~ 0
       ),
 
-      # Latent score → ordinal engagement (1–5)
       latent_score = re_intercept + fe_prep + fe_time +
-                     fe_baseline  + fe_interaction + re_prep +
-                     rnorm(n(), 0, 1),
+                     fe_baseline + re_prep + rnorm(n(), 0, 0.7),
 
       engagement = as.integer(
         cut(latent_score,
@@ -214,45 +207,82 @@ fit_model_update <- function(template_fit, new_data) {
 
 
 # ── 4. Per-Child Stopping Criteria ───────────────────────────────────────────
-#
-# At each interim, for each still-active child, evaluate:
-#
-#   SUPERIORITY: 95% CrI for prepChildChoice is entirely above 0.
-#     → Child Choice reliably outperforms No Prep on the latent logit scale.
-#     → Must be sustained for `consec_required` consecutive interims.
-#
-#   ROPE (Region of Practical Equivalence): 95% CrI is entirely inside
-#     [ROPE_lower, ROPE_upper] = [-0.1, 0.1].
-#     → No meaningful difference; stop to avoid wasting the child's sessions.
-#     → Triggers immediately (no consecutive requirement).
-#
-# Returns a per-child tibble with columns:
-#   child_id, lower_ci, upper_ci, superiority, in_rope, stop_reason
 
 ROPE_LOWER <- -0.1
 ROPE_UPPER <-  0.1
 
-check_stopping_per_child <- function(fit) {
-  child_ests <- coef(fit)$child_id   # array [child × stat × param]
-  child_ids  <- dimnames(child_ests)[[1]]
+
+PREP_PARAMS <- c(
+  Calming      = "prepCalming",
+  Stimulating  = "prepStimulating",
+  ChildChoice  = "prepChildChoice"
+)
+
+check_stopping_per_child <- function(fit,
+                                     prob_best_threshold = 0.90,
+                                     aipe_width          = 0.5) {
+
+  draws     <- as_draws_df(fit)
+  child_ids <- levels(fit$data$child_id)
+
+  # Fixed-effect draws (population-level)
+  b_cal  <- draws[["b_prepCalming"]]
+  b_sti  <- draws[["b_prepStimulating"]]
+  b_cc   <- draws[["b_prepChildChoice"]]
 
   map_dfr(child_ids, function(cid) {
-    lower <- child_ests[cid, "Q2.5",  "prepChildChoice"]
-    upper <- child_ests[cid, "Q97.5", "prepChildChoice"]
 
-    superiority <- lower > 0
-    in_rope     <- lower > ROPE_LOWER & upper < ROPE_UPPER
+    # Individual draws = fixed + random deviation
+    # Column naming convention in brms: r_child_id[{id},prep{Level}]
+    cal_draws <- b_cal + draws[[paste0("r_child_id[", cid, ",prepCalming]")]]
+    sti_draws <- b_sti + draws[[paste0("r_child_id[", cid, ",prepStimulating]")]]
+    cc_draws  <- b_cc  + draws[[paste0("r_child_id[", cid, ",prepChildChoice]")]]
+    # No Prep = reference = 0 for every draw
+
+    # Criterion 2: P(each arm is the best, including No Prep)
+    n_draws      <- length(cal_draws)
+    best_matrix  <- cbind(NoPrep = 0, cal_draws, sti_draws, cc_draws)
+    winner_draw  <- max.col(best_matrix)   # 1=NoPrep, 2=Cal, 3=Sti, 4=CC
+
+    p_best <- c(
+      NoPrep      = mean(winner_draw == 1),
+      Calming     = mean(winner_draw == 2),
+      Stimulating = mean(winner_draw == 3),
+      ChildChoice = mean(winner_draw == 4)
+    )
+
+    best_name <- names(which.max(p_best))
+
+    # Superiority: modal winner has P(best) above threshold
+    superiority <- max(p_best) >= prob_best_threshold
+
+    # AIPE: CrI width for the leading arm is narrow enough
+    if (best_name != "NoPrep") {
+      best_draws <- list(
+        Calming = cal_draws, Stimulating = sti_draws, ChildChoice = cc_draws
+      )[[best_name]]
+      cri_width <- as.numeric(quantile(best_draws, 0.975) -
+                               quantile(best_draws, 0.025))
+      aipe_met  <- cri_width < aipe_width
+    } else {
+      aipe_met <- FALSE
+    }
+
+    # ROPE: No Prep is the most probable best arm with high confidence
+    in_rope <- p_best["NoPrep"] >= 0.70
 
     tibble(
-      child_id    = cid,
-      lower_ci    = lower,
-      upper_ci    = upper,
-      superiority = superiority,
-      in_rope     = in_rope,
-      stop_reason = case_when(
-        superiority ~ "superiority",
-        in_rope     ~ "rope",
-        TRUE        ~ "continue"
+      child_id       = cid,
+      best_condition = best_name,
+      p_best         = max(p_best),
+      superiority    = superiority,
+      aipe_met       = aipe_met,
+      in_rope        = in_rope,
+      stop_reason    = case_when(
+        superiority          ~ "superiority",
+        aipe_met             ~ "aipe",
+        in_rope              ~ "rope",
+        TRUE                 ~ "continue"
       )
     )
   })
@@ -291,6 +321,7 @@ fixed_n_one_sim <- function(sim_idx, n_sessions, effect_size,
   if (is.null(checks)) return(NULL)
 
   ind_rate <- mean(checks$superiority)
+  print(ind_rate)
   tibble(
     sim        = sim_idx,
     ind_rate   = ind_rate,
@@ -301,14 +332,8 @@ fixed_n_one_sim <- function(sim_idx, n_sessions, effect_size,
 run_fixed_n_sweep <- function(session_range = c(20, 30, 40),
                               n_sims        = 20,
                               effect_size   = 0.5,
-                              thresh_pct    = 0.80) {
-
-  # Compile Stan once on a small representative dataset
-  cat("Compiling Stan model (done once)...\n")
-  init_data    <- simulate_study_data(n_sessions = min(session_range),
-                                      effect_size = effect_size)
-  template_fit <- fit_model_fresh(init_data)
-  cat("  Compilation done.\n")
+                              thresh_pct    = 0.80,
+                              template_fit) {
 
   map_dfr(session_range, function(n_s) {
     cat(sprintf("\n=== Fixed-N: %d sessions ===\n", n_s))
@@ -353,7 +378,7 @@ run_fixed_n_sweep <- function(session_range = c(20, 30, 40),
 #   child_status   : per-child tibble (stop_session, stop_reason, detected)
 #   mean_sessions  : mean sessions used per child in this simulation
 #   p90_sessions   : 90th-percentile sessions (planning buffer)
-#   detection_rate : proportion of children where Child Choice was detected
+#   detection_rate : proportion of children where best prep was detected
 
 simulate_adaptive_one <- function(template_fit,
                                   n_children      = 25,
@@ -434,7 +459,6 @@ simulate_adaptive_one <- function(template_fit,
     }
   }
 
-  # — Final detection: was Child Choice reliably estimated for each child? —
   # Use the last fitted model (at the session each child stopped) as proxy.
   # A separate final fit on per-child truncated data would be more precise
   # but prohibitively expensive for the sweep.
@@ -619,8 +643,9 @@ print_adaptive_summary <- function(summary_tbl) {
   cat(sprintf("    Max reached:   %.0f%% of children\n", summary_tbl$pct_max        * 100))
   cat("══════════════════════════════════════════════════════════\n\n")
 }
+```
 
-
+```{r}
 # ── 8. Run ────────────────────────────────────────────────────────────────────
 #
 # RECOMMENDED WORKFLOW
@@ -636,14 +661,20 @@ print_adaptive_summary <- function(summary_tbl) {
 N_SIMS_FIXED  <- 10
 N_SIMS_ADAPT  <- 5
 EFFECT_SIZE   <- 0.5
-SESSION_RANGE <- c(20, 30, 40, 50, 60)
+SESSION_RANGE <- c(36, 40)
+
+cat("Compiling Stan model...\n")
+template_fit <- fit_model_fresh(
+  simulate_study_data(n_sessions = min(SESSION_RANGE), effect_size = EFFECT_SIZE)
+)
 
 # — 8a. Fixed-N sweep —
 fixed_results <- run_fixed_n_sweep(
   session_range = SESSION_RANGE,
   n_sims        = N_SIMS_FIXED,
   effect_size   = EFFECT_SIZE,
-  thresh_pct    = 0.80
+  thresh_pct    = 0.80,
+  template_fit  = template_fit
 )
 
 cat("\n── Fixed-N Results ──────────────────────────────────\n")
@@ -652,22 +683,17 @@ print(fixed_results)
 p_fixed <- plot_fixed_n(fixed_results, target_rate = 0.80)
 print(p_fixed)
 ggsave("power_curve_fixed_n.png", p_fixed, width = 9, height = 5.5, dpi = 150)
+```
 
+```{r}
 # — 8b. Adaptive sweep —
-# Re-uses the compiled Stan model carried from the fixed-N sweep.
-# To obtain template_fit from the fixed sweep, re-compile once here:
-cat("\nCompiling Stan model for adaptive sweep (re-uses fixed-N compilation)...\n")
-template_for_adaptive <- fit_model_fresh(
-  simulate_study_data(n_sessions = 12, effect_size = EFFECT_SIZE)
-)
-
 adaptive_results <- run_adaptive_sweep(
   n_sims          = N_SIMS_ADAPT,
   effect_size     = EFFECT_SIZE,
-  template_fit    = template_for_adaptive,
+  template_fit    = template_fit,
   n_children      = 25,
   min_sessions    = 12,
-  max_sessions    = 60,
+  max_sessions    = 36,
   check_every     = 4,
   consec_required = 3
 )
@@ -698,4 +724,75 @@ if (requireNamespace("gridExtra", quietly = TRUE)) {
 }
 
 cat("\nAll done. Output PNGs saved to working directory.\n")
+```
+
+```{r}
+data <- simulate_study_data(n_children = 4, n_sessions  = 36, effect_size = 0.5)
+data$baseline_state <- 'hyper'
+data
+```
+
+```{r}
+library(dplyr)
+
+result <- data %>%
+  group_by(child_id, prep) %>%
+  summarise(
+    mean_engagement = mean(engagement, na.rm = TRUE),
+    sd_engagement   = sd(engagement, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+result
+```
+
+```{r}
+
+```
+
+```{r}
+ggplot(data, aes(x = prep, y = engagement, fill = prep)) +
+  # Use boxplots to show distribution
+  geom_boxplot(alpha = 0.6, outlier.shape = NA) +
+  # Add jittered points to show every single session's data
+  geom_jitter(width = 0.2, height = 0.1, alpha = 0.5, size = 1.5) +
+  # Facet by Child (Rows) and Baseline State (Columns)
+  facet_grid(baseline_state ~ child_id) +
+  # Styling
+  scale_y_continuous(breaks = 1:5, limits = c(0.5, 5.5)) +
+  scale_fill_brewer(palette = "Set2") +
+  theme_minimal() +
+  labs(
+    title = "Personalized Prep Impact on Session Engagement",
+    subtitle = "Faceted by Child and Arrival Baseline State",
+    x = "Preparation Type",
+    y = "BRES-5 Engagement Score",
+    fill = "Condition"
+  ) +
+  theme(
+    strip.background = element_rect(fill = "gray95"),
+    strip.text = element_text(face = "bold"),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "none"
+  )
+```
+
+```{r}
+template_fit
+```
+
+```{r}
+ci_width <- 0.9
+lo <- (1 - ci_width) / 2
+hi <- 1 - lo
+probs_needed <- c(lo, hi)
+
+child_ests <- coef(fit, probs = probs_needed)$child_id
+lo_tag     <- paste0("Q", lo * 100)
+hi_tag     <- paste0("Q", hi * 100)
+child_ids  <- dimnames(child_ests)[[1]]
+
+cid <- 0
+
+map_dbl(PREP_PARAMS, ~ child_ests[cid, "Estimate", .x])
 ```
