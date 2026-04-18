@@ -31,9 +31,6 @@ yarn-error.log*
 *.Rcheck/
 *.Rbuildignore
 
-# R CMD check results
-*.Rcheck/
-
 # Output directories
 /inst/doc/
 /vignettes/*.html
