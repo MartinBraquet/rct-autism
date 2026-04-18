@@ -1,0 +1,59 @@
+---
+title: "plot"
+output: html_document
+---
+
+```{r}
+library(here)
+library(readr)
+library(dplyr)
+
+# 2. Define the path relative to the project root
+file_path <- here("data", "test_data.csv")
+
+# 3. Read the data
+study_data <- read_csv(file_path)
+
+# 2. Convert to factors and set logical orders
+# This ensures that "No Prep" is the reference level for your models
+# and that "Tired -> Neutral -> Hyper" follows a logical progression.
+study_data <- study_data %>%
+  mutate(
+    baseline_state = factor(baseline_state, levels = c("tired", "neutral", "hyper")),
+    prep = factor(prep, levels = c("No Prep", "Calming", "Stimulating", "Child Choice")),
+    child_id = as.factor(child_id)
+  )
+
+# 3. Quick verification
+print(summary(study_data))
+head(study_data)
+```
+
+```{r}
+library(ggplot2)
+
+ggplot(study_data, aes(x = prep, y = engagement, fill = prep)) +
+  # Use boxplots to show distribution
+  geom_boxplot(alpha = 0.6, outlier.shape = NA) +
+  # Add jittered points to show every single session's data
+  geom_jitter(width = 0.2, height = 0.1, alpha = 0.5, size = 1.5) +
+  # Facet by Child (Rows) and Baseline State (Columns)
+  facet_grid(child_id ~ baseline_state) +
+  # Styling
+  scale_y_continuous(breaks = 1:5, limits = c(0.5, 5.5)) +
+  scale_fill_brewer(palette = "Set2") +
+  theme_minimal() +
+  labs(
+    title = "Personalized Prep Impact on Session Engagement",
+    subtitle = "Faceted by Child and Arrival Baseline State",
+    x = "Preparation Type",
+    y = "BRES-5 Engagement Score",
+    fill = "Condition"
+  ) +
+  theme(
+    strip.background = element_rect(fill = "gray95"),
+    strip.text = element_text(face = "bold"),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "none"
+  )
+```

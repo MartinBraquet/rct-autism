@@ -11,3 +11,74 @@ yarn-error.log*
 .vscode/*
 /martin/
 .idea
+
+# History files
+.Rhistory
+.Rapp.history
+
+# Session data
+.RData
+.RDataTmp
+
+# RStudio files
+.Rproj.user/
+*.Rproj
+
+# Package build files
+*.tar.gz
+*.tgz
+*.zip
+*.Rcheck/
+*.Rbuildignore
+
+# R CMD check results
+*.Rcheck/
+
+# Output directories
+/inst/doc/
+/vignettes/*.html
+/vignettes/*.pdf
+
+# knitr / rmarkdown cache
+*_cache/
+*_files/
+
+# renv (dependency management)
+renv/library/
+renv/staging/
+renv/python/
+renv/cache/
+# renv.lock  <-- usually keep this tracked
+
+# packrat (older dependency management)
+packrat/lib/
+packrat/src/
+packrat/lib-R/
+packrat/packrat.lock
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+
+# Data files (optional — uncomment if needed)
+data/
+*.csv
+*.rds
+*.png
+
+# Environment variables
+.Renviron
+.Renviron.site
+
+# Credentials (never commit these)
+*.key
+*.pem
+*.env
