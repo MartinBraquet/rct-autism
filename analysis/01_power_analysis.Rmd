@@ -1,5 +1,5 @@
 ---
-title: "power"
+title: "Power Analysis: Adaptive Simulation"
 output: html_document
 ---
 
@@ -16,25 +16,18 @@ output: html_document
 #   2.  Data generation  [FIXED: prep + baseline assigned ONCE per session]
 #   3.  Model fitting    [2 chains, 1000 iter — reliable individual-level CrI]
 #   4.  Stopping criteria (per child)
-#   5.  Fixed-N power sweep   → power curve
-#   6.  Adaptive simulation   → expected sessions per child
-#   7.  Reporting & plots
-#   8.  Run
+#   5.  Adaptive simulation   → expected sessions per child
+#   6.  Reporting & plots
+#   7.  Run
 #
-# COMPUTATIONAL NOTE
-#   The adaptive arm refits the full hierarchical model at every interim for
-#   every simulation.  Use n_sims_adaptive = 5–10 during development; bump to
-#   50 for a final estimate.  The `update()` trick avoids Stan recompilation
-#   after the first call — this is the single biggest speed-up available.
-# =============================================================================
-
 # NOTE: Selecting the best arm by posterior mean then checking its CrI
 # introduces selection bias (the winner is inflated by being the maximum).
 # This is partially mitigated by hierarchical shrinkage and the consecutive-
 # interim requirement. See pre-registration for full justification.
+# =============================================================================
 
 
-# ── 0. Packages ───────────────────────────────────────────────────────────────
+# ── Packages ───────────────────────────────────────────────────────────────
 
 library(tidyverse)
 library(brms)
@@ -48,7 +41,7 @@ plan(multisession, workers = max(1L, parallel::detectCores() - 2L))
 set.seed(20240101)
 
 
-# ── 1. Blocked Randomisation ──────────────────────────────────────────────────
+# ── Blocked Randomisation ──────────────────────────────────────────────────
 #
 # Produces a condition sequence of length n_sessions with two constraints:
 #   • Every block of 4 contains each condition exactly once (balanced).
@@ -75,29 +68,88 @@ generate_blocked_sequence <- function(n_sessions,
 }
 
 
-# ── 2. Data Generation ───────────────────────────────────────────
+# ── Data Generation ───────────────────────────────────────────
 #
 # One row per (child × session × time_point).
 # time_point is the only variable expanded within a session.
 
-simulate_study_data <- function(n_children  = 25,
-                                n_sessions  = 20,
-                                effect_size = 0.5) {
+# one_winner_strong children are the easy case — the model should stop early via the superiority criterion and produce a clear recommendation. Power here is high even at 20 sessions.
+# one_winner_weak children are the clinically important hard case — the effect is real but small, requiring more sessions to separate from noise. These are the children who drive the session count requirement upward. They also represent children where the rater scale's granularity (ordinal 1–5) limits detection.
+# multiple_winners children test whether the stopping rule behaves sensibly when no single arm dominates. P(arm is best) will be split between two arms and may never reach 0.90. The AIPE criterion becomes the likely exit path — the model estimates both arms as moderately helpful and the CrI narrows over time. For practitioners, the correct recommendation is "either Calming or Stimulating works for this child — use whichever is easier to deliver." The simulation reveals whether your decision procedure produces that output or wrongly forces a single winner.
+# no_differential children test the ROPE / null-detection arm. These children should ideally exit the study early with the output "no prep effect detected — use No Prep or clinical judgment." They represent a real clinical category: some children with ASD are already well-regulated on arrival and gain nothing from structured prep.
+# A reasonable defensible claim is that roughly half of children will show a clear single winner (strong or weak), a fifth will show multiple-winner patterns, and the remainder will show no differential response. 
 
-  thresholds  <- c(-1.5, -0.5, 0.5, 1.5)
+simulate_study_data <- function(n_children ,
+                                n_sessions ,
+                                effect_size ) {
+
+  # logit thresholds for engagement categories 1–5
+  thresholds  <- c(-1.0, -0.2, 0.5, 1.5)
 
   child_rfx <- map_dfr(seq_len(n_children), function(id) {
-    re <- MASS::mvrnorm(
-      n     = 1,
-      mu    = c(0, effect_size, effect_size, effect_size),
-      Sigma = diag(c(0.2, 1.0, 1.0, 1.0))
+
+    # — Profile probabilities (adjust to match clinical expectations) —
+    profile <- sample(
+      c("one_winner_strong",   # one prep clearly best, large effect
+        "one_winner_weak",     # one prep best, small effect (harder to detect)
+        "multiple_winners",    # two preps similarly helpful
+        "no_differential"),    # all preps similar to No Prep
+      size = 1,
+      prob = c(0.2, 0.1, 0.6, 0.1)
     )
+
+    v <- 0.1
+
+    slopes <- switch(profile,
+
+      "one_winner_strong" = {
+        winner <- sample(c("calming","stimulating","childchoice"), 1)
+        winners_vec <- winner
+        s <- c(calming     = rnorm(1, 0, v),
+              stimulating = rnorm(1, 0, v),
+              childchoice = rnorm(1, 0, v))
+        s[winner] <- s[winner] + effect_size         
+        s
+      },
+
+      "one_winner_weak" = {
+        winner <- sample(c("calming","stimulating","childchoice"), 1)
+        winners_vec <- winner
+        s <- c(calming     = rnorm(1, 0, v),
+              stimulating = rnorm(1, 0, v),
+              childchoice = rnorm(1, 0, v))
+        s[winner] <- s[winner] + effect_size * 0.5  
+        s
+      },
+
+      "multiple_winners" = {
+        # Two preps share the benefit — winner identity is ambiguous
+        winners <- sample(c("calming","stimulating","childchoice"), 2)
+        winners_vec <- paste(sort(winners), collapse = ", ")
+        s <- c(calming     = rnorm(1, 0, v),
+              stimulating = rnorm(1, 0, v),
+              childchoice = rnorm(1, 0, v))
+        s[winners] <- s[winners] + effect_size
+        s
+      },
+
+      "no_differential" = {
+        winners_vec <- ""
+        # All preps near No Prep — prep type doesn't matter for this child
+        c(calming     = rnorm(1, 0, v),
+          stimulating = rnorm(1, 0, v),
+          childchoice = rnorm(1, 0, v))
+      }
+    )
+
     tibble(
       child_id       = factor(id),
-      re_intercept   = re[1],
-      re_calming     = re[2],
-      re_stimulating = re[3],
-      re_childchoice = re[4]
+      true_profile   = profile,            # keep for ground-truth evaluation
+      true_winners   = winners_vec,
+      re_intercept   = rnorm(1, 0, 0.8),
+      re_calming     = slopes["calming"],
+      re_stimulating = slopes["stimulating"],
+      re_childchoice = slopes["childchoice"]
     )
   })
 
@@ -116,44 +168,75 @@ simulate_study_data <- function(n_children  = 25,
     )
   })
 
-  session_level %>%
-    expand_grid(time_point = c("5min", "15min", "30min")) %>%
-    left_join(child_rfx, by = "child_id") %>%
+  list(
+    data     = session_level %>%
+                expand_grid(time_point = c("5min", "15min", "30min")) %>%
+                left_join(child_rfx, by = "child_id") %>%
+                group_by(child_id, session) %>%
+                mutate(
+                  # No fixed-effect winner — all conditions treated equally
+                  fe_prep = 0,
+
+                  fe_time = if_else(time_point == "5min", 0.1, 0),
+
+                  fe_baseline = case_when(
+                    baseline_state == "Tired" ~ -0.2,
+                    baseline_state == "Hyper" ~  0.2,
+                    TRUE                      ~  0
+                  ),
+
+                  # Individual winner determined entirely by random slopes
+                  re_prep = case_when(
+                    prep == "Calming"      ~ re_calming,
+                    prep == "Stimulating"  ~ re_stimulating,
+                    prep == "Child Choice" ~ re_childchoice,
+                    TRUE                   ~ 0
+                  ),
+
+                  re_session = rnorm(1, 0, 0.2),
+                    
+                  latent_score = re_intercept + fe_prep + fe_time + fe_baseline + re_prep + re_session + rnorm(n(), 0, 0.2),
+
+                  engagement = as.integer(
+                    cut(latent_score,
+                        breaks = c(-Inf, thresholds, Inf),
+                        labels = FALSE)
+                  )
+                ) %>%
+                dplyr::select(child_id, session, prep,
+                              time_point, baseline_state, engagement, latent_score),
+    child_rfx = child_rfx   # ← ground truth carried alongside
+  )
+}
+
+evaluate_accuracy <- function(child_status, child_rfx) {
+  child_status %>%
+    left_join(
+      child_rfx %>% dplyr::select(child_id, true_profile),
+      by = "child_id"
+    ) %>%
     mutate(
-      # No fixed-effect winner — all active conditions treated equally
-      # Small shared benefit of any prep over nothing (optional but realistic)
-      fe_prep = if_else(prep == "No Prep", 0, 0.1),
-
-      fe_time = if_else(time_point == "15min", 0.1, 0),
-
-      fe_baseline = case_when(
-        baseline_state == "Tired" ~ -0.3,
-        baseline_state == "Hyper" ~  0.2,
-        TRUE                      ~  0
-      ),
-
-      # Individual winner determined entirely by random slopes
-      re_prep = case_when(
-        prep == "Calming"      ~ re_calming,
-        prep == "Stimulating"  ~ re_stimulating,
-        prep == "Child Choice" ~ re_childchoice,
-        TRUE                   ~ 0
-      ),
-
-      latent_score = re_intercept + fe_prep + fe_time +
-                     fe_baseline + re_prep + rnorm(n(), 0, 0.7),
-
-      engagement = as.integer(
-        cut(latent_score,
-            breaks = c(-Inf, thresholds, Inf),
-            labels = FALSE)
+      # Was stopping reason appropriate given the true profile?
+      correct_stop = case_when(
+        true_profile == "one_winner_strong" & stop_reason == "superiority" ~ TRUE,
+        true_profile == "one_winner_weak"   & stop_reason %in% c("superiority","aipe") ~ TRUE,
+        true_profile == "multiple_winners"  & stop_reason == "aipe" ~ TRUE,
+        true_profile == "no_differential"  & stop_reason == "rope" ~ TRUE,
+        stop_reason  == "max_reached" ~ NA,   # inconclusive, not wrong
+        TRUE ~ FALSE
       )
     ) %>%
-    dplyr::select(child_id, session, prep, time_point, baseline_state, engagement)
+    group_by(true_profile) %>%
+    summarise(
+      n             = n(),
+      pct_correct   = mean(correct_stop, na.rm = TRUE),
+      pct_max       = mean(stop_reason == "max_reached"),
+      mean_sessions = mean(stop_session, na.rm = TRUE)
+    )
 }
 
 
-# ── 3. Model Fitting ──────────────────────────────────────────────────────────
+# ── Model Fitting ──────────────────────────────────────────────────────────
 #
 # Two chains and 500 post-warmup draws per chain give reliable individual-level
 # 95% CrI (needed for per-child stopping decisions).
@@ -173,17 +256,21 @@ SHARED_PRIOR <- c(
   prior(exponential(1), class = sd)
 )
 
+ITER <- 1000
+WARMUP <- ITER / 2
+
 # Fits from scratch (used for first call per simulation)
 fit_model_fresh <- function(data, prior = SHARED_PRIOR) {
+  
   brm(
-    engagement ~ prep + time_point + baseline_state +
-      (1 + prep || child_id),
+    engagement ~ prep + baseline_state + # age +
+      (1 + prep || child_id) + (1 | child_id:session),
     data    = data,
     family  = cumulative("logit"),
     prior   = prior,
     chains  = 2,
-    iter    = 1000,
-    warmup  = 500,
+    iter    = ITER,
+    warmup  = WARMUP,
     backend = "cmdstanr",
     threads = threading(2),
     refresh = 0,
@@ -198,19 +285,15 @@ fit_model_update <- function(template_fit, new_data) {
     newdata   = new_data,
     recompile = FALSE,
     chains    = 2,
-    iter      = 1000,
-    warmup    = 500,
+    iter      = ITER,
+    warmup    = WARMUP,
     refresh   = 0,
     silent    = 2
   )
 }
 
 
-# ── 4. Per-Child Stopping Criteria ───────────────────────────────────────────
-
-ROPE_LOWER <- -0.1
-ROPE_UPPER <-  0.1
-
+# ── Per-Child Stopping Criteria ───────────────────────────────────────────
 
 PREP_PARAMS <- c(
   Calming      = "prepCalming",
@@ -219,146 +302,117 @@ PREP_PARAMS <- c(
 )
 
 check_stopping_per_child <- function(fit,
-                                     prob_best_threshold = 0.90,
-                                     aipe_width          = 0.5) {
-
+                                     prob_best_threshold    = 0.90,
+                                     aipe_width             = 1.50,
+                                     rope_no_prep_threshold = 0.70) {
+ 
   draws     <- as_draws_df(fit)
   child_ids <- levels(fit$data$child_id)
-
-  # Fixed-effect draws (population-level)
-  b_cal  <- draws[["b_prepCalming"]]
-  b_sti  <- draws[["b_prepStimulating"]]
-  b_cc   <- draws[["b_prepChildChoice"]]
-
+ 
+  # — Population-level (fixed effect) draws —
+  b_cal <- draws[["b_prepCalming"]]
+  b_sti <- draws[["b_prepStimulating"]]
+  b_cc  <- draws[["b_prepChildChoice"]]
+ 
   map_dfr(child_ids, function(cid) {
-
-    # Individual draws = fixed + random deviation
-    # Column naming convention in brms: r_child_id[{id},prep{Level}]
+ 
+    # — Individual-level draws: fixed + child-specific deviation —
     cal_draws <- b_cal + draws[[paste0("r_child_id[", cid, ",prepCalming]")]]
     sti_draws <- b_sti + draws[[paste0("r_child_id[", cid, ",prepStimulating]")]]
     cc_draws  <- b_cc  + draws[[paste0("r_child_id[", cid, ",prepChildChoice]")]]
-    # No Prep = reference = 0 for every draw
-
-    # Criterion 2: P(each arm is the best, including No Prep)
-    n_draws      <- length(cal_draws)
-    best_matrix  <- cbind(NoPrep = 0, cal_draws, sti_draws, cc_draws)
-    winner_draw  <- max.col(best_matrix)   # 1=NoPrep, 2=Cal, 3=Sti, 4=CC
-
+    # No Prep reference = 0 on the latent logit scale for every draw
+ 
+    # — P(each arm is best) across posterior draws —
+    best_matrix <- cbind(
+      NoPrep      = 0,
+      Calming     = cal_draws,
+      Stimulating = sti_draws,
+      ChildChoice = cc_draws
+    )
+    winner_draw <- max.col(best_matrix)   # 1=NoPrep 2=Cal 3=Sti 4=CC
+ 
     p_best <- c(
       NoPrep      = mean(winner_draw == 1),
       Calming     = mean(winner_draw == 2),
       Stimulating = mean(winner_draw == 3),
       ChildChoice = mean(winner_draw == 4)
     )
-
+ 
     best_name <- names(which.max(p_best))
+    p_best_max <- max(p_best)
 
-    # Superiority: modal winner has P(best) above threshold
-    superiority <- max(p_best) >= prob_best_threshold
+    best_condition <- best_name
 
-    # AIPE: CrI width for the leading arm is narrow enough
-    if (best_name != "NoPrep") {
-      best_draws <- list(
-        Calming = cal_draws, Stimulating = sti_draws, ChildChoice = cc_draws
-      )[[best_name]]
-      cri_width <- as.numeric(quantile(best_draws, 0.975) -
-                               quantile(best_draws, 0.025))
-      aipe_met  <- cri_width < aipe_width
+    # Identify the top 2 names based on p_best
+    top_names <- names(sort(p_best, decreasing = TRUE))[1:2]
+ 
+    # ── Stopping criterion 1: SUPERIORITY ────────────────────────────────────
+    # One active prep wins the posterior majority AND exceeds the threshold.
+    # Explicitly excludes No Prep from triggering this arm.
+    superiority <- p_best_max >= prob_best_threshold & best_name != "NoPrep"
+ 
+    # ── Stopping criterion 2: AIPE ────────────────────────────────────────────
+    # The leading active arm (by P(best)) has a narrow enough 95% CrI that
+    # a "best available" recommendation is precise enough to be actionable,
+    # even when no arm clearly dominates (multiple_winners profile).
+
+    # If both top 2 are active preps (not No Prep), check the precision of their difference
+    if (!"NoPrep" %in% top_names) {
+      diff_draws <- arm_draws[[top_names[1]]] - arm_draws[[top_names[2]]]
+      aipe_width <- as.numeric(quantile(diff_draws, 0.975) - quantile(diff_draws, 0.025))
+      aipe_met <- cri_width < aipe_width
+      best_condition <- paste(top_names, collapse = ",")
     } else {
-      aipe_met <- FALSE
+      # No Prep leads — AIPE is not meaningful as an active recommendation
+      cri_width <- NA_real_
+      aipe_met  <- FALSE
     }
+ 
+    # ── Stopping criterion 3: ROPE ────────────────────────────────────────────
+    # No Prep is the most probable best arm with confidence above the threshold.
+    # Interpretation: prep type does not matter for this child; No Prep is fine.
+    # Define the ROPE range (the "Clinically Negligible" zone)
+    rope_range <- c(-0.5, 0.5)
 
-    # ROPE: No Prep is the most probable best arm with high confidence
-    in_rope <- p_best["NoPrep"] >= 0.70
+    # Calculate what % of the posterior for each active arm is inside the ROPE
+    prop_in_rope <- c(
+      Calming     = mean(cal_draws > rope_range[1] & cal_draws < rope_range[2]),
+      Stimulating = mean(sti_draws > rope_range[1] & sti_draws < rope_range[2]),
+      ChildChoice = mean(cc_draws  > rope_range[1] & cc_draws  < rope_range[2])
+    )
 
+    # STOP if ALL active preps are likely in the ROPE
+    # (Meaning we are confident none of them work)
+    rope_met <- all(prop_in_rope > 0.90)
+
+    if (rope_met) {
+      best_condition <- "No Prep (ROPE)"
+    }
+ 
+    # ── Resolve stop reason (priority: superiority > aipe > rope > continue) ──
+    stop_reason <- case_when(
+      superiority ~ "superiority",
+      aipe_met    ~ "aipe",
+      in_rope     ~ "rope",
+      TRUE        ~ "continue"
+    )
+ 
     tibble(
       child_id       = cid,
       best_condition = best_name,
-      p_best         = max(p_best),
+      p_best         = p_best_max,
+      p_no_prep      = p_best["NoPrep"],
+      cri_width      = cri_width,
       superiority    = superiority,
       aipe_met       = aipe_met,
       in_rope        = in_rope,
-      stop_reason    = case_when(
-        superiority          ~ "superiority",
-        aipe_met             ~ "aipe",
-        in_rope              ~ "rope",
-        TRUE                 ~ "continue"
-      )
+      stop_reason    = stop_reason
     )
   })
 }
 
 
-# ── 5. Fixed-N Power Sweep ────────────────────────────────────────────────────
-#
-# For a grid of fixed session counts, runs n_sims simulations and estimates:
-#
-#   mean_ind_rate : Average proportion of children with detected effect.
-#                   This is the "mean individual detection rate."
-#
-#   power         : Probability that ≥ thresh_pct of children are detected.
-#                   The study-level power metric. Default threshold = 0.80.
-#
-# Both metrics are needed:
-#   • mean_ind_rate answers "how personalised is the output on average?"
-#   • power answers "will this study deliver clinically actionable results?"
-
-fixed_n_one_sim <- function(sim_idx, n_sessions, effect_size,
-                            template_fit, thresh_pct = 0.80) {
-  sim_data <- simulate_study_data(n_sessions  = n_sessions,
-                                  effect_size = effect_size)
-
-  fit <- tryCatch(
-    fit_model_update(template_fit, sim_data),
-    error = function(e) NULL
-  )
-  if (is.null(fit)) return(NULL)
-
-  checks <- tryCatch(
-    check_stopping_per_child(fit),
-    error = function(e) NULL
-  )
-  if (is.null(checks)) return(NULL)
-
-  ind_rate <- mean(checks$superiority)
-  print(ind_rate)
-  tibble(
-    sim        = sim_idx,
-    ind_rate   = ind_rate,
-    above_thresh = ind_rate >= thresh_pct
-  )
-}
-
-run_fixed_n_sweep <- function(session_range = c(20, 30, 40),
-                              n_sims        = 20,
-                              effect_size   = 0.5,
-                              thresh_pct    = 0.80,
-                              template_fit) {
-
-  map_dfr(session_range, function(n_s) {
-    cat(sprintf("\n=== Fixed-N: %d sessions ===\n", n_s))
-
-    sims <- future_map_dfr(
-      seq_len(n_sims),
-      fixed_n_one_sim,
-      n_sessions   = n_s,
-      effect_size  = effect_size,
-      template_fit = template_fit,
-      thresh_pct   = thresh_pct,
-      .options     = furrr_options(seed = TRUE)
-    )
-
-    tibble(
-      n_sessions    = n_s,
-      mean_ind_rate = mean(sims$ind_rate,     na.rm = TRUE),
-      power         = mean(sims$above_thresh, na.rm = TRUE),
-      n_valid       = sum(!is.na(sims$ind_rate))
-    )
-  })
-}
-
-
-# ── 6. Adaptive Simulation ───────────────────────────────────────────────────
+# ── Adaptive Simulation ───────────────────────────────────────────────────
 #
 # Procedure (one simulation run):
 #
@@ -366,114 +420,148 @@ run_fixed_n_sweep <- function(session_range = c(20, 30, 40),
 #   b. At each interim checkpoint (every `check_every` sessions, starting at
 #      min_sessions), fit the hierarchical model on ALL data accumulated so far.
 #      Partial pooling across children is preserved at every interim.
-#   c. For each active child, apply stopping criteria:
-#        • ROPE triggers immediately.
-#        • Superiority must be confirmed at `consec_required` consecutive
-#          interims before stopping (prevents premature stopping on noise).
-#   d. All children still active when max_sessions is reached are labelled
-#      "max_reached."
-#   e. After all children have stopped, record sessions used and stopping reason.
+#   c. For each active child, apply stopping criteria in priority order:
+#        • SUPERIORITY fires after `consec_required` consecutive interims with
+#          P(best active arm) ≥ prob_best_threshold.  Counter resets on miss.
+#        • AIPE fires immediately when the leading arm's 95% CrI width is
+#          below aipe_width (precision-based stopping, no sustain needed).
+#        • ROPE fires immediately when P(No Prep is best) ≥ rope_threshold
+#          (no active prep works — stop to avoid wasting sessions).
+#   d. All children still active at max_sessions are labelled "max_reached."
+#   e. Final detection is evaluated on the last fitted model.
 #
 # Returns a list with:
 #   child_status   : per-child tibble (stop_session, stop_reason, detected)
 #   mean_sessions  : mean sessions used per child in this simulation
-#   p90_sessions   : 90th-percentile sessions (planning buffer)
-#   detection_rate : proportion of children where best prep was detected
-
+#   p90_sessions   : 90th-percentile sessions (operational planning buffer)
+#   detection_rate : proportion where the recommended arm was an active prep
+ 
 simulate_adaptive_one <- function(template_fit,
-                                  n_children      = 25,
-                                  min_sessions    = 12,
-                                  max_sessions    = 60,
-                                  check_every     = 4,
-                                  effect_size     = 0.5,
-                                  consec_required = 3) {
-
+                                  n_children     ,
+                                  min_sessions    ,
+                                  max_sessions    ,
+                                  check_every    ,
+                                  effect_size    ,
+                                  consec_required) {
+ 
   # — Generate full data upfront —
-  full_data <- simulate_study_data(n_children  = n_children,
+  sim <- simulate_study_data(n_children  = n_children,
                                    n_sessions  = max_sessions,
                                    effect_size = effect_size)
 
+  full_data  <- sim$data
+  child_rfx  <- sim$child_rfx
+
   # — Initialise child tracker —
+  # consec_sup: counts consecutive interims where superiority criterion holds.
+  #             Resets to 0 whenever superiority is not met.
   child_status <- tibble(
     child_id     = factor(seq_len(n_children)),
     stopped      = FALSE,
     stop_session = NA_integer_,
     stop_reason  = NA_character_,
-    consec_sup   = 0L   # consecutive interims with superiority confirmed
+    consec_sup   = 0L
   )
-
+ 
   # — Interim checkpoints —
   checkpoints <- seq(min_sessions, max_sessions, by = check_every)
   if (tail(checkpoints, 1) < max_sessions) checkpoints <- c(checkpoints, max_sessions)
-
-  last_fit <- NULL   # carry forward for final detection check
-
+ 
+  last_fit <- NULL
+ 
   for (s in checkpoints) {
     active_ids <- child_status %>% filter(!stopped) %>% pull(child_id)
     if (length(active_ids) == 0) break
-
-    # All children's data up to session s (pooling is always over full cohort)
+ 
     current_data <- full_data %>% filter(session <= s)
-
+ 
     fit <- tryCatch(
       fit_model_update(template_fit, current_data),
       error = function(e) NULL
     )
     if (is.null(fit)) next
     last_fit <- fit
-
+ 
     child_checks <- tryCatch(
       check_stopping_per_child(fit),
       error = function(e) NULL
     )
     if (is.null(child_checks)) next
-
+ 
     # — Update status for each active child —
     for (cid in as.character(active_ids)) {
       row <- child_checks %>% filter(child_id == cid)
       if (nrow(row) == 0) next
-
+ 
       idx <- which(child_status$child_id == cid)
-
-      # Update consecutive superiority counter (reset if not confirmed)
+ 
+      # Superiority counter: increment on hit, reset on miss
       if (isTRUE(row$superiority)) {
         child_status$consec_sup[idx] <- child_status$consec_sup[idx] + 1L
       } else {
         child_status$consec_sup[idx] <- 0L
       }
-
+ 
       sustained_superiority <- child_status$consec_sup[idx] >= consec_required
       at_maximum            <- s == max_sessions
-
-      stop_now <- sustained_superiority | isTRUE(row$in_rope) | at_maximum
-
+ 
+      # AIPE and ROPE fire immediately; superiority requires sustain
+      stop_now <- sustained_superiority |
+                  isTRUE(row$aipe_met)  |
+                  isTRUE(row$in_rope)   |
+                  at_maximum
+ 
       if (stop_now) {
         child_status$stopped[idx]      <- TRUE
         child_status$stop_session[idx] <- s
         child_status$stop_reason[idx]  <- case_when(
-          sustained_superiority   ~ "superiority",
-          isTRUE(row$in_rope)    ~ "rope",
-          TRUE                    ~ "max_reached"
+          sustained_superiority  ~ "superiority",
+          isTRUE(row$aipe_met)  ~ "aipe",
+          isTRUE(row$in_rope)   ~ "rope",
+          TRUE                   ~ "max_reached"
         )
       }
     }
   }
-
-  # Use the last fitted model (at the session each child stopped) as proxy.
-  # A separate final fit on per-child truncated data would be more precise
-  # but prohibitively expensive for the sweep.
+ 
+  # — Final detection —
+  # "Detected" = the recommended arm at stopping is an active prep (not No Prep
+  # and not max_reached with an inconclusive posterior).
+  # Uses the last fitted model as a proxy for all children.
   detected <- if (!is.null(last_fit)) {
     tryCatch({
       ch <- check_stopping_per_child(last_fit)
-      setNames(ch$superiority, ch$child_id)
+      # Detected = best condition is an active prep with P(best) ≥ threshold,
+      # OR stopped via AIPE (precise enough to recommend even without dominance)
+      setNames(ch$superiority | ch$aipe_met, ch$child_id)
     }, error = function(e) rep(NA, n_children))
   } else {
     rep(NA, n_children)
   }
 
-  child_status <- child_status %>%
-    mutate(detected = detected[as.character(child_id)])
+  # Get best condition for each child from final model
+  final_winners <- if (!is.null(last_fit)) {
+    tryCatch({
+      check_stopping_per_child(last_fit) %>%
+        dplyr::select(child_id, best_condition, p_best)
+    }, error = function(e) {
+      tibble(child_id = factor(seq_len(n_children)),
+             best_condition = NA_character_,
+             p_best = NA_real_)
+    })
+  } else {
+    tibble(child_id = factor(seq_len(n_children)),
+           best_condition = NA_character_,
+           p_best = NA_real_)
+  }
 
+  child_status <- child_status %>%
+    left_join(child_rfx %>%
+                dplyr::select(child_id, true_profile, true_winners),
+              by = "child_id") %>%
+    left_join(final_winners, by = "child_id") %>%
+    mutate(detected = detected[as.character(child_id)])
+ 
   list(
     child_status   = child_status,
     mean_sessions  = mean(child_status$stop_session, na.rm = TRUE),
@@ -481,26 +569,26 @@ simulate_adaptive_one <- function(template_fit,
     detection_rate = mean(child_status$detected, na.rm = TRUE)
   )
 }
-
-run_adaptive_sweep <- function(n_sims       = 10,
-                               effect_size  = 0.5,
+ 
+run_adaptive_sweep <- function(n_sims      ,
+                               effect_size ,
                                template_fit = NULL,   # pass compiled fit to avoid recompile
-                               n_children   = 25,
-                               min_sessions = 12,
-                               max_sessions = 60,
-                               check_every  = 4,
-                               consec_required = 3) {
-
+                               n_children  ,
+                               min_sessions ,
+                               max_sessions ,
+                               check_every  ,
+                               consec_required) {
+ 
   if (is.null(template_fit)) {
     cat("Compiling Stan model for adaptive sweep...\n")
-    init_data    <- simulate_study_data(n_sessions = min_sessions,
+    init_data    <- simulate_study_data(n_children=n_children, n_sessions = min_sessions,
                                         effect_size = effect_size)
-    template_fit <- fit_model_fresh(init_data)
+    template_fit <- fit_model_fresh(init_data$data)
   }
-
+ 
   cat(sprintf("\n=== Adaptive sweep: %d simulations ===\n", n_sims))
-  cat("  (Each sim refits the model at every interim — allow ~10 min per sim)\n")
-
+  cat("  (Each sim refits the model at every interim — allow ~10 min per n_cores sims)\n")
+ 
   results <- future_map(seq_len(n_sims), function(i) {
     cat(sprintf("  sim %d/%d\r", i, n_sims))
     tryCatch(
@@ -516,12 +604,15 @@ run_adaptive_sweep <- function(n_sims       = 10,
       error = function(e) NULL
     )
   }, .options = furrr_options(seed = TRUE))
-
+ 
   results <- Filter(Negate(is.null), results)
+
+  cat("\nAdaptive sweep complete.\n")
+
   results
 }
-
-# Summarise the list returned by run_adaptive_sweep()
+ 
+# Summarise the list returned by the adaptive sweep
 summarise_adaptive <- function(results) {
   tibble(
     n_valid        = length(results),
@@ -530,10 +621,13 @@ summarise_adaptive <- function(results) {
     p50_sessions   = median(map_dbl(results, "mean_sessions"), na.rm = TRUE),
     p90_sessions   = mean(map_dbl(results, "p90_sessions"),   na.rm = TRUE),
     detection_rate = mean(map_dbl(results, "detection_rate"), na.rm = TRUE),
-
+ 
     # Stopping reason breakdown (averaged across sims)
     pct_superiority = mean(map_dbl(results, ~ {
       mean(.x$child_status$stop_reason == "superiority", na.rm = TRUE)
+    }), na.rm = TRUE),
+    pct_aipe = mean(map_dbl(results, ~ {
+      mean(.x$child_status$stop_reason == "aipe", na.rm = TRUE)
     }), na.rm = TRUE),
     pct_rope = mean(map_dbl(results, ~ {
       mean(.x$child_status$stop_reason == "rope", na.rm = TRUE)
@@ -545,71 +639,30 @@ summarise_adaptive <- function(results) {
 }
 
 
-# ── 7. Reporting & Plots ──────────────────────────────────────────────────────
+# ── Reporting & Plots ──────────────────────────────────────────────────────
 
-# 7a. Fixed-N power curve
-plot_fixed_n <- function(results, target_rate = 0.80) {
-  ggplot(results, aes(x = n_sessions)) +
-    geom_ribbon(aes(ymin = 0, ymax = mean_ind_rate),
-                fill = "#2c7bb6", alpha = 0.12) +
-    geom_line(aes(y = mean_ind_rate, colour = "Mean individual\ndetection rate"),
-              linewidth = 1.1) +
-    geom_point(aes(y = mean_ind_rate, colour = "Mean individual\ndetection rate"),
-               size = 3.5) +
-    geom_line(aes(y = power, colour = "P(≥80% children\ndetected)"),
-              linewidth = 1.1, linetype = "dashed") +
-    geom_point(aes(y = power, colour = "P(≥80% children\ndetected)"),
-               size = 3.5) +
-    geom_hline(yintercept = target_rate, linetype = "dotted",
-               colour = "grey40", linewidth = 0.7) +
-    annotate("text",
-             x = min(results$n_sessions) + 0.2,
-             y = target_rate + 0.025,
-             label = paste0(target_rate * 100, "% threshold"),
-             colour = "grey30", hjust = 0, size = 3.5) +
-    scale_colour_manual(values = c(
-      "Mean individual\ndetection rate" = "#2c7bb6",
-      "P(≥80% children\ndetected)"      = "#d7191c"
-    ), name = NULL) +
-    scale_y_continuous(labels = percent_format(accuracy = 1), limits = c(0, 1)) +
-    scale_x_continuous(breaks = results$n_sessions) +
-    labs(
-      title    = "Fixed-N analysis: sessions needed to detect individual prep effects",
-      subtitle = sprintf(
-        "Effect size = 0.5 (logit) | %d simulations per point | 25 children",
-        results$n_valid[1]),
-      x        = "Sessions per child (fixed N)",
-      y        = "Rate / Probability",
-      caption  = paste0(
-        "Blue = mean individual detection rate across sims.\n",
-        "Red dashed = study-level power (P that ≥80% of children reach 95% CrI > 0)."
-      )
-    ) +
-    theme_minimal(base_size = 13) +
-    theme(legend.position = "top",
-          plot.caption = element_text(colour = "grey50", size = 9))
-}
-
-# 7b. Distribution of sessions used per child under adaptive stopping
+# Distribution of sessions used per child under adaptive stopping
 plot_session_distribution <- function(adaptive_results) {
   all_children <- map_dfr(seq_along(adaptive_results), function(i) {
     adaptive_results[[i]]$child_status %>%
       mutate(sim = i)
   })
-
+ 
   ggplot(all_children, aes(x = stop_session, fill = stop_reason)) +
     geom_histogram(binwidth = 2, colour = "white", alpha = 0.9,
                    position = "stack") +
     scale_fill_manual(
       values = c(
-        superiority = "#1a9641",
-        rope        = "#fdae61",
-        max_reached = "#d7191c"
+        superiority = "#1a9641",   # green  — clear winner found
+        aipe        = "#74c476",   # light green — winner found via precision
+        rope        = "#fdae61",   # orange — no active prep helps
+        max_reached = "#d7191c"    # red    — inconclusive at max sessions
       ),
       labels = c(
-        superiority = "Superiority confirmed",
-        rope        = "No practical effect (ROPE)",
-        max_reached = "Max sessions reached"
+        superiority = "Superiority: P(best arm) ≥ 90% for 3 interims",
+        aipe        = "AIPE: 95% CrI width < 0.5 logit",
+        rope        = "ROPE: No Prep most probable (no differential effect)",
+        max_reached = "Max sessions reached (inconclusive)"
       ),
       name = "Stopping reason"
     ) +
@@ -617,16 +670,93 @@ plot_session_distribution <- function(adaptive_results) {
     labs(
       title    = "Distribution of sessions used per child — adaptive stopping",
       subtitle = paste0(
-        "Green = stopped early with positive result | ",
-        "Orange = stopped early with null result | Red = reached protocol maximum"),
+        "Dark green = clear winner | Light green = precise estimate | ",
+        "Orange = no prep effect | Red = inconclusive"),
       x        = "Session number when child stopped",
       y        = "Count  (children × simulations)"
     ) +
     theme_minimal(base_size = 13) +
-    theme(legend.position = "bottom")
+    theme(legend.position = "bottom",
+          legend.text = element_text(size = 8))
 }
 
-# 7c. Summary table printed to console
+plot_resolution_curve <- function(adaptive_results,
+                                  max_s = 60, check_every = 4) {
+
+  checkpoints <- seq(12, max_s, by = check_every)
+
+  all_children <- map_dfr(seq_along(adaptive_results), function(i) {
+    adaptive_results[[i]]$child_status %>% mutate(sim = i)
+  })
+
+  # Cumulative resolution at each checkpoint, per profile
+  resolution_curve <- map_dfr(checkpoints, function(s) {
+    all_children %>%
+      mutate(resolved_by_s = stop_reason %in% c("superiority", "aipe", "rope") &
+                stop_session <= s) %>%
+      group_by(true_profile) %>%
+      summarise(pct_resolved = mean(resolved_by_s), .groups = "drop") %>%
+      mutate(session = s)
+  })
+
+  # Add overall (weighted by profile proportions)
+  overall <- map_dfr(checkpoints, function(s) {
+    all_children %>%
+      mutate(resolved_by_s = stop_reason %in% c("superiority", "aipe", "rope") &
+                            stop_session <= s) %>%
+      summarise(pct_resolved = mean(resolved_by_s)) %>%
+      mutate(session = s, true_profile = "overall")
+  })
+
+  curve_data <- bind_rows(resolution_curve, overall)
+
+  profile_colours <- c(
+    one_winner_strong = "#1D9E75",
+    one_winner_weak   = "#5DCAA5",
+    multiple_winners  = "#378ADD",
+    no_differential   = "#EF9F27",
+    overall           = "#888780"
+  )
+
+  profile_linetypes <- c(
+    one_winner_strong = "solid",
+    one_winner_weak   = "dashed",
+    multiple_winners  = "solid",
+    no_differential   = "solid",
+    overall           = "dotted"
+  )
+
+  ggplot(curve_data, aes(x = session, y = pct_resolved,
+                          colour = true_profile,
+                          linetype = true_profile)) +
+    geom_line(linewidth = 1.1) +
+    geom_point(size = 2.5) +
+    geom_hline(yintercept = 0.80, linetype = "dotted",
+               colour = "grey50", linewidth = 0.6) +
+    annotate("text", x = 13, y = 0.82, label = "80% target",
+             colour = "grey40", hjust = 0, size = 3.2) +
+    scale_colour_manual(values = profile_colours, name = "Profile") +
+    scale_linetype_manual(values = profile_linetypes, name = "Profile") +
+    scale_y_continuous(labels = percent_format(accuracy = 1),
+                       limits = c(0, 1)) +
+    scale_x_continuous(breaks = checkpoints) +
+    labs(
+      title    = "Cumulative resolution rate by session and child profile",
+      subtitle = "Resolved = stopped via superiority, AIPE, or ROPE before max_sessions",
+      x        = "Session number",
+      y        = "Cumulative % resolved",
+      caption = paste0(
+        "Resolved = stopped via superiority, AIPE, or ROPE (max_reached excluded).\n",
+        "Dashed horizontal = 90% resolution target."
+      )
+    ) +
+    theme_minimal(base_size = 13) +
+    theme(legend.position = "top",
+          plot.caption = element_text(colour = "grey50", size = 9),
+          panel.grid.minor = element_blank())
+}
+
+# Summary table printed to console
 print_adaptive_summary <- function(summary_tbl) {
   cat("\n")
   cat("══════════════════════════════════════════════════════════\n")
@@ -639,160 +769,119 @@ print_adaptive_summary <- function(summary_tbl) {
   cat(sprintf("  Mean detection rate:        %.0f%%\n", summary_tbl$detection_rate * 100))
   cat("  ── Stopping reason breakdown ──\n")
   cat(sprintf("    Superiority:   %.0f%% of children\n", summary_tbl$pct_superiority * 100))
-  cat(sprintf("    ROPE (no fx):  %.0f%% of children\n", summary_tbl$pct_rope       * 100))
-  cat(sprintf("    Max reached:   %.0f%% of children\n", summary_tbl$pct_max        * 100))
+  cat(sprintf("    AIPE:          %.0f%% of children\n", summary_tbl$pct_aipe        * 100))
+  cat(sprintf("    ROPE (no fx):  %.0f%% of children\n", summary_tbl$pct_rope        * 100))
+  cat(sprintf("    Max reached:   %.0f%% of children\n", summary_tbl$pct_max         * 100))
   cat("══════════════════════════════════════════════════════════\n\n")
+}
+
+# Print list of recommended winners per child
+print_winners_list <- function(child_status) {
+  winners <- child_status %>%
+    arrange(child_id) %>%
+    dplyr::select(child_id, best_condition, p_best, stop_session, stop_reason, true_profile) %>%
+    filter(!is.na(best_condition))
+  
+  cat("\n")
+  cat("══════════════════════════════════════════════════════════\n")
+  cat("  Recommended Preparation by Child\n")
+  cat("══════════════════════════════════════════════════════════\n")
+  
+  for (i in seq_len(nrow(winners))) {
+    row <- winners[i, ]
+    cat(sprintf("  Child %2s:  %-16s (P(best)=%.2f, stopped at session %2d via %s)\n",
+                row$child_id, row$best_condition, row$p_best, 
+                row$stop_session, row$stop_reason))
+  }
+  
+  cat("══════════════════════════════════════════════════════════\n\n")
+  
+  # Summary by prep type
+  prep_counts <- winners %>%
+    group_by(best_condition) %>%
+    summarise(n = n(), .groups = "drop") %>%
+    arrange(desc(n))
+  
+  cat("  Summary by Preparation Type:\n")
+  for (i in seq_len(nrow(prep_counts))) {
+    row <- prep_counts[i, ]
+    pct <- round(100 * row$n / nrow(winners), 1)
+    cat(sprintf("    %-16s: %2d children (%.1f%%)\n", 
+                row$best_condition, row$n, pct))
+  }
+  cat("\n")
 }
 ```
 
 ```{r}
-# ── 8. Run ────────────────────────────────────────────────────────────────────
-#
-# RECOMMENDED WORKFLOW
-#
-#   Phase 1 (development, <1 hr):
-#     n_sims        = 10,  session_range = c(20, 30, 40)
-#     n_sims_adapt  = 5
-#
-#   Phase 2 (final estimate, overnight):
-#     n_sims        = 100, session_range = c(20, 25, 30, 35, 40)
-#     n_sims_adapt  = 50
-
-N_SIMS_FIXED  <- 10
+EFFECT_SIZE   <- 1.0
+N_CHILDREN   <- 25
 N_SIMS_ADAPT  <- 5
-EFFECT_SIZE   <- 0.5
-SESSION_RANGE <- c(36, 40)
+max_sessions <- 42
+check_every <- 4
 
-cat("Compiling Stan model...\n")
-template_fit <- fit_model_fresh(
-  simulate_study_data(n_sessions = min(SESSION_RANGE), effect_size = EFFECT_SIZE)
-)
-
-# — 8a. Fixed-N sweep —
-fixed_results <- run_fixed_n_sweep(
-  session_range = SESSION_RANGE,
-  n_sims        = N_SIMS_FIXED,
-  effect_size   = EFFECT_SIZE,
-  thresh_pct    = 0.80,
-  template_fit  = template_fit
-)
-
-cat("\n── Fixed-N Results ──────────────────────────────────\n")
-print(fixed_results)
-
-p_fixed <- plot_fixed_n(fixed_results, target_rate = 0.80)
-print(p_fixed)
-ggsave("power_curve_fixed_n.png", p_fixed, width = 9, height = 5.5, dpi = 150)
+sim_data <- simulate_study_data(n_children = N_CHILDREN, n_sessions = 12, effect_size = EFFECT_SIZE)
+sim_data
 ```
 
 ```{r}
-# — 8b. Adaptive sweep —
+# ── 8. Run ────────────────────────────────────────────────────────────────────
+template_fit <- fit_model_fresh(sim_data$data)
+
+# Show R-hat values
+print(rhat(template_fit))
+
+if (any(rhat(template_fit) > 1.1)) {
+  warning("R-hat values indicate potential convergence issues. Please check the model diagnostics.")
+}
+
+# Effective sample size — should be > 400 for key parameters
+summary(template_fit)$fixed[ , "Bulk_ESS"]
+summary(template_fit)$fixed[ , "Tail_ESS"]
+
+if (any(summary(template_fit)$fixed[ , "Bulk_ESS"] < 400) ||
+    any(summary(template_fit)$fixed[ , "Tail_ESS"] < 400)) {
+  warning("Effective sample size is low for some parameters. Consider increasing iterations or improving model fit.")
+}
+
+# Divergences — any non-zero count is a problem regardless of R-hat
+divergence_check <- nuts_params(template_fit) %>% filter(Parameter == "divergent__") %>% summarise(sum(Value))
+if (divergence_check$total > 0) {
+  warning("Divergences detected: ", divergence_check$total)
+}
+
+template_fit
+```
+
+```{r}
+# — Adaptive sweep —
 adaptive_results <- run_adaptive_sweep(
   n_sims          = N_SIMS_ADAPT,
   effect_size     = EFFECT_SIZE,
   template_fit    = template_fit,
-  n_children      = 25,
+  n_children      = N_CHILDREN,
   min_sessions    = 12,
-  max_sessions    = 36,
-  check_every     = 4,
+  max_sessions    = max_sessions,
+  check_every     = check_every,
   consec_required = 3
 )
 
 adaptive_summary <- summarise_adaptive(adaptive_results)
 print_adaptive_summary(adaptive_summary)
 
-p_sessions <- plot_session_distribution(adaptive_results)
-print(p_sessions)
-ggsave("sessions_distribution_adaptive.png", p_sessions, width = 9, height = 5.5, dpi = 150)
-
-# — 8c. Combined figure (for paper / portfolio) —
-if (requireNamespace("gridExtra", quietly = TRUE)) {
-  combined_plot <- gridExtra::arrangeGrob(
-    p_fixed, p_sessions,
-    ncol = 1,
-    top  = grid::textGrob(
-      "N-of-1 power analysis: fixed vs adaptive design\nMaya Care and Grow | Bayesian hierarchical cumulative logit model",
-      gp = grid::gpar(fontsize = 13, fontface = "bold")
-    )
-  )
-  ggsave("combined_power_analysis.png", combined_plot,
-         width = 10, height = 11, dpi = 150)
-  cat("Combined figure saved to combined_power_analysis.png\n")
-} else {
-  cat("Install gridExtra for a combined figure: install.packages('gridExtra')\n")
-  cat("Individual figures already saved as separate PNGs.\n")
-}
-
-cat("\nAll done. Output PNGs saved to working directory.\n")
+adaptive_results
 ```
 
 ```{r}
-data <- simulate_study_data(n_children = 4, n_sessions  = 36, effect_size = 0.5)
-data$baseline_state <- 'hyper'
-data
+adaptive_results[[1]]$child_status[, c("true_profile", "true_winners", "best_condition", "p_best", "stop_session", "stop_reason", "detected")]
 ```
 
 ```{r}
-library(dplyr)
-
-result <- data %>%
-  group_by(child_id, prep) %>%
-  summarise(
-    mean_engagement = mean(engagement, na.rm = TRUE),
-    sd_engagement   = sd(engagement, na.rm = TRUE),
-    .groups = "drop"
-  )
-
-result
+plot_resolution_curve(adaptive_results, max_s = max_sessions, check_every = check_every)
 ```
 
 ```{r}
-
-```
-
-```{r}
-ggplot(data, aes(x = prep, y = engagement, fill = prep)) +
-  # Use boxplots to show distribution
-  geom_boxplot(alpha = 0.6, outlier.shape = NA) +
-  # Add jittered points to show every single session's data
-  geom_jitter(width = 0.2, height = 0.1, alpha = 0.5, size = 1.5) +
-  # Facet by Child (Rows) and Baseline State (Columns)
-  facet_grid(baseline_state ~ child_id) +
-  # Styling
-  scale_y_continuous(breaks = 1:5, limits = c(0.5, 5.5)) +
-  scale_fill_brewer(palette = "Set2") +
-  theme_minimal() +
-  labs(
-    title = "Personalized Prep Impact on Session Engagement",
-    subtitle = "Faceted by Child and Arrival Baseline State",
-    x = "Preparation Type",
-    y = "BRES-5 Engagement Score",
-    fill = "Condition"
-  ) +
-  theme(
-    strip.background = element_rect(fill = "gray95"),
-    strip.text = element_text(face = "bold"),
-    axis.text.x = element_text(angle = 45, hjust = 1),
-    legend.position = "none"
-  )
-```
-
-```{r}
-template_fit
-```
-
-```{r}
-ci_width <- 0.9
-lo <- (1 - ci_width) / 2
-hi <- 1 - lo
-probs_needed <- c(lo, hi)
-
-child_ests <- coef(fit, probs = probs_needed)$child_id
-lo_tag     <- paste0("Q", lo * 100)
-hi_tag     <- paste0("Q", hi * 100)
-child_ids  <- dimnames(child_ests)[[1]]
-
-cid <- 0
-
-map_dbl(PREP_PARAMS, ~ child_ests[cid, "Estimate", .x])
+# Check implied category probabilities at the average child
+sim_data <- simulate_study_data(n_children = 1000, n_sessions = 40, effect_size = 1.0)
+table(sim_data$data$engagement) / nrow(sim_data$data)
 ```
