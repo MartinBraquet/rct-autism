@@ -1,5 +1,5 @@
 ---
-title: "Power Analysis: Adaptive Simulation"
+title: "Main Analysis"
 output: html_document
 ---
 
@@ -17,7 +17,7 @@ output: html_document
 
 ```{r}
 # =============================================================================
-# Simulation-Based Power Analysis: Personalized Pre-Session Preparation
+# Main Analysis: Personalized Pre-Session Preparation
 # N-of-1 Crossover Trial | Maya Care and Grow, Agartala
 # PI: Martin Braquet | Collaborator: Riki Dewan
 # =============================================================================
@@ -25,11 +25,10 @@ output: html_document
 # STRUCTURE
 #   0.  Packages & parallel backend
 #   1.  Blocked randomisation (block size = 4, no consecutive repeats)
-#   2.  Data generation
+#   2.  Data loading
 #   3.  Model fitting
 #   4.  Stopping criteria (per child)
-#   5.  Adaptive simulation   → expected sessions per child
-#   6.  Reporting & plots
+#   5.  Reporting & plots
 #
 # =============================================================================
 
@@ -49,31 +48,42 @@ source(here::here("analysis", "utils", "model.R"))
 source(here::here("analysis", "utils", "sim.R"))
 source(here::here("analysis", "utils", "plotting.R"))
 source(here::here("analysis", "utils", "power.R"))
+source(here::here("analysis", "utils", "stop_criteria.R"))
 
 set.seed(42)
 ```
 
 ```{r}
-EFFECT_SIZE   <- 2.0
-N_CHILDREN   <- 25
-N_SIMS  <- 30
-max_sessions <- 36
-check_every <- 4
+file_path <- here("data", "study_data.csv")
+study_data <- read_csv(file_path)
 
-adaptive_results <- run_adaptive_sweep(
-  n_sims          = N_SIMS,
-  effect_size     = EFFECT_SIZE,
-  n_children      = N_CHILDREN,
-  min_sessions    = 12,
-  max_sessions    = max_sessions,
-  check_every     = check_every,
-  consec_required = 3
+study_data <- study_data %>%
+  mutate(
+    baseline_state = factor(baseline_state, levels = c("tired", "neutral", "hyper")),
+    prep = factor(prep, levels = c("No Prep", "Calming", "Stimulating", "Child Choice")),
+    child_id = as.factor(child_id)
+  )
+study_data
+```
+
+```{r}
+chains <- 4
+fit <- fit_model_fresh(
+  study_data,
+  threads = threading(chains),
+  chains = chains,
+  iter = 2000
 )
+summary(fit)
 ```
 
 ```{r}
-plot_resolution_curve(adaptive_results, max_s = max_sessions, check_every = check_every)
-```
-
-```{r}
+chains <- 4
+results <- check_stopping_sequentially(
+  template_fit = fit,
+  data = study_data,
+  min_sessions = 0
+)
+child_status <- results$child_status
+child_status
 ```
