@@ -82,3 +82,30 @@ data/
 
 results/
 analysis/dev/
+
+# LaTeX
+*.aux
+*.log
+*.toc
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg
+*.idx
+*.ind
+*.ilg
+*.lot
+*.lof
+*.figlist
+*.makefile
+*.nav
+*.snm
+*.vrb
+*.upa
+*.upb
+*.bcf
+*.xml
+*.pdf
+*_minted*
