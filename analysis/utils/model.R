@@ -24,6 +24,8 @@ library(ggplot2)
 #
 # NOTE: LKJ prior is omitted because || removes the correlation structure.
 
+FORCE_REPRODUCIBILITY <- FALSE
+
 SHARED_PRIOR <- c(
   prior(normal(0, 1), class = b),
   prior(normal(5, 2), class = Intercept),
@@ -44,6 +46,10 @@ fit_model_fresh <- function(data, prior = SHARED_PRIOR, threads = NULL, chains =
   print(str(data))
   print(levels(data$prep))
   levels(data$prep)
+  
+  if (FORCE_REPRODUCIBILITY) {
+    threads <- NULL
+  }
 
   template_fit <- brm(
     engagement ~ prep + teacher + age + (1 + prep || child_id),
