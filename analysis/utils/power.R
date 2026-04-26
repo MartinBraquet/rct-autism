@@ -15,6 +15,7 @@ source(here::here("analysis", "utils", "model.R"))
 source(here::here("analysis", "utils", "sim.R"))
 source(here::here("analysis", "utils", "plotting.R"))
 source(here::here("analysis", "utils", "stop_criteria.R"))
+source(here::here("analysis", "utils", "multiprocessing.R"))
 
 # ── Adaptive Simulation ───────────────────────────────────────────────────
 #
@@ -142,16 +143,7 @@ run_adaptive_sweep <- function(n_sims,
   }
 
   if (n_sims > 1) {
-    n_logical_cores <- parallel::detectCores()
-    n_workers <- min(max(1L, floor(n_logical_cores) - 2), n_sims)
-    cat(sprintf("\nSystem has %d cores. Using %d cores total.\n",
-                n_logical_cores, n_workers))
-    cat(sprintf("Adaptive loop: Refitting hierarchical model at each interim.
-Distributed across %d workers with threading(1).
-Expected throughput: ~10 min per batch.\n", n_workers))
-    plan(multisession, workers = n_workers)
-    results <- future_map(seq_len(n_sims), f, .options = furrr_options(seed = TRUE))
-    plan(sequential)
+    results <- run_multiprocessing(f, n_sims)
   } else {
     results <- map(seq_len(n_sims), f)
   }

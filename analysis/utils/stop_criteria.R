@@ -175,7 +175,7 @@ check_stopping_per_child <- function(fit,
 check_stopping_sequentially <- function(
   template_fit = NULL,
   data,
-  min_sessions,
+  min_sessions = NULL,
   check_every = 4,
   consec_required = NULL,
   prior = NULL
@@ -193,6 +193,10 @@ check_stopping_sequentially <- function(
   #             Resets to 0 whenever superiority is not met.
   n_children <- length(unique(data$child_id))
   max_sessions <- max(data$session)
+
+  if (is.null(min_sessions)) {
+    min_sessions <- max_sessions
+  }
 
   child_status <- tibble(
     child_id     = factor(seq_len(n_children)),

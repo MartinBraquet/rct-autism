@@ -1,0 +1,68 @@
+---
+title: "Covariate Sensitivity Analysis"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+# knitr::opts_chunk$set(
+#   echo       = FALSE,   # hide code in paper output
+#   warning    = FALSE,
+#   message    = FALSE,
+#   fig.width  = 7,
+#   fig.height = 4.5,
+#   fig.retina = 3,       # crisp figures on retina displays
+#   dpi        = 300      # print-quality
+# )
+```
+
+```{r}
+# =============================================================================
+# Covariate Sensitivity Analysis: Personalized Pre-Session Preparation
+# N-of-1 Crossover Trial | Maya Care and Grow, Agartala
+# PI: Martin Braquet | Collaborator: Riki Dewan
+# =============================================================================
+#
+# STRUCTURE
+#   0.  Packages & parallel backend
+#   1.  Analysis
+#   2.  Reporting
+#
+# Run with rmarkdown::render("analysis/03_covariate_sensitivity.Rmd")
+#
+# =============================================================================
+
+library(tidyverse)
+library(tibble)
+library(tidyr)
+library(brms)
+library(MASS)
+library(furrr)
+library(cmdstanr)
+library(scales)
+library(dplyr)
+library(purrr)
+library(ggplot2)
+
+source(here::here("analysis", "utils", "model.R"))
+source(here::here("analysis", "utils", "sim.R"))
+source(here::here("analysis", "utils", "plotting.R"))
+source(here::here("analysis", "utils", "power.R"))
+source(here::here("analysis", "utils", "stop_criteria.R"))
+source(here::here("analysis", "utils", "sensitivity.R"))
+
+set.seed(42)
+```
+
+```{r}
+n_sims  <- 10
+effect_size   <- 2.0
+n_children   <- 25
+n_sessions <- 36
+
+combined_results <- covariate_sensitivity(
+  effect_size = effect_size,
+  n_sessions = n_sessions,
+  n_children = n_children,
+  n_sims = n_sims
+)
+```

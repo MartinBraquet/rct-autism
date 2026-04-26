@@ -16,6 +16,7 @@ source(here::here("analysis", "utils", "sim.R"))
 source(here::here("analysis", "utils", "plotting.R"))
 source(here::here("analysis", "utils", "stop_criteria.R"))
 source(here::here("analysis", "utils", "power.R"))
+source(here::here("analysis", "utils", "multiprocessing.R"))
 
 # 1. Baseline (Your Original)
 prior_baseline <- c(
@@ -358,14 +359,7 @@ run_prior_sensitivity <- function(
   }
 
   if (n_sims > 1) {
-    n_logical_cores <- parallel::detectCores()
-    n_workers <- min(max(1L, floor(n_logical_cores) - 2), n_sims)
-    cat(sprintf("\nSystem has %d cores. Using %d cores total.\n", n_logical_cores, n_workers))
-    cat(sprintf("Sensitivity analysis. Distributed across %d workers with threading(1).\n", n_workers))
-    plan(multisession, workers = n_workers)
-    results <- future_map(seq_len(n_sims), f, .options = furrr_options(seed = TRUE))
-    plan(sequential)
-
+    results <- run_multiprocessing(f, n_sims)
     sim_average(results)
   } else {
     results <- map(seq_len(n_sims), f)
@@ -373,5 +367,127 @@ run_prior_sensitivity <- function(
   return(results)
 }
 
+covariate_sensitivity_single_sim = function(
+  effect_size,
+  n_sessions,
+  n_children
+) {
+  init_data <- simulate_study_data(
+    n_children = n_children,
+    n_sessions = n_sessions,
+    effect_size = EFFECT_SIZE
+  )
+  data <- init_data$data
+  print(data)
 
+  # Loop over multiple fits
+  all_results <- list()
+  fits <- list(
+    baseline = NULL,
+    no_teacher = engagement ~ prep + teacher + (1 + prep || child_id),
+    no_age = engagement ~ prep + age + (1 + prep || child_id),
+    no_fix_effect = engagement ~ prep + (1 + prep || child_id)
+  )
+  fit_names <- names(fits)
+
+  for (i in seq_along(fits)) {
+    fit_name <- fit_names[i]
+    cat(sprintf("Processing fit %s (%d/%d)...\n", fit_name, i, length(fits)))
+
+    current_fit <- fit_model_fresh(data, equation = fits[[i]])
+
+    results <- check_stopping_sequentially(current_fit, data)
+
+    # Store results with fit identifier
+    results$child_status$fit_name <- fit_name
+    results$fit_name <- fit_name
+    results$fit_index <- i
+    all_results[[fit_name]] <- results
+    print(results)
+  }
+
+  # Combine results if needed
+  combined_results <- bind_rows(lapply(all_results, function(x) x$child_status))
+  combined_results$stop_session <- NULL
+  combined_results$consec_sup <- NULL
+  combined_results <- combined_results[order(combined_results$child_id), ]
+  print(combined_results, n = nrow(combined_results))
+  
+  # Aggregate over child_id and check best_condition consistency
+  consistency_check <- combined_results %>%
+    group_by(child_id) %>%
+    summarise(
+      baseline_best_condition = best_condition[fit_name == "baseline"],
+      valid_decisions = list(best_condition[!is.na(best_condition)]),
+      has_any_decision = length(valid_decisions[[1]]) > 0,
+      all_sets = list(strsplit(as.character(valid_decisions[[1]]), ",\\s*")),
+      common_winners = if(has_any_decision) {
+      list(reduce(all_sets[[1]], intersect))
+      } else { list(character(0)) },
+      is_consistent = !has_any_decision || length(common_winners[[1]]) > 0,
+      consensus_prep = paste(common_winners[[1]], collapse = ", "),
+      .groups = "drop"
+    )
+  
+  cat("\n=== CONSISTENCY CHECK ACROSS FITS ===\n")
+  print(consistency_check)
+  
+  # Summary of consistency
+  n_consistent <- sum(consistency_check$is_consistent, na.rm = TRUE)
+  n_total <- nrow(consistency_check)
+  cat(sprintf("\nConsistency Summary: %d/%d children have consistent best_condition across fits (%.1f%%)\n", 
+              n_consistent, n_total, 100 * n_consistent / n_total))
+  
+  # Return both combined_results and consistency_check
+  list(
+    combined_results = combined_results,
+    consistency_check = consistency_check
+  )
+
+}
+
+covariate_sensitivity = function(
+  effect_size,
+  n_sessions,
+  n_children,
+  n_sims = 1
+) {
+    # Define the function to run for each simulation
+    sim_function <- function(sim_id) {
+      covariate_sensitivity_single_sim(effect_size, n_sessions, n_children)
+    }
+    
+    if (n_sims > 1) {
+      results <- run_multiprocessing(sim_function, n_sims)
+      
+      # Extract consistency percentages from each simulation
+      consistency_percentages <- map_dbl(results, function(sim_result) {
+        if (is.list(sim_result) && !is.null(sim_result$consistency_check)) {
+          consistency_check <- sim_result$consistency_check
+          n_consistent <- sum(consistency_check$is_consistent, na.rm = TRUE)
+          n_total <- nrow(consistency_check)
+          return(100 * n_consistent / n_total)
+        } else {
+          return(NA_real_)
+        }
+      })
+      
+      # Calculate average consistency across simulations
+      avg_consistency <- mean(consistency_percentages, na.rm = TRUE)
+      cat(sprintf("\n=== AVERAGE CONSISTENCY ACROSS %d SIMULATIONS ===\n", n_sims))
+      cat(sprintf("Average consistency: %.1f%%\n", avg_consistency))
+      cat(sprintf("Range: %.1f%% - %.1f%%\n", min(consistency_percentages, na.rm = TRUE), max(consistency_percentages, na.rm = TRUE)))
+      
+      # Return summary
+      list(
+        avg_consistency = avg_consistency,
+        consistency_percentages = consistency_percentages,
+        all_results = results
+      )
+      
+    } else {
+      results <- map(seq_len(n_sims), sim_function)
+      return(results[[1]])
+    }
+}
 

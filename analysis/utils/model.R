@@ -34,7 +34,7 @@ SHARED_PRIOR <- c(
 )
 
 # Fits from scratch (used for first call per simulation)
-fit_model_fresh <- function(data, prior = SHARED_PRIOR, threads = NULL, chains = 2, iter = 2000) {
+fit_model_fresh <- function(data, prior = SHARED_PRIOR, threads = NULL, chains = 2, iter = 2000, equation = NULL) {
 
   data$child_id <- as.factor(data$child_id)
   data$prep     <- as.factor(data$prep)
@@ -43,16 +43,20 @@ fit_model_fresh <- function(data, prior = SHARED_PRIOR, threads = NULL, chains =
   data$teacher  <- as.factor(data$teacher)
   data$latent_score <- as.numeric(data$latent_score)
 
-  print(str(data))
-  print(levels(data$prep))
-  levels(data$prep)
+  print(data %>% ungroup() %>% str())
+#   print(levels(data$prep))
+#   levels(data$prep)
   
   if (FORCE_REPRODUCIBILITY) {
     threads <- NULL
   }
 
+  if (is.null(equation)) {
+    equation = engagement ~ prep + teacher + age + (1 + prep || child_id)
+  }
+
   template_fit <- brm(
-    engagement ~ prep + teacher + age + (1 + prep || child_id),
+    equation,
     # baseline_state + (1 | child_id:session)
     data = data,
     family = gaussian(),
