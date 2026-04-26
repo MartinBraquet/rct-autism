@@ -12,6 +12,9 @@ yarn-error.log*
 /martin/
 .idea
 
+analysis/*.html
+analysis/*tikzDictionary
+
 # History files
 .Rhistory
 .Rapp.history

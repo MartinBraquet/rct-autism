@@ -1,5 +1,5 @@
 ---
-title: "Power Analysis: Adaptive Simulation"
+title: "Prior Sensitivity Analysis"
 output: html_document
 ---
 
@@ -17,19 +17,15 @@ output: html_document
 
 ```{r}
 # =============================================================================
-# Simulation-Based Power Analysis: Personalized Pre-Session Preparation
+# Prior Sensitivity Analysis: Personalized Pre-Session Preparation
 # N-of-1 Crossover Trial | Maya Care and Grow, Agartala
 # PI: Martin Braquet | Collaborator: Riki Dewan
 # =============================================================================
 #
 # STRUCTURE
 #   0.  Packages & parallel backend
-#   1.  Blocked randomisation (block size = 4, no consecutive repeats)
-#   2.  Data generation
-#   3.  Model fitting
-#   4.  Stopping criteria (per child)
-#   5.  Adaptive simulation   → expected sessions per child
-#   6.  Reporting & plots
+#   1.  Analysis
+#   2.  Reporting
 #
 # =============================================================================
 
@@ -49,30 +45,23 @@ source(here::here("analysis", "utils", "model.R"))
 source(here::here("analysis", "utils", "sim.R"))
 source(here::here("analysis", "utils", "plotting.R"))
 source(here::here("analysis", "utils", "power.R"))
+source(here::here("analysis", "utils", "stop_criteria.R"))
+source(here::here("analysis", "utils", "sensitivity.R"))
 
 set.seed(42)
 ```
 
 ```{r}
-EFFECT_SIZE   <- 2.0
-N_CHILDREN   <- 25
-N_SIMS  <- 28
-max_sessions <- 36
-check_every <- 4
+n_sims  <- 14
 
-adaptive_results <- run_adaptive_sweep(
-  n_sims          = N_SIMS,
-  effect_size     = EFFECT_SIZE,
-  n_children      = N_CHILDREN,
-  min_sessions    = 12,
-  max_sessions    = max_sessions,
-  check_every     = check_every
+effect_size   <- 2.0
+n_children   <- 25
+max_sessions <- 48
+
+run_prior_sensitivity(
+  n_sims = n_sims,
+  effect_size = effect_size,
+  n_children = n_children,
+  max_sessions = max_sessions
 )
-```
-
-```{r}
-plot_resolution_curve(adaptive_results, max_s = max_sessions, check_every = check_every)
-```
-
-```{r}
 ```

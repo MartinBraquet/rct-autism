@@ -23,7 +23,7 @@ PREP_PARAMS <- c(
 )
 
 check_stopping_per_child <- function(fit,
-                                     prob_best_threshold = 0.8,
+                                     prob_best_threshold = 0.9,
                                      aipe_width = 2.0,
                                      rope_no_prep_threshold = 1.0) {
   draws <- as_draws_df(fit)
@@ -172,7 +172,22 @@ check_stopping_per_child <- function(fit,
   })
 }
 
-check_stopping_sequentially <- function(template_fit, data, min_sessions, check_every = 4, consec_required = 3) {
+check_stopping_sequentially <- function(
+  template_fit = NULL,
+  data,
+  min_sessions,
+  check_every = 4,
+  consec_required = NULL,
+  prior = NULL
+) {
+  if (is.null(consec_required)) {
+    consec_required <- 1
+  }
+
+  if (is.null(template_fit)) {
+    template_fit <- fit_model_fresh(data, prior = prior)
+  }
+
   # — Initialise child tracker —
   # consec_sup: counts consecutive interims where superiority criterion holds.
   #             Resets to 0 whenever superiority is not met.

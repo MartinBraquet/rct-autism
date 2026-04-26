@@ -18,6 +18,8 @@ output: html_document
 ```{r}
 # =============================================================================
 # Main Analysis: Personalized Pre-Session Preparation
+# This script is run every Sunday to infer which children completed the trial
+# and assign them their recommended preparation.
 # N-of-1 Crossover Trial | Maya Care and Grow, Agartala
 # PI: Martin Braquet | Collaborator: Riki Dewan
 # =============================================================================

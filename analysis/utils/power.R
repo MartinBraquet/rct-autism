@@ -40,22 +40,26 @@ source(here::here("analysis", "utils", "stop_criteria.R"))
 #   p90_sessions   : 90th-percentile sessions (operational planning buffer)
 #   detection_rate : proportion where the recommended arm was an active prep
 
-simulate_adaptive_one <- function(template_fit,
+simulate_adaptive_one <- function(template_fit = NULL,
                                   n_children,
                                   min_sessions,
                                   max_sessions,
                                   check_every,
                                   effect_size,
-                                  consec_required) {
-  # — Generate full data upfront —
-  sim <- simulate_study_data(
-    n_children = n_children,
-    n_sessions = max_sessions,
-    effect_size = effect_size
-  )
+                                  consec_required = NULL,
+                                  sim_data = NULL,
+                                  prior = NULL) {
+  if (is.null(sim_data)) {
+    # — Generate full data upfront —
+    sim_data <- simulate_study_data(
+      n_children = n_children,
+      n_sessions = max_sessions,
+      effect_size = effect_size
+    )
+  }
 
-  full_data <- sim$data
-  child_rfx <- sim$child_rfx
+  full_data <- sim_data$data
+  child_rfx <- sim_data$child_rfx
 
   cat("Child random effects (ground truth for simulation):")
   print(child_rfx, n = n_children)
@@ -65,7 +69,8 @@ simulate_adaptive_one <- function(template_fit,
     data = full_data,
     min_sessions = min_sessions,
     check_every = check_every,
-    consec_required = consec_required
+    consec_required = consec_required,
+    prior = prior
   )
 
   child_status <- results$child_status
@@ -100,7 +105,7 @@ run_adaptive_sweep <- function(n_sims,
                                min_sessions,
                                max_sessions,
                                check_every,
-                               consec_required) {
+                               consec_required = NULL) {
   if (is.null(template_fit)) {
     cat("Compiling Stan model for adaptive sweep...\n")
     init_data <- simulate_study_data(
@@ -138,7 +143,7 @@ run_adaptive_sweep <- function(n_sims,
 
   if (n_sims > 1) {
     n_logical_cores <- parallel::detectCores()
-    n_workers <- max(1L, floor(n_logical_cores) - 1)
+    n_workers <- min(max(1L, floor(n_logical_cores) - 2), n_sims)
     cat(sprintf("\nSystem has %d cores. Using %d cores total.\n",
                 n_logical_cores, n_workers))
     cat(sprintf("Adaptive loop: Refitting hierarchical model at each interim.
