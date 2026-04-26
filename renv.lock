@@ -3076,6 +3076,24 @@
       "Maintainer": "Dirk Eddelbuettel <edd@debian.org>",
       "Repository": "CRAN"
     },
+    "irr": {
+      "Package": "irr",
+      "Version": "0.84.1",
+      "Source": "Repository",
+      "Date": "2012-01-22",
+      "Title": "Various Coefficients of Interrater Reliability and Agreement",
+      "Author": "Matthias Gamer <m.gamer@uke.uni-hamburg.de>, Jim Lemon <jim@bitwrit.com.au>, Ian Fellows <ifellows@uscd.edu> Puspendra Singh <puspendra.pusp22@gmail.com>",
+      "Maintainer": "Matthias Gamer <m.gamer@uke.uni-hamburg.de>",
+      "Depends": [
+        "R (>= 2.10)",
+        "lpSolve"
+      ],
+      "Description": "Coefficients of Interrater Reliability and Agreement for quantitative, ordinal and nominal data: ICC, Finn-Coefficient, Robinson's A, Kendall's W, Cohen's Kappa, ...",
+      "License": "GPL (>= 2)",
+      "URL": "https://www.r-project.org",
+      "Repository": "CRAN",
+      "NeedsCompilation": "no"
+    },
     "isoband": {
       "Package": "isoband",
       "Version": "0.3.0",
@@ -3515,6 +3533,22 @@
       "SystemRequirements": "pandoc (>= 1.12.3), pandoc-citeproc",
       "NeedsCompilation": "no",
       "Author": "Aki Vehtari [aut], Jonah Gabry [cre, aut], Måns Magnusson [aut], Yuling Yao [aut], Paul-Christian Bürkner [aut], Topi Paananen [aut], Andrew Gelman [aut], Ben Goodrich [ctb], Juho Piironen [ctb], Bruno Nicenboim [ctb], Leevi Lindgren [ctb], Visruth Srimath Kandali [ctb]",
+      "Repository": "CRAN"
+    },
+    "lpSolve": {
+      "Package": "lpSolve",
+      "Version": "5.6.23",
+      "Source": "Repository",
+      "Title": "Interface to 'Lp_solve' v. 5.5 to Solve Linear/Integer Programs",
+      "Authors@R": "c( person(\"Gábor\", \"Csárdi\", , \"csardi.gabor@gmail.com\", role = \"cre\"), person(\"Michel\", \"Berkelaar\", role = \"aut\") )",
+      "Description": "Lp_solve is freely available (under LGPL 2) software for solving linear, integer and mixed integer programs. In this implementation we supply a \"wrapper\" function in C and some R functions that solve general linear/integer problems, assignment problems, and transportation problems. This version calls lp_solve version 5.5.",
+      "License": "LGPL-2",
+      "URL": "https://github.com/gaborcsardi/lpSolve",
+      "BugReports": "https://github.com/gaborcsardi/lpSolve/issues",
+      "Encoding": "UTF-8",
+      "NeedsCompilation": "yes",
+      "Author": "Gábor Csárdi [cre], Michel Berkelaar [aut]",
+      "Maintainer": "Gábor Csárdi <csardi.gabor@gmail.com>",
       "Repository": "CRAN"
     },
     "lubridate": {

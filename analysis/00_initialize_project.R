@@ -14,6 +14,7 @@ if (!file.exists("renv.lock")) {
     "tidybayes",   # Post-processing and sensitivity plots
     "here",        # Essential for the paths in your /analysis/utils/ folder
     "rmarkdown",   # Needed to run your .Rmd files
+    "irr",
     # --- Simulation & Multiprocessing ---
     "simr",        # For the power analysis
     "furrr",       # For the /utils/multiprocessing.R logic
