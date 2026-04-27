@@ -2,7 +2,7 @@
 
 [//]: # ([![CD]&#40;https://github.com/MartinBraquet/rct-autism/actions/workflows/cd.yml/badge.svg&#41;]&#40;https://github.com/MartinBraquet/rct-autism/actions/workflows/cd.yml&#41;)
 
-# Autism RCT
+# Personalized Pre-Session Preparation to Improve Engagement in Early Autism Intervention
 
 This repository contains the source code for a trial aiming to provide personalized preparation recommendations for 
 children at Maya Care and Grow, an early autism intervention center in Agartala, India.
