@@ -217,6 +217,8 @@ plot_resolution_curve <- function(adaptive_results,
 
   save_csv(curve_data_table, name = "resolution_curve")
 
+  ts <- format(Sys.time(), "%Y-%m-%d_%H%M%S")
+
   if (save_pdf) {
     ggsave(
       filename = here::here("results", "draft", paste0("resolution_curve_", ts, ".pdf")),
