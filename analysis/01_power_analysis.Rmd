@@ -34,8 +34,6 @@ source(here("analysis", "utils", "sim.R"))
 source(here("analysis", "utils", "plotting.R"))
 source(here("analysis", "utils", "power.R"))
 
-# Parallel processing setup for brms/cmdstanr
-options(mc.cores = parallel::detectCores())
 set.seed(42)
 ```
 
@@ -101,7 +99,7 @@ plot_resolution_curve(
 )
 ```
 
-**Interpretation:** Based on the simulation, a cap of **28 sessions** provides a robust balance between statistical power (approx. 83% overall resolution) and clinical feasibility (7 weeks of intervention).
+**Interpretation:** Based on the simulation, a cap of **32 sessions** provides a robust balance between statistical power (approx. 87% overall resolution) and clinical feasibility (8 weeks of intervention).
 
 ------------------------------------------------------------------------
 
