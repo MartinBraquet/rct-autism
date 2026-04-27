@@ -7,11 +7,9 @@
 This repository contains the source code for a trial aiming to provide personalized preparation recommendations for 
 children at Maya Care and Grow, an early autism intervention center in Agartala, India.
 
-Paper title:
-
-> Personalized Pre-Session Preparation to Improve Engagement in Early Autism Intervention: A Bayesian Adaptive Randomized N-of-1 Trial
-
 Pre-registered on OSF: https://osf.io/cwzm3.
+
+> Braquet, Martin, and Riki Dewan. 2026. “Personalized Pre-session Preparation to Improve Engagement in Early Autism Intervention: A Bayesian Adaptive Randomized N-of-1 Trial.” OSF. April 27. doi:10.17605/OSF.IO/CWZM3.
 
 ## Status
 
