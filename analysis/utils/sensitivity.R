@@ -212,6 +212,7 @@ check_stopping_time_efficiency <- function(sensitivity_results) {
 }
 
 sim_average <- function(results) {
+  n_sims <- length(results)
   cat("\n=== Averaging Results Across", n_sims, "Simulations ===\n")
 
   # Extract best condition agreement results
