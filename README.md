@@ -9,6 +9,8 @@ children at Maya Care and Grow, an early autism intervention center in Agartala,
 
 Pre-registered on OSF: https://osf.io/cwzm3.
 
+To cite this work:
+
 > Braquet, Martin, and Riki Dewan. 2026. “Personalized Pre-session Preparation to Improve Engagement in Early Autism Intervention: A Bayesian Adaptive Randomized N-of-1 Trial.” OSF. April 27. doi:10.17605/OSF.IO/CWZM3.
 
 ## Status
