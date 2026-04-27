@@ -123,26 +123,46 @@ plot_resolution_curve <- function(adaptive_results,
   )
 
   profile_linetypes <- c(
-    one_winner_strong = "dotted",
-    one_winner_weak   = "dotted",
-    multiple_winners  = "dotted",
-    no_differential   = "dotted",
+    one_winner_strong = "dashed",
+    one_winner_weak   = "dashed",
+    multiple_winners  = "dashed",
+    no_differential   = "dashed",
     overall           = "solid"
+  )
+
+  profile_sizes <- c(
+    one_winner_strong = 1.2,
+    one_winner_weak   = 1.2,
+    multiple_winners  = 1.2,
+    no_differential   = 1.2,
+    overall           = 2.0  # Keep the overall point prominent
   )
 
   p <- ggplot(curve_data, aes(
     x = session, y = pct_resolved,
     colour = true_profile,
-    linetype = true_profile
+    linetype = true_profile,
+    size = true_profile
   )) +
     geom_line(linewidth = 1.1) +
-    geom_point(size = 2.5) +
+    geom_point() +
+    scale_size_manual(
+      values = profile_sizes,
+      name = "Profile",
+      labels = c(
+        one_winner_strong  = "One winner strong",
+        one_winner_weak    = "One winner weak",
+        multiple_winners   = "Multiple winners",
+        no_differential    = "No differential",
+        overall            = "Overall"
+      )
+    ) +
     geom_hline(
       yintercept = 0.85, linetype = "dotted",
       colour = "grey50", linewidth = 0.6
     ) +
     annotate("text",
-      x = 13, y = 0.89, label = "85\\% target",
+      x = 13, y = 0.91, label = "85\\% target",
       colour = "grey40", hjust = 0, size = 3.2
     ) +
     scale_colour_manual(
@@ -150,7 +170,7 @@ plot_resolution_curve <- function(adaptive_results,
       name = "Profile",
       labels = c(
         one_winner_strong  = "One winner strong",
-        one_winner_weak    = "One winner weak", 
+        one_winner_weak    = "One winner weak",
         multiple_winners   = "Multiple winners",
         no_differential    = "No differential",
         overall            = "Overall"
@@ -161,7 +181,7 @@ plot_resolution_curve <- function(adaptive_results,
       name = "Profile",
       labels = c(
         one_winner_strong  = "One winner strong",
-        one_winner_weak    = "One winner weak", 
+        one_winner_weak    = "One winner weak",
         multiple_winners   = "Multiple winners",
         no_differential    = "No differential",
         overall            = "Overall"
@@ -184,10 +204,15 @@ plot_resolution_curve <- function(adaptive_results,
     ) +
     theme_minimal(base_size = 13) +
     theme(
-      legend.position = "top",
+      legend.position = "right",
+      legend.justification = "top",
       plot.caption = element_text(colour = "grey50", size = 9),
-      panel.grid.minor = element_blank(),
-      aspect.ratio = 9/16
+      panel.grid.minor = element_blank()
+  #     aspect.ratio = 0.5
+    ) +
+    guides(
+      colour = guide_legend(ncol = 1),
+      linetype = guide_legend(ncol = 1)
     )
 
   save_csv(curve_data_table, name = "resolution_curve")
@@ -207,8 +232,8 @@ plot_resolution_curve <- function(adaptive_results,
   if (save_tikz) {
     tikz(
       file = here::here("results", "draft", paste0("resolution_curve_", ts, ".tex")),
-      width = 6,
-      height = 3.5
+      width = 7,      # Fits standard A4 text area width
+      height = 3.2   # Keeps the 9:16-ish aspect ratio but compact
     )
     print(p)
     dev.off()
