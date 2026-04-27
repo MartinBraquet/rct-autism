@@ -1,4 +1,4 @@
-**Project Title:** Personalized Pre-Session Preparation to Improve Engagement in Early Autism Intervention: A Randomized Repeated-Measures Crossover Study  
+**Project Title:** Personalized Pre-Session Preparation to Improve Engagement in Early Autism Intervention: A Bayesian Adaptive Randomized N-of-1 Trial
 **Setting:** Maya Care and Grow, Agartala  
 **Principal Investigator:** Martin Braquet  
 **Collaborator:** Lily (Founder, Maya Care and Grow)    
@@ -300,10 +300,10 @@ The primary model is re-fitted under four prior regimes:
 
 | Metric                          | Observed Value | Result   |
 | ------------------------------- | -------------- | -------- |
-| Overall Average Agreement       | 88.6%          | **PASS** |
-| Delay — Skeptical prior         | +0.56 sessions | **PASS** |
-| Delay — Low Heterogeneity prior | −0.15 sessions | **PASS** |
-| Delay — Vague prior             | −0.16 sessions | **PASS** |
+| Overall Average Agreement       | 87.25%         | **PASS** |
+| Delay — Skeptical prior         | +0.01 sessions | **PASS** |
+| Delay — Low Heterogeneity prior | +0.47 sessions | **PASS** |
+| Delay — Vague prior             | −0.03 sessions | **PASS** |
 
 Where a child's recommendation is sensitive to the prior specification (a "fragile" recommendation), the lead practitioner and PI will review raw session data and qualitative behavioural notes before making the final clinical assignment.
   
@@ -312,6 +312,15 @@ Where a child's recommendation is sensitive to the prior specification (a "fragi
 ## 9. Expected Child Response Profiles
 
 Child response profiles are simulated using a latent variable approach. A "Strong Winner" is a child whose random slope for a specific preparation condition ($\beta_{\text{prep},i}$) is shifted +2.0 units on the latent scale relative to the population mean. "Multiple Winners" have two slopes each shifted by +2.0, creating practical ambiguity between conditions but clear benefit over No Preparation. These profiles allow the model's ability to recover clinically meaningful signals to be tested against session-level noise ($\sigma = 0.7$).
+
+**Simulated Participant Archetypes**
+
+To validate the Bayesian adaptive stopping rules, we conducted simulations across four distinct clinical archetypes representing the heterogeneous responses expected in early autism intervention:
+
+- **Strong Differential Response ($Profile_{strong}$):** Represents children with a high sensitivity to a specific preparation type. The model is expected to reach the **Superiority Criterion** early ($\leq 20$ sessions).
+- **Weak Differential Response ($Profile_{weak}$):** Represents the primary clinical challenge. The treatment effect is present but subtle, testing the model's ability to separate signal from noise within the ordinal constraints of the BRES scale. These profiles determine the upper bound of the session cap.
+- **Equi-effective Response ($Profile_{multi}$):** Represents children for whom multiple active conditions are beneficial. Success is defined by the **AIPE (Accuracy in Parameter Estimation)** criterion, providing the clinical recommendation that either intervention is suitable.
+- **Null Response ($Profile_{null}$):** Represents children who are well-regulated upon arrival. The model is tested on its ability to reach the **ROPE (Region of Practical Equivalence)**, preventing unnecessary intervention and supporting "No Prep" as a valid clinical choice.
 
 | Profile             | Proportion | Description                                                   | Primary Stopping Path |
 | ------------------- | ---------- | ------------------------------------------------------------- | --------------------- |
