@@ -1,4 +1,4 @@
-# Personalized Pre-Session Prep in Autism: Technical Paper
+# Technical Paper
 
 This folder contains the technical paper for the **Maya Care and Grow** randomized crossover trial.
 

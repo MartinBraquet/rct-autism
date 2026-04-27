@@ -1,4 +1,4 @@
-# Personalized Pre-Session Prep in Autism: Simulation & Analysis
+# Simulation & Analysis
 
 This folder contains the reproducible research pipeline for the **Maya Care and Grow** randomized crossover trial. It
 includes the Bayesian adaptive power simulations, prior sensitivity analyses, and the main analysis framework.
