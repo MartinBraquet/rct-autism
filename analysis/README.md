@@ -28,9 +28,9 @@ The analysis uses `cmdstanr` as the backend for `brms`. You must have a C++ comp
 
 ## 3. Running the Analysis
 
-The project is structured as a series of Literate Programming documents (`.Rmd`). You can view the results in two ways:
+The project is structured as a series of Literate Programming documents (`.Rmd`).
 
-### A. Reproduce from Scratch
+### Reproduce from Scratch
 
 Open the desired `.Rmd` file in RStudio and click the **"Knit"** button.
 If you want to run from the command line, use `rmarkdown::render`. Example for the first script:
@@ -45,10 +45,9 @@ rmarkdown::render("analysis/01_power_analysis.Rmd")
 | `03_covariate_sensitivity.Rmd` | Validates model robustness against "noise" like time of day or assistant effects.   |
 | `04_main_analysis.Rmd`         | The template for processing the actual trial data once collected.                   |
 
-### A. Quick View
-
-If present, open the pre-rendered **HTML** files in the `analysis/` folder using any web browser. These contain the full
-code, plots, and interpretations as they appeared when the study was registered.
+[//]: # (### B. Quick View)
+[//]: # (If present, open the pre-rendered **HTML** files in the `analysis/` folder using any web browser. These contain the full)
+[//]: # (code, plots, and interpretations as they appeared when the study was registered.)
 
 ## 4. Repository Structure
 
