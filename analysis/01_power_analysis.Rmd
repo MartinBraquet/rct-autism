@@ -40,17 +40,20 @@ set.seed(42)
 ```
 
 ## Overview
+
 This document reports the simulation-based power analysis for the **Maya Care and Grow** N-of-1 crossover trial. We utilize a Bayesian adaptive framework to determine the probability of resolving treatment superiority (or equivalence) for individual children within a clinical window of 36 sessions.
 
 ### Trial Design Parameters
-* **Design**: Randomized blocked crossover (Block size = 4).
-* **Population**: $N = 25$ children.
-* **Outcome**: BRES-10 Engagement Scale.
-* **Model**: Bayesian Hierarchical Linear Model.
 
----
+-   **Design**: Randomized blocked crossover (Block size = 4).
+-   **Population**: $N = 25$ children.
+-   **Outcome**: BRES-10 Engagement Scale.
+-   **Model**: Bayesian Hierarchical Linear Model.
+
+------------------------------------------------------------------------
 
 ## 1. Simulation Configuration
+
 We define the expected effect sizes and the adaptive parameters. The "Resolution" of a child's profile is checked every 4 sessions after an initial 12-session burn-in.
 
 ```{r params}
@@ -66,9 +69,10 @@ CONFIG <- list(
 print(glimpse(CONFIG))
 ```
 
----
+------------------------------------------------------------------------
 
 ## 2. Adaptive Simulation Sweep
+
 The following block executes the Monte Carlo simulation. We iterate through four potential child profiles: *Strong Winner*, *Weak Winner*, *Multiple Winners*, and *No Differential*.
 
 ```{r run-simulation, cache=TRUE}
@@ -83,9 +87,10 @@ adaptive_results <- run_adaptive_sweep(
 )
 ```
 
----
+------------------------------------------------------------------------
 
 ## 3. Results: Resolution Curves
+
 The resolution curve represents the cumulative probability that the Bayesian stopping rules (Superiority, AIPE, or ROPE) are met before the session cap.
 
 ```{r plot-results, echo=FALSE}
@@ -96,12 +101,12 @@ plot_resolution_curve(
 )
 ```
 
-**Interpretation:**
-Based on the simulation, a cap of **28 sessions** provides a robust balance between statistical power (approx. 83% overall resolution) and clinical feasibility (7 weeks of intervention).
+**Interpretation:** Based on the simulation, a cap of **28 sessions** provides a robust balance between statistical power (approx. 83% overall resolution) and clinical feasibility (7 weeks of intervention).
 
----
+------------------------------------------------------------------------
 
 ## Session Information
+
 For reproducibility purposes, the versions of all packages used in this analysis are listed below.
 
 ```{r session-info}
