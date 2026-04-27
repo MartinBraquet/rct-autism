@@ -58,7 +58,7 @@ We define the expected effect sizes and the adaptive parameters. The "Resolution
 CONFIG <- list(
   effect_size  = 2.0,
   n_children   = 25,
-  n_sims       = 28,      # Number of iterations per profile
+  n_sims       = 28,
   max_sessions = 36,
   check_every  = 4,
   min_sessions = 12

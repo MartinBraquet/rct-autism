@@ -1,6 +1,6 @@
 # Web Application
 
-The rct-autism web application built with Next.js, React and TypeScript.
+The web application for layman's explanations and dynamic results of the study. Built with Next.js, React and TypeScript.
 
 ## Overview
 

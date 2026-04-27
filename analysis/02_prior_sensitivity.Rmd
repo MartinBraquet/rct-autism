@@ -73,7 +73,7 @@ sensitivity_results <- run_prior_sensitivity(
 
 We look for the "Stability" of the resolution. If the prep recommendations from informative and non-informative priors are similar, it suggests the data (BRES-10 scores) is strong enough to overwhelm the prior.
 
-```{r plot-sensitivity, echo=FALSE}
+```{r plot-sensitivity}
 sensitivity_results
 ```
 

@@ -45,32 +45,6 @@ generate_blocked_sequence <- function(n_sessions,
 # One row per (child × session × time_point).
 # time_point is the only variable expanded within a session.
 
-#' one_winner_strong children are the easy case — the model should
-#' be stop early via the superiority criterion and produce a clear
-#'  recommendation. Power here is high even at 20 sessions.
-#' one_winner_weak children are the clinically important hard case
-#'  — the effect is real but small, requiring more sessions to
-#' separate from noise. These are the children who drive the session
-#'  count requirement upward. They also represent children where the
-#'  rater scale's granularity (ordinal 1–5) limits detection.
-#' multiple_winners children test whether the stopping rule behaves
-#'  sensibly when no single arm dominates. P(arm is best) will be
-#' split between two arms and may never reach 0.90. The AIPE criterion
-#'  becomes the likely exit path — the model estimates both arms as
-#'  moderately helpful and the CrI narrows over time. For practitioners
-#' , the correct recommendation is "either Calming or Stimulating works
-#'  for this child — use whichever is easier to deliver." The simulation
-#'  reveals whether your decision procedure produces that output or
-#'  wrongly forces a single winner.
-#' no_differential children test the ROPE / null-detection arm. These
-#'  children should ideally exit the study early with the output "no
-#'  prep effect detected — use No Prep or clinical judgment." They
-#'  represent a real clinical category: some children with ASD are
-#'  already well-regulated on arrival and gain nothing from structured prep.
-#' A reasonable defensible claim is that roughly half of children will show
-#'  a clear single winner (strong or weak), a fifth will show multiple-winner
-#'  patterns, and the remainder will show no differential response.
-
 simulate_study_data <- function(n_children,
                                 n_sessions,
                                 effect_size) {

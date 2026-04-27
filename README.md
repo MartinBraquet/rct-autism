@@ -15,9 +15,9 @@ Paper title:
 
 ## Features
 
-- R code for data analysis
-- LaTeX paper for technical details
-- Next.js web application for layman's explanations and dynamic results 
+- R code for data analysis (see [README.md](./analysis/README.md) in the `analysis` folder for details)
+- LaTeX paper for technical details (see [README.md](./paper/README.md) in the `paper` folder for details)
+- Next.js web application for layman's explanations and dynamic results (see [README.md](./web/README.md) in the `web` folder for details)
 
 ## Contributing
 

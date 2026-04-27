@@ -368,7 +368,7 @@ covariate_sensitivity_single_sim = function(
   init_data <- simulate_study_data(
     n_children = n_children,
     n_sessions = n_sessions,
-    effect_size = EFFECT_SIZE
+    effect_size = effect_size
   )
   data <- init_data$data
   print(data)

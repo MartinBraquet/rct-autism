@@ -1,59 +1,44 @@
 ---
 title: "Main Analysis"
-output: html_document
+author: "Martin Braquet, Riki Dewan"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: lumen
+    code_folding: show
 ---
 
 ```{r setup, include=FALSE}
-# knitr::opts_chunk$set(
-#   echo       = FALSE,   # hide code in paper output
-#   warning    = FALSE,
-#   message    = FALSE,
-#   fig.width  = 7,
-#   fig.height = 4.5,
-#   fig.retina = 3,       # crisp figures on retina displays
-#   dpi        = 300      # print-quality
-# )
-```
-
-```{r}
-# =============================================================================
-# Main Analysis: Personalized Pre-Session Preparation
-# This script is run every Sunday to infer which children completed the trial
-# and assign them their recommended preparation.
-# N-of-1 Crossover Trial | Maya Care and Grow, Agartala
-# PI: Martin Braquet | Collaborator: Riki Dewan
-# =============================================================================
-#
-# STRUCTURE
-#   0.  Packages & parallel backend
-#   1.  Blocked randomisation (block size = 4, no consecutive repeats)
-#   2.  Data loading
-#   3.  Model fitting
-#   4.  Stopping criteria (per child)
-#   5.  Reporting & plots
-#
-# =============================================================================
+knitr::opts_chunk$set(
+  echo       = TRUE,
+  warning    = FALSE,
+  message    = FALSE,
+  fig.width  = 9,
+  fig.height = 6,
+  dpi        = 300,
+  cache      = TRUE
+)
 
 library(tidyverse)
-library(tibble)
-library(tidyr)
 library(brms)
-library(MASS)
-library(furrr)
-library(cmdstanr)
-library(scales)
-library(dplyr)
-library(purrr)
-library(ggplot2)
+library(here)
 
-source(here::here("analysis", "utils", "model.R"))
-source(here::here("analysis", "utils", "sim.R"))
-source(here::here("analysis", "utils", "plotting.R"))
-source(here::here("analysis", "utils", "power.R"))
-source(here::here("analysis", "utils", "stop_criteria.R"))
+# Load specialized utility functions
+source(here("analysis", "utils", "model.R"))
+source(here("analysis", "utils", "sim.R"))
+source(here("analysis", "utils", "plotting.R"))
+source(here("analysis", "utils", "power.R"))
+source(here("analysis", "utils", "stop_criteria.R"))
+source(here("analysis", "utils", "sensitivity.R"))
 
 set.seed(42)
 ```
+
+## Purpose
+
+The main analysis checks the stopping conditions with the current data and assigns the recommended preparation to the resolved children.
 
 ```{r}
 file_path <- here("data", "study_data.csv")
