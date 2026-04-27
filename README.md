@@ -15,7 +15,7 @@ Pre-registered on OSF: https://osf.io/cwzm3.
 
 ## Status
 
-The pre-registered analysis is complete, and the data collection is now in progress until the end of June 2026.
+The pre-registration is complete, and the data collection is now in progress until the end of June 2026.
 
 ## Features
 
