@@ -11,7 +11,6 @@ to this open-source project.
 - [Project Structure](#project-structure)
 - [Coding Standards](#coding-standards)
 - [Making Changes](#making-changes)
-- [Testing](#testing)
 - [Pull Request Guidelines](#pull-request-guidelines)
 - [Commit Message Guidelines](#commit-message-guidelines)
 - [Documentation](#documentation)
@@ -46,13 +45,13 @@ Before contributing, ensure you have the following installed:
    git remote add upstream https://github.com/MartinBraquet/rct-autism.git
    ```
 
-Below is for the web page only.
+### Install Web Dependencies
+
+Only if you want to make changes in the web app.
 
 ```bash
 cd web
 ```
-
-### Install Dependencies
 
 ```bash
 yarn install --frozen-lockfile
@@ -109,38 +108,6 @@ rct-autism/
 - Export primary component at the top of the file
 - Use composition over inheritance
 - Keep components small and focused
-
-Example component structure:
-
-```tsx
-import clsx from 'clsx'
-import {useState} from 'react'
-
-interface ProfileCardProps {
-  name: string
-  age: number
-  onSelect?: (id: string) => void
-  className?: string
-}
-
-export function ProfileCard({name, age, onSelect, className}: ProfileCardProps) {
-  const [selected, setSelected] = useState(false)
-
-  const handleClick = () => {
-    setSelected(!selected)
-    onSelect?.(name)
-  }
-
-  return (
-    <div className={clsx('card', selected && 'selected', className)}>
-      <h3>
-        {name}, {age}
-      </h3>
-      <button onClick={handleClick}>Select</button>
-    </div>
-  )
-}
-```
 
 ### Naming Conventions
 
