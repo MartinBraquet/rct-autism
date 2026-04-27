@@ -4,13 +4,20 @@
 
 # Autism RCT
 
-This repository contains the source code for a Personalized Pre-Session Preparation to Improve Engagement in Early Autism Intervention: A Randomized Repeated-Measures Crossover Study.
+This repository contains the source code for a trial aiming to provide personalized preparation recommendations for 
+children at Maya Care and Grow, an early autism intervention center in Agartala, India.
+
+Paper title:
+
+> Personalized Pre-Session Preparation to Improve Engagement in Early Autism Intervention: A Bayesian Adaptive Randomized N-of-1 Trial
+
+* Pre-registered on OSF: https://osf.io/cwzm3.
 
 ## Features
 
 - R code for data analysis
 - LaTeX paper for technical details
-- Next.js web application with layman's explanations and dynamic results 
+- Next.js web application for layman's explanations and dynamic results 
 
 ## Contributing
 
