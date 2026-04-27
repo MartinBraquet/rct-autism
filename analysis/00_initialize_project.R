@@ -1,5 +1,3 @@
-library(languageserver) # Useful if you use VS Code
-
 # 1. Ensure renv is installed
 if (!requireNamespace("renv", quietly = TRUE)) install.packages("renv")
 
@@ -36,8 +34,8 @@ if (!file.exists("renv.lock")) {
 }
 
 # 3. Final Sync Check
-if (nrow(renv::status()$repairs) > 0) {
-  renv::snapshot(confirm = FALSE)
-}
+# if (nrow(renv::status()$repairs) > 0) {
+#   renv::snapshot(confirm = FALSE)
+# }
 
 cat("\n--- PROJECT SYNCED & REPRODUCIBLE ---\n")

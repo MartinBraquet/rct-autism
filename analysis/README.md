@@ -18,7 +18,7 @@ The analysis uses `cmdstanr` as the backend for `brms`. You must have a C++ comp
 ## 2. Setup Instructions
 
 1. **Initialize the Project:**
-   Open the `.Rproj` file in RStudio. This ensures the `here` package correctly anchors all file paths.
+   Open the `.Rproj` file in RStudio. This ensures the `here` package correctly anchors all file paths. To avoid path issues, run every script from the root directory. 
 
 2. **Install Packages:**
    Run the initialization script to install all necessary libraries (`tidyverse`, `brms`, `cmdstanr`, `furrr`, etc.):
@@ -33,6 +33,10 @@ The project is structured as a series of Literate Programming documents (`.Rmd`)
 ### A. Reproduce from Scratch
 
 Open the desired `.Rmd` file in RStudio and click the **"Knit"** button.
+If you want to run from the command line, use `rmarkdown::render`. Example for the first script:
+```r
+rmarkdown::render("analysis/01_power_analysis.Rmd")
+```
 
 | File                           | Description                                                                         |
 |:-------------------------------|:------------------------------------------------------------------------------------|
