@@ -276,4 +276,4 @@ test(profiles): add unit tests for scoring
 
 ---
 
-Thank you for contributing! Together we're building a platform for meaningful connections.
+Thank you for contributing!

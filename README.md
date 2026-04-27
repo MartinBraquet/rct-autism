@@ -1,6 +1,6 @@
 ![Vercel](https://deploy-badge.vercel.app/vercel/rct-autism)
 
-[//]: # ([![CD]&#40;https://github.com/rct-autismConnections/rct-autism/actions/workflows/cd.yml/badge.svg&#41;]&#40;https://github.com/rct-autismConnections/rct-autism/actions/workflows/cd.yml&#41;)
+[//]: # ([![CD]&#40;https://github.com/MartinBraquet/rct-autism/actions/workflows/cd.yml/badge.svg&#41;]&#40;https://github.com/MartinBraquet/rct-autism/actions/workflows/cd.yml&#41;)
 
 # Autism RCT
 

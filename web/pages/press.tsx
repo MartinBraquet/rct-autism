@@ -138,7 +138,7 @@ export default function PressPage() {
                 {t('press.brand_assets_description', 'Download our logo and brand guidelines.')}
               </p>
               <a
-                href="https://github.com/rct-autismConnections/assets/archive/refs/heads/main.zip"
+                href="https://github.com/MartinBraquet/assets/archive/refs/heads/main.zip"
                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 {t('press.download_assets', 'Download Assets')}
