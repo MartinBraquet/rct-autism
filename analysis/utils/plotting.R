@@ -12,6 +12,8 @@ library(ggplot2)
 library(tikzDevice)
 library(readr)
 
+source(here::here("analysis", "utils", "data.R"))
+
 options(tikzDefaultEngine = "pdftex")
 options(tikzLatexPackages = c(
   getOption("tikzLatexPackages"),
@@ -102,7 +104,15 @@ plot_resolution_curve <- function(adaptive_results,
 
   curve_data <- bind_rows(resolution_curve, overall)
 
-  print(curve_data, n = nrow(curve_data))
+  curve_data_table <- curve_data |>
+    tidyr::pivot_wider(
+      names_from = true_profile,
+      values_from = pct_resolved,
+      names_prefix = ""
+    )
+
+#   print(curve_data, n = nrow(curve_data))
+  print(curve_data_table)
 
   profile_colours <- c(
     one_winner_strong = "#1D9E75",
@@ -128,11 +138,11 @@ plot_resolution_curve <- function(adaptive_results,
     geom_line(linewidth = 1.1) +
     geom_point(size = 2.5) +
     geom_hline(
-      yintercept = 0.80, linetype = "dotted",
+      yintercept = 0.85, linetype = "dotted",
       colour = "grey50", linewidth = 0.6
     ) +
     annotate("text",
-      x = 13, y = 0.82, label = "80\\% target",
+      x = 13, y = 0.89, label = "85\\% target",
       colour = "grey40", hjust = 0, size = 3.2
     ) +
     scale_colour_manual(
@@ -169,7 +179,7 @@ plot_resolution_curve <- function(adaptive_results,
       y = "Cumulative \\% resolved",
       caption = paste0(
         "Resolved = stopped via superiority, AIPE, or ROPE.\n",
-        "Dashed horizontal = 80\\% resolution target."
+        "Dashed horizontal = 85\\% resolution target."
       )
     ) +
     theme_minimal(base_size = 13) +
@@ -180,14 +190,11 @@ plot_resolution_curve <- function(adaptive_results,
       aspect.ratio = 9/16
     )
 
-  ts <- format(Sys.time(), "%Y-%m-%d_%H%M%S")
-
-  # save to csv with timestamp
-  write_csv(curve_data, here::here("results", paste0("resolution_curve_", ts, ".csv")))
+  save_csv(curve_data_table, name = "resolution_curve")
 
   if (save_pdf) {
     ggsave(
-      filename = here::here("results", paste0("resolution_curve_", ts, ".pdf")),
+      filename = here::here("results", "draft", paste0("resolution_curve_", ts, ".pdf")),
       plot = p,
       device = cairo_pdf, # Ensures fonts are embedded correctly for journals
       width = 8, 
@@ -199,7 +206,7 @@ plot_resolution_curve <- function(adaptive_results,
 
   if (save_tikz) {
     tikz(
-      file = here::here("results", paste0("resolution_curve_", ts, ".tex")),
+      file = here::here("results", "draft", paste0("resolution_curve_", ts, ".tex")),
       width = 6,
       height = 3.5
     )

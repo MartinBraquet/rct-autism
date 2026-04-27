@@ -17,6 +17,7 @@ source(here::here("analysis", "utils", "plotting.R"))
 source(here::here("analysis", "utils", "stop_criteria.R"))
 source(here::here("analysis", "utils", "power.R"))
 source(here::here("analysis", "utils", "multiprocessing.R"))
+source(here::here("analysis", "utils", "data.R"))
 
 # 1. Baseline (Your Original)
 prior_baseline <- c(
@@ -267,13 +268,6 @@ sim_average <- function(results) {
     cat("❌ FAIL - Average agreement below >80% target\n")
   }
 
-  # Save results to CSV
-  ts <- format(Sys.time(), "%Y%m%d_%H%M%S")
-  results_dir <- here::here("results")
-  if (!dir.exists(results_dir)) {
-    dir.create(results_dir, recursive = TRUE)
-  }
-
   # Create summary data frame
   summary_results <- data.frame(
     metric = c("overall_avg_agreement", paste0("delay_", avg_delays$prior)),
@@ -283,9 +277,7 @@ sim_average <- function(results) {
   )
 
   # Save to CSV
-  output_file <- here::here("results", paste0("prior_sensitivity_", ts, ".csv"))
-  write.csv(summary_results, output_file, row.names = FALSE)
-  cat(sprintf("\nResults saved to: %s\n", output_file))
+  save_csv(summary_results, name = "prior_sensitivity")
 
   cat("\n--- Averaged Stopping Time Efficiency ---\n")
   cat(sprintf("Baseline: %.1f avg sessions\n", baseline_avg))
