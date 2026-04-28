@@ -56,8 +56,9 @@ function MyApp(props: AppProps<PageProps>) {
     return () => window.removeEventListener('appBackButton', handleBack)
   }, [router])
 
-  const title = 'RCT Autism'
-  const description = 'Effect of pre-session preparation on attention and engagement'
+  const title = 'Bayesian N-of-1 Trial for Autism Intervention | Martin Braquet & Maya Care'
+  const description =
+    'A longitudinal study on personalized pre-session preparation to improve engagement in children with autism. Explore our Bayesian adaptive design, simulation reports, and open-science protocol.'
 
   return (
     <>

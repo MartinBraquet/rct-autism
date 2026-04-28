@@ -48,8 +48,7 @@ if (IS_LOCAL && !process.env.ENVIRONMENT) {
     process.env.ENVIRONMENT = 'DEV'
   }
 
-export const PNG_LOGO = 'https://www.compassmeet.com/icons/icon-512x512.png'
-
+export const PNG_LOGO = 'https://rct-autism.vercel.app/favicon.png'
 
 export const DEPLOYED_DOMAIN = 'rct-autism.vercel.app'
 export const LOCAL_WEB_DOMAIN = `localhost:3000`
