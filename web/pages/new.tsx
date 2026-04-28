@@ -5,17 +5,21 @@ import {Col} from 'web/components/layout/col'
 import {Row} from 'web/components/layout/row'
 import {CustomLink} from 'web/components/links'
 
-/* ─────────────────────────────────────────────────────────────
-   StudyPage — Personalized Pre-Session Preparation Study
-   Drop-in for:
-     export default function IndexPage() {
-       return (
-         <PageBase hideSidebar={true}>
-           <StudyPage />
-         </PageBase>
-       )
-     }
-───────────────────────────────────────────────────────────── */
+const protocolUrl =
+  'https://github.com/MartinBraquet/rct-autism/releases/download/v1.0.0/protocol.pdf'
+
+// const heroLinkStyle = {
+//   color: '#1e1a14', // Match the surrounding text color
+//   textDecoration: 'none',
+//   borderBottom: '1px solid rgba(30, 26, 20, 0.2)', // Very subtle underline
+//   transition: 'all 0.2s ease-in-out',
+//   fontWeight: 500,
+// }
+//
+// const heroLinkHoverStyle = {
+//   borderBottom: '1px solid #1e1a14', // Darken the line on hover
+//   color: '#5e5544', // Slight color shift to indicate it's clickable
+// }
 
 // ── DATA ──────────────────────────────────────────────────────
 const SESSIONS = [12, 16, 20, 24, 28, 32, 36]
@@ -272,7 +276,18 @@ const PowerCurve = () => {
             fontFamily: 'DM Sans',
           }}
         />
-        <Tooltip formatter={(value) => `${value}%`} />
+        <Tooltip
+          formatter={(value, name) => {
+            const labelMap = {
+              overall: 'Overall',
+              strong: 'Strong response',
+              multi: 'Multiple winners',
+              weak: 'Weak response',
+              none: 'No differential',
+            }
+            return [`${value}%`, (labelMap as any)[name] || name]
+          }}
+        />
         <Legend
           iconType="rect"
           wrapperStyle={{
@@ -494,12 +509,13 @@ function initCharts(Chart: any) {
           ctx.restore()
 
           if (EXCLUDES_ZERO[i]) {
-            const labelX = scales.x.getPixelForValue(CI_UPPER[i]) + 10
+            const labelX = scales.x.getPixelForValue(CI_LOWER[i]) + 10
+            const labelY = scales.y.getPixelForValue(CI_LOWER[i]) - 30
             ctx.save()
             ctx.font = `500 11px 'DM Sans', sans-serif`
             ctx.fillStyle = BAR_COLORS[i]
             ctx.textBaseline = 'middle'
-            ctx.fillText('★ excludes zero', labelX, cy)
+            ctx.fillText('★ excludes zero', labelX, labelY)
             ctx.restore()
           }
         })
@@ -796,7 +812,16 @@ export default function StudyPage() {
           Maya Care and Grow · Study
         </span>
         <div style={{display: 'flex', gap: '2rem'}}>
-          {['#why', '#conditions', '#how', '#results', '#safety', '#faq'].map((href, i) => (
+          {[
+            '#why',
+            '#conditions',
+            '#how',
+            '#safety',
+            '#simulations',
+            '#results',
+            '#resources',
+            '#faq',
+          ].map((href, i) => (
             <a
               key={i}
               href={href}
@@ -816,8 +841,20 @@ export default function StudyPage() {
                 textDecoration: 'none',
                 cursor: 'pointer',
               }}
+              className={'hover:font-bold'}
             >
-              {['Why', 'Conditions', 'How it Works', 'Data', 'Safety', 'FAQ'][i]}
+              {
+                [
+                  'Why',
+                  'Conditions',
+                  'How it Works',
+                  'Safety',
+                  'Simulations',
+                  'Results',
+                  'Resources',
+                  'FAQ',
+                ][i]
+              }
             </a>
           ))}
         </div>
@@ -892,21 +929,33 @@ export default function StudyPage() {
               }}
             >
               {[
-                ['Setting', 'Maya Care and Grow'],
-                ['Lead Researcher', 'Martin Braquet'],
-                ['Collaborator', 'Riki Dewan (Founder)'],
-                // ['Protocol Version', '1.1'],
-              ].map(([label, value]) => (
-                <div key={label} style={{display: 'flex', flexDirection: 'column', gap: '0.2rem'}}>
-                  <span
-                    style={{
-                      fontSize: '0.7rem',
-                      fontWeight: 500,
-                      letterSpacing: '0.1em',
-                      textTransform: 'uppercase',
-                      color: '#bab2a0',
-                    }}
+                [
+                  'Setting',
+                  <CustomLink href="https://mayacaregrow.wordpress.com" className={'hero-link'}>
+                    Maya Care and Grow
+                  </CustomLink>,
+                ],
+                [
+                  'Lead Researcher',
+                  <CustomLink href="https://martinbraquet.com" className={'hero-link'}>
+                    Martin Braquet
+                  </CustomLink>,
+                ],
+                [
+                  'Collaborator',
+                  <CustomLink
+                    href="https://mayacaregrow.wordpress.com/about/"
+                    className={'hero-link'}
                   >
+                    Riki Dewan
+                  </CustomLink>,
+                ],
+              ].map(([label, value]) => (
+                <div
+                  key={label as string}
+                  style={{display: 'flex', flexDirection: 'column', gap: '0.2rem'}}
+                >
+                  <span style={{fontSize: '0.7rem', color: '#bab2a0', textTransform: 'uppercase'}}>
                     {label}
                   </span>
                   <span style={{fontSize: '0.95rem', fontWeight: 500, color: '#1e1a14'}}>
@@ -976,13 +1025,13 @@ export default function StudyPage() {
           >
             {[
               ['4', 'preparation conditions tested'],
-              ['≥12', 'sessions before first analysis'],
+              // ['≥12', 'sessions before first analysis'],
               ['87%', 'expected resolution rate by 32 sessions'],
-              ['8 wks', 'max data collection window per child'],
+              ['8 weeks', 'max data collection window per child'],
             ].map(([num, desc]) => (
               <div
                 key={desc}
-                style={{display: 'flex', flexDirection: 'column', gap: '0.2rem', maxWidth: '200px'}}
+                style={{display: 'flex', flexDirection: 'column', gap: '0.2rem', maxWidth: '250px'}}
               >
                 <span
                   style={{
@@ -1305,10 +1354,52 @@ export default function StudyPage() {
         </div>
       </section>
 
+      {/* ── SAFETY ──────────────────────────────────────── */}
+      <section id="safety" style={{padding: '90px 2rem', background: '#3d5a45'}}>
+        <div style={{maxWidth: 1000, margin: '0 auto'}}>
+          <div {...R()}>
+            <SectionHeader
+              light
+              label="Your Child's Wellbeing"
+              title="Safety comes first"
+              body="This study uses only activities already practiced at Maya Care and Grow. Every safeguard below is active from the first session."
+            />
+          </div>
+          <div
+            {...R()}
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+              gap: '1.25rem',
+              marginTop: '3rem',
+            }}
+          >
+            {SAFETY_ITEMS.map((item) => (
+              <div key={item.title} className="study-safety-card">
+                <div style={{fontSize: '1.75rem', marginBottom: '0.75rem'}}>{item.icon}</div>
+                <h3
+                  style={{
+                    fontSize: '0.95rem',
+                    fontWeight: 500,
+                    color: '#fffef9',
+                    marginBottom: '0.4rem',
+                  }}
+                >
+                  {item.title}
+                </h3>
+                <p style={{fontSize: '0.85rem', lineHeight: 1.7, color: 'rgba(250,246,240,0.6)'}}>
+                  {item.body}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <div style={{height: 1, background: '#e8dece', margin: '0 2rem'}} />
 
       {/* ── PROFILES ────────────────────────────────────── */}
-      <section style={{padding: '90px 2rem'}}>
+      <section id={'simulations'} style={{padding: '90px 2rem'}}>
         <div style={{maxWidth: 1000, margin: '0 auto'}}>
           <div {...R()}>
             <SectionHeader
@@ -1369,7 +1460,7 @@ export default function StudyPage() {
       <div style={{height: 1, background: '#e8dece', margin: '0 2rem'}} />
 
       {/* ── CHARTS ──────────────────────────────────────── */}
-      <section id="results" style={{padding: '90px 2rem', background: '#fffef9'}}>
+      <section style={{padding: '90px 2rem', background: '#fffef9'}}>
         <div style={{maxWidth: 1000, margin: '0 auto'}}>
           <div {...R()}>
             <SectionHeader
@@ -1461,71 +1552,267 @@ export default function StudyPage() {
 
       <div style={{height: 1, background: '#e8dece', margin: '0 2rem'}} />
 
-      {/* ── SAFETY ──────────────────────────────────────── */}
-      <section id="safety" style={{padding: '90px 2rem', background: '#3d5a45'}}>
+      {/* ── SENSITIVITY ANALYSES ─────────────────────────── */}
+      <section id="sensitivity" style={{padding: '90px 2rem', background: '#faf6f0'}}>
         <div style={{maxWidth: 1000, margin: '0 auto'}}>
           <div {...R()}>
             <SectionHeader
-              light
-              label="Your Child's Wellbeing"
-              title="Safety comes first"
-              body="This study uses only activities already practiced at Maya Care and Grow. Every safeguard below is active from the first session."
+              label="Methodological Rigor"
+              title="Stability & Sensitivity"
+              body="We performed 'stress-tests' on our statistical models to ensure clinical recommendations are driven by the child's actual progress, not by background noise or mathematical assumptions."
             />
           </div>
+
           <div
             {...R()}
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-              gap: '1.25rem',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+              gap: '2rem',
               marginTop: '3rem',
             }}
           >
-            {SAFETY_ITEMS.map((item) => (
-              <div key={item.title} className="study-safety-card">
-                <div style={{fontSize: '1.75rem', marginBottom: '0.75rem'}}>{item.icon}</div>
-                <h3
+            {/* Covariate Sensitivity Card */}
+            <div className="study-chart-card" style={{background: '#fffef9'}}>
+              <h3
+                style={{
+                  fontFamily: "'Playfair Display', serif",
+                  fontSize: '1.2rem',
+                  fontWeight: 600,
+                  color: '#1e1a14',
+                  marginBottom: '1rem',
+                }}
+              >
+                🌪️ Environmental Robustness
+              </h3>
+              <p
+                style={{
+                  fontSize: '0.9rem',
+                  color: '#7a7060',
+                  lineHeight: 1.6,
+                  marginBottom: '1.5rem',
+                }}
+              >
+                We tested the model by removing information about the <strong>child's age</strong>{' '}
+                and the <strong>specific teacher</strong>.
+              </p>
+              <div
+                style={{
+                  background: 'rgba(61, 90, 69, 0.05)',
+                  padding: '1rem',
+                  borderRadius: '12px',
+                  border: '1px solid rgba(61, 90, 69, 0.1)',
+                }}
+              >
+                <div
+                  style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}
+                >
+                  <span style={{fontSize: '0.85rem', fontWeight: 500, color: '#3d5a45'}}>
+                    Model Agreement
+                  </span>
+                  <span
+                    style={{
+                      fontFamily: "'DM Mono', monospace",
+                      fontWeight: 700,
+                      color: '#3d5a45',
+                      fontSize: '1.1rem',
+                    }}
+                  >
+                    100%
+                  </span>
+                </div>
+                <div
                   style={{
-                    fontSize: '0.95rem',
-                    fontWeight: 500,
-                    color: '#fffef9',
-                    marginBottom: '0.4rem',
+                    height: '4px',
+                    background: '#e8dece',
+                    borderRadius: '2px',
+                    marginTop: '0.5rem',
+                    overflow: 'hidden',
                   }}
                 >
-                  {item.title}
-                </h3>
-                <p style={{fontSize: '0.85rem', lineHeight: 1.7, color: 'rgba(250,246,240,0.6)'}}>
-                  {item.body}
+                  <div style={{width: '100%', height: '100%', background: '#3d5a45'}} />
+                </div>
+                <p
+                  style={{
+                    fontSize: '0.75rem',
+                    color: '#bab2a0',
+                    marginTop: '0.75rem',
+                    fontStyle: 'italic',
+                  }}
+                >
+                  Result: Clinical recommendations remain identical even when ignoring environmental
+                  covariates.
                 </p>
               </div>
-            ))}
+            </div>
+
+            {/* Prior Sensitivity Card */}
+            <div className="study-chart-card" style={{background: '#fffef9'}}>
+              <h3
+                style={{
+                  fontFamily: "'Playfair Display', serif",
+                  fontSize: '1.2rem',
+                  fontWeight: 600,
+                  color: '#1e1a14',
+                  marginBottom: '1rem',
+                }}
+              >
+                ⚖️ Decision Stability
+              </h3>
+              <p
+                style={{
+                  fontSize: '0.9rem',
+                  color: '#7a7060',
+                  lineHeight: 1.6,
+                  marginBottom: '1.5rem',
+                }}
+              >
+                We re-ran the study using other mathematical assumptions (Bayesian priors) to see if
+                the outcome changed.
+              </p>
+              <div style={{display: 'flex', flexDirection: 'column', gap: '0.75rem'}}>
+                {[
+                  {label: 'Decision Agreement', val: '87.3%', target: '>85%', pass: true},
+                  {label: 'Skeptical Priors', val: '+0.01 sessions', target: '<4', pass: true},
+                  {label: 'Vague Bias', val: '-0.03 sessions', target: 'Minimal', pass: true},
+                  {
+                    label: 'Low Heterogeneity',
+                    val: '+0.47 sessions',
+                    target: 'Minimal',
+                    pass: true,
+                  },
+                ].map((item, idx) => (
+                  <div
+                    key={idx}
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      fontSize: '0.8rem',
+                      padding: '0.4rem 0',
+                      borderBottom: '1px solid #f0e6d6',
+                    }}
+                  >
+                    <span style={{color: '#7a7060'}}>{item.label}</span>
+                    <span style={{fontWeight: 600, color: '#1e1a14'}}>
+                      {item.val} <span style={{color: '#22c55e', marginLeft: '4px'}}>✓</span>
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Qualitative Safety Net */}
+          <div
+            {...R()}
+            style={{
+              marginTop: '2rem',
+              padding: '1.25rem',
+              background: 'rgba(184, 92, 56, 0.05)',
+              border: '1px dashed rgba(184, 92, 56, 0.3)',
+              borderRadius: '12px',
+            }}
+          >
+            <p
+              style={{fontSize: '0.85rem', color: '#b85c38', lineHeight: 1.6, textAlign: 'center'}}
+            >
+              <strong>The Qualitative Safety Net:</strong> In cases where a recommendation is
+              mathematically "fragile" (sensitive to assumptions), the Principal Investigator and
+              Lead Practitioner conduct a manual review of session notes before finalizing the
+              clinical assignment.
+            </p>
           </div>
         </div>
       </section>
 
+      <div style={{height: 1, background: '#e8dece', margin: '0 2rem'}} />
+
+      <section id="results" style={{padding: '90px 2rem'}}>
+        <div style={{maxWidth: 1000, margin: '0 auto'}}>
+          <div {...R()}>
+            <SectionHeader
+              label="Results"
+              title="Predictive Power & Personalized Insights"
+              body="Data collection is in progress — we'll update this section in June."
+            />
+          </div>
+        </div>
+      </section>
+
+      <div style={{height: 1, background: '#e8dece', margin: '0 2rem'}} />
+
       <section
         id="resources"
-        style={{padding: '60px 2rem', background: '#fffef9', borderTop: '1px solid #e8dece'}}
+        style={{padding: '80px 2rem', background: '#fffef9', borderTop: '1px solid #e8dece'}}
       >
-        <div style={{maxWidth: 1000, margin: '0 auto', textAlign: 'center'}}>
-          <h2
+        <div style={{maxWidth: 1000, margin: '0 auto'}}>
+          <div {...R()}>
+            <SectionHeader
+              label="Open Science"
+              title="Research & Transparency"
+              body="We are committed to full transparency. Below you can find the source code, pre-registered protocols, and the technical reports that validate our statistical approach."
+            />
+          </div>
+
+          <div
+            {...R()}
             style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: '2rem',
-              marginBottom: '2rem',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gap: '1.5rem',
+              marginTop: '3rem',
             }}
           >
-            Research & Transparency
-          </h2>
-          <div style={{display: 'flex', justifyContent: 'center', gap: '2rem', flexWrap: 'wrap'}}>
-            <CustomLink href="https://github.com/MartinBraquet/rct-autism">
-              <span>💻</span> View Source Code on GitHub
+            {/* Primary Research Links */}
+            <CustomLink
+              href="https://github.com/MartinBraquet/rct-autism"
+              className="hero-link"
+              style={{
+                padding: '1.5rem',
+                background: '#faf6f0',
+                borderRadius: '12px',
+                display: 'block',
+              }}
+            >
+              <span style={{fontSize: '1.2rem', marginRight: '8px'}}>💻</span>{' '}
+              <strong>Source Code</strong>
+              <p style={{fontSize: '0.8rem', color: '#7a7060', marginTop: '0.5rem'}}>
+                View the Bayesian model and simulation scripts on GitHub.
+              </p>
             </CustomLink>
-            <CustomLink href="https://osf.io/cwzm3">
-              <span>📜</span> View OSF Preregistration
+
+            <CustomLink
+              href="https://osf.io/cwzm3"
+              className="hero-link"
+              style={{
+                padding: '1.5rem',
+                background: '#faf6f0',
+                borderRadius: '12px',
+                display: 'block',
+              }}
+            >
+              <span style={{fontSize: '1.2rem', marginRight: '8px'}}>📜</span>{' '}
+              <strong>OSF Preregistration</strong>
+              <p style={{fontSize: '0.8rem', color: '#7a7060', marginTop: '0.5rem'}}>
+                View our timestamped study plan to ensure unbiased reporting.
+              </p>
             </CustomLink>
-            <CustomLink href="https://osf.io/cwzm3">
-              <span>📜</span> Download Study Protocol
+
+            <CustomLink
+              href={protocolUrl}
+              className="hero-link"
+              style={{
+                padding: '1.5rem',
+                background: '#faf6f0',
+                borderRadius: '12px',
+                display: 'block',
+              }}
+            >
+              <span style={{fontSize: '1.2rem', marginRight: '8px'}}>📄</span>{' '}
+              <strong>Study Protocol</strong>
+              <p style={{fontSize: '0.8rem', color: '#7a7060', marginTop: '0.5rem'}}>
+                Download the full PDF describing the clinical workflow.
+              </p>
             </CustomLink>
           </div>
         </div>
@@ -1563,16 +1850,30 @@ export default function StudyPage() {
           Principal Investigator: Martin Braquet · Collaborator: Riki Dewan (Founder, Maya Care and
           Grow) · Agartala, India
         </p>
-        <p style={{marginTop: '0.5rem'}} className={'custom-link'}>
-          Full source code (protocol, simulation, analysis, paper, webpage):{' '}
-          <CustomLink href="https://github.com/MartinBraquet/rct-autism">
-            github.com/MartinBraquet/rct-autism
-          </CustomLink>
-        </p>
+        {/*<p style={{marginTop: '0.5rem'}} className={'custom-link'}>*/}
+        {/*  Full source code (protocol, simulation, analysis, paper, webpage):{' '}*/}
+        {/*  <CustomLink href="https://github.com/MartinBraquet/rct-autism">*/}
+        {/*    github.com/MartinBraquet/rct-autism*/}
+        {/*  </CustomLink>*/}
+        {/*</p>*/}
         <p style={{marginTop: '1rem', fontSize: '0.75rem'}}>
           Conducted in accordance with the Declaration of Helsinki. All activities are standard
           components of existing learning at Maya Care and Grow.
         </p>
+        <div
+          style={{
+            marginTop: '1.5rem',
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '1.5rem',
+            fontSize: '0.8rem',
+          }}
+          className={'custom-link'}
+        >
+          <CustomLink href="https://github.com/MartinBraquet/rct-autism">GitHub</CustomLink>
+          <CustomLink href="https://osf.io/cwzm3">OSF Registry</CustomLink>
+          <CustomLink href={protocolUrl}>Protocol PDF</CustomLink>
+        </div>
       </footer>
     </div>
   )
