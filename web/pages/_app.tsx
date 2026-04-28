@@ -85,6 +85,11 @@ function MyApp(props: AppProps<PageProps>) {
           name="viewport"
           content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no, viewport-fit=cover"
         />
+
+        <meta
+          name="google-site-verification"
+          content="oLa48KiI6Du0MsspNgt8vhCRNjzkE8w6fohCWYxA_AM"
+        />
       </Head>
       <div className={clsx('contents font-normal')}>
         <I18nContext.Provider value={{locale, setLocale}}>
