@@ -7,6 +7,8 @@
 This repository contains the source code for a trial aiming to provide personalized preparation recommendations for 
 children at Maya Care and Grow, an early autism intervention center in Agartala, India.
 
+Visit https://rct-autism.vercel.app/ for a nice and visual overview of the trial.
+
 Pre-registered on OSF: https://osf.io/cwzm3.
 
 To cite this work:
