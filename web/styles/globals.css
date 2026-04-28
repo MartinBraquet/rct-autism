@@ -357,23 +357,10 @@
     U+1FAE0-1FAE8, U+1FAF0-1FAF8;
 }
 
-@font-face {
-  font-family: 'icomoon';
-  src:
-    url('../public/fonts/icomoon.eot?v49ui9#iefix') format('embedded-opentype'),
-    url('../public/fonts/icomoon.ttf?v49ui9') format('truetype'),
-    url('../public/fonts/icomoon.woff?v49ui9') format('woff'),
-    url('../public/fonts/icomoon.svg?v49ui9#icomoon') format('svg');
-  font-weight: normal;
-  font-style: normal;
-  font-display: block;
-  unicode-range: U+1E40;
-}
-
 [class^='icon-'],
 [class*=' icon-'] {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'icomoon', serif !important;
+  font-family: serif !important;
   speak: never;
   font-style: normal;
   font-weight: normal;
@@ -402,7 +389,7 @@
 }
 
 text {
-  font-family: icomoon, var(--font-main), emoji, sans-serif;
+  font-family: var(--font-main), emoji, sans-serif;
 }
 
 /* Style all headings globally */

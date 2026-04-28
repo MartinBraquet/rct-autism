@@ -25,7 +25,6 @@ module.exports = {
       {...defaultTheme.fontFamily},
       {
         'major-mono': ['var(--font-logo)', 'monospace'],
-        figtree: ['icomoon', 'var(--font-main)', 'emoji', 'sans-serif'],
         'grenze-gotisch': ['var(--font-match-cards)', 'cursive'], // just for match card game
       },
     ),
@@ -44,7 +43,7 @@ module.exports = {
         16: 'repeat(16, minmax(0, 1fr))',
       },
       fontFamily: {
-        mana: ['icomoon'],
+        mana: [],
       },
       transitionTimingFunction: {
         bouncy: 'cubic-bezier(0.8, 0, 1, 1)',
