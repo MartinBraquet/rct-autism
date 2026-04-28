@@ -62,7 +62,7 @@ const STEPS = [
   {
     n: 3,
     tag: 'Learning session',
-    title: '20-minute standardized learning block',
+    title: 'standardized learning block',
     body: 'The same structured curriculum — specific Discrete Trial Training tasks or tabletop work — is used in every session. The rater observes from a separate room, scoring engagement at 5, 15, and 30 minutes.',
   },
   {
@@ -954,7 +954,7 @@ export default function IndexPage() {
             <SectionHeader
               label="Process"
               title="How does a session work?"
-              body="A typical session takes about 30 minutes. The order of conditions across sessions is randomized — a bit like shuffling cards — so no child gets the same warm-up two sessions in a row."
+              body="A typical session takes about one hour. The order of conditions across sessions is randomized — a bit like shuffling cards — so no child gets the same warm-up two sessions in a row."
             />
           </div>
           <div {...R()} style={{...R().style, marginTop: '3rem'}}>
