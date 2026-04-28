@@ -523,14 +523,9 @@ export default function IndexPage() {
 
       {/* ── HERO ────────────────────────────────────────── */}
       <section
+        className="flex flex-col justify-center pb-4 lg:py-[80px] px-8 relative overflow-hidden"
         style={{
           minHeight: '92vh',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          padding: '80px 2rem 80px',
-          position: 'relative',
-          overflow: 'hidden',
         }}
       >
         <div
@@ -541,7 +536,7 @@ export default function IndexPage() {
               'radial-gradient(ellipse 70% 60% at 80% 20%, rgba(107,143,113,0.12) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 10% 80%, rgba(196,154,114,0.15) 0%, transparent 60%)',
           }}
         />
-        <Row className={'flex flex-col lg:flex-row gap-8 mx-auto'}>
+        <Row className={'flex flex-col lg:flex-row gap-0 lg:gap-8 mx-auto'}>
           <div style={{maxWidth: 800, position: 'relative', zIndex: 1}}>
             <h1
               style={{
@@ -652,8 +647,8 @@ export default function IndexPage() {
               width={600}
               height={600}
               alt={'Maya Care Grow'}
-              style={{height: '450px', objectFit: 'cover'}}
-              className={'rounded-2xl'}
+              style={{objectFit: 'cover'}}
+              className={'rounded-2xl h-[270px] lg:h-[450px]'}
             />
           </Col>
         </Row>
