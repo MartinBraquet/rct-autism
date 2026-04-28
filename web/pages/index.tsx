@@ -213,7 +213,26 @@ const FAQS = [
 export default function IndexPage() {
   const revealRefs = useRef<(HTMLElement | null)[]>([])
   const chartsInitialized = useRef(false)
-  const isMobile = useIsMobile()
+  const isMobile = useIsMobile(1000)
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false)
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (isMenuOpen) {
+        const target = event.target as Element
+        const navElement = target.closest('nav')
+        if (!navElement) {
+          setIsMenuOpen(false)
+        }
+      }
+    }
+
+    if (isMobile) {
+      document.addEventListener('click', handleClickOutside)
+      return () => document.removeEventListener('click', handleClickOutside)
+    }
+  }, [isMenuOpen, isMobile])
 
   // Fonts
   useEffect(() => {
@@ -315,32 +334,143 @@ export default function IndexPage() {
       `}</style>
 
       {/* ── STICKY NAV ──────────────────────────────────── */}
-      {!isMobile && (
-        <nav
+      <nav
+        style={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 100,
+          background: 'rgba(250,246,240,0.92)',
+          backdropFilter: 'blur(12px)',
+          borderBottom: '1px solid #e8dece',
+          padding: '0 2rem',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          height: 60,
+        }}
+      >
+        <span
           style={{
-            position: 'sticky',
-            top: 0,
-            zIndex: 100,
-            background: 'rgba(250,246,240,0.92)',
-            backdropFilter: 'blur(12px)',
-            borderBottom: '1px solid #e8dece',
-            padding: '0 2rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            height: 60,
+            fontFamily: "'Playfair Display', serif",
+            fontSize: '1rem',
+            fontWeight: 700,
+            color: '#3d5a45',
           }}
         >
-          <span
-            style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: '1rem',
-              fontWeight: 700,
-              color: '#3d5a45',
-            }}
-          >
-            Maya Care and Grow · Study
-          </span>
+          Maya Care and Grow · Study
+        </span>
+
+        {isMobile ? (
+          <div style={{position: 'relative'}}>
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              style={{
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                padding: '0.5rem',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '3px',
+              }}
+            >
+              <div
+                style={{
+                  width: '20px',
+                  height: '2px',
+                  background: '#3d5a45',
+                  transition: 'transform 0.3s ease',
+                  transform: isMenuOpen ? 'rotate(45deg) translate(5px, 5px)' : 'none',
+                }}
+              />
+              <div
+                style={{
+                  width: '20px',
+                  height: '2px',
+                  background: '#3d5a45',
+                  transition: 'opacity 0.3s ease',
+                  opacity: isMenuOpen ? 0 : 1,
+                }}
+              />
+              <div
+                style={{
+                  width: '20px',
+                  height: '2px',
+                  background: '#3d5a45',
+                  transition: 'transform 0.3s ease',
+                  transform: isMenuOpen ? 'rotate(-45deg) translate(7px, -6px)' : 'none',
+                }}
+              />
+            </button>
+
+            {isMenuOpen && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '100%',
+                  right: 0,
+                  background: '#faf6f0',
+                  border: '1px solid #e8dece',
+                  borderRadius: '8px',
+                  boxShadow: '0 8px 24px rgba(30,26,20,0.12)',
+                  minWidth: '200px',
+                  padding: '0.5rem 0',
+                  marginTop: '0.5rem',
+                }}
+              >
+                {[
+                  '#why',
+                  '#conditions',
+                  '#how',
+                  '#safety',
+                  '#simulations',
+                  '#results',
+                  '#resources',
+                  '#faq',
+                ].map((href, i) => (
+                  <a
+                    key={i}
+                    href={href}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      setIsMenuOpen(false)
+                      const element = document.querySelector(href)
+                      if (element) {
+                        element.scrollIntoView({behavior: 'smooth', block: 'start'})
+                      }
+                    }}
+                    style={{
+                      display: 'block',
+                      padding: '0.75rem 1.5rem',
+                      fontSize: '0.875rem',
+                      fontWeight: 500,
+                      letterSpacing: '0.06em',
+                      textTransform: 'uppercase',
+                      color: '#7a7060',
+                      textDecoration: 'none',
+                      cursor: 'pointer',
+                      transition: 'background-color 0.2s ease',
+                    }}
+                    className={'hover:bg-gray-100'}
+                  >
+                    {
+                      [
+                        'Why',
+                        'Conditions',
+                        'How it Works',
+                        'Safety',
+                        'Simulations',
+                        'Results',
+                        'Resources',
+                        'FAQ',
+                      ][i]
+                    }
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+        ) : (
           <div style={{display: 'flex', gap: '2rem'}}>
             {[
               '#why',
@@ -388,8 +518,8 @@ export default function IndexPage() {
               </a>
             ))}
           </div>
-        </nav>
-      )}
+        )}
+      </nav>
 
       {/* ── HERO ────────────────────────────────────────── */}
       <section
@@ -411,7 +541,7 @@ export default function IndexPage() {
               'radial-gradient(ellipse 70% 60% at 80% 20%, rgba(107,143,113,0.12) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 10% 80%, rgba(196,154,114,0.15) 0%, transparent 60%)',
           }}
         />
-        <Row className={'gap-8 mx-auto'}>
+        <Row className={'flex flex-col lg:flex-row gap-8 mx-auto'}>
           <div style={{maxWidth: 800, position: 'relative', zIndex: 1}}>
             <h1
               style={{
@@ -449,23 +579,24 @@ export default function IndexPage() {
             {/*  Scroll to explore*/}
             {/*</div>*/}
           </div>
-          <Col className={'gap-6'}>
+          <Col className={'gap-6 lg:flex-1'}>
             <div
               style={{
                 display: 'flex',
-                gap: '2rem',
+                gap: '6rem',
                 marginTop: '3rem',
                 flexWrap: 'wrap',
                 animation: 'fadeUp 0.6s 0.3s ease both',
               }}
+              className={'justify-center'}
             >
               {[
-                [
-                  'Setting',
-                  <CustomLink href="https://mayacaregrow.wordpress.com" className={'hero-link'}>
-                    Maya Care and Grow
-                  </CustomLink>,
-                ],
+                // [
+                //   'Setting',
+                //   <CustomLink href="https://mayacaregrow.wordpress.com" className={'hero-link'}>
+                //     Maya Care and Grow
+                //   </CustomLink>,
+                // ],
                 [
                   'Lead Researcher',
                   <CustomLink href="https://martinbraquet.com" className={'hero-link'}>
@@ -544,18 +675,19 @@ export default function IndexPage() {
           <div
             {...R()}
             style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
               gap: '4rem',
               marginTop: '3rem',
               alignItems: 'center',
             }}
+            className={
+              'lg:grid lg:grid-cols-2 flex flex-col lg:flex-row gap-8 mx-auto lg:items-center'
+            }
           >
             <div style={{fontSize: '1rem', color: '#4a453e', lineHeight: 1.7}}>
               <p style={{marginBottom: '1.5rem'}}>
-                Children aged <strong>3 to 14</strong> attend 2–16 hours of therapy per week. In
-                this setting, the first 15 minutes are critical; practitioners currently use a
-                variety of activities to 'prepare' a child for learning.
+                Children aged <strong>3 to 14</strong> attend 2–16 hours of learning sessions per
+                week. In this setting, the first 15 minutes are critical; practitioners currently
+                use a variety of activities to 'prepare' a child for learning.
               </p>
               <p>
                 While these preparations—ranging from{' '}
@@ -573,6 +705,9 @@ export default function IndexPage() {
                 border: '1px solid #e8dece',
               }}
             >
+              <CustomLink href="https://mayacaregrow.wordpress.com" className={'hero-link'}>
+                Maya Care and Grow
+              </CustomLink>
               <h4
                 style={{
                   fontFamily: "'Playfair Display', serif",
