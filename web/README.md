@@ -1,6 +1,6 @@
 # Web Application
 
-The web application for layman's explanations and dynamic results of the study. Built with Next.js, React and TypeScript.
+This folder contains the source code for https://rct-autism.vercel.app: the web page of the trial with layman's explanations and nice dynamic results of the study. Built with Next.js, React and TypeScript.
 
 ## Overview
 
