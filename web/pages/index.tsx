@@ -62,7 +62,7 @@ const STEPS = [
   {
     n: 3,
     tag: 'Learning session',
-    title: 'standardized learning block',
+    title: 'Standardized learning block',
     body: 'The same structured curriculum — specific Discrete Trial Training tasks or tabletop work — is used in every session. The rater observes from a separate room, scoring engagement at 5, 15, and 30 minutes.',
   },
   {
