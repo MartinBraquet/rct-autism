@@ -12,7 +12,7 @@ export const NOT_FOUND_TEXTS = {
 export default function Custom404(props: {customText?: string}) {
   // console.log('props:', props)
   return (
-    <PageBase>
+    <PageBase hideSidebar={true}>
       <SEO title={'Not Found'} description={'Not Found'} url={`/404`} />
       <Custom404Content customText={props.customText} />
     </PageBase>
@@ -40,9 +40,9 @@ export function Custom404Content(props: {customText?: string}) {
         <p className="custom-link">
           {t(
             '404.help_text',
-            "If you didn't expect this, try to reload the page in a few seconds or get some ",
+            "If you didn't expect this, try to reload the page in a few seconds or go back ",
           )}
-          <Link href={'/help'}>{t('organization.help', 'help').toLowerCase()}</Link>.
+          <Link href={'/'}>{t('', 'home').toLowerCase()}</Link>.
         </p>
 
         {/*<Link href="/">*/}

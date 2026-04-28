@@ -4,7 +4,7 @@ type FavIconProps = {
 
 const FavIconBlack = ({className}: FavIconProps) => (
   <img
-    src="https://www.rct-autismmeet.com/favicon-black.svg"
+    src="/favicon.svg"
     alt="rct-autism logo"
     className={`w-12 h-12 ${className ?? ''}`}
   />

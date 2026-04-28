@@ -14,10 +14,14 @@ import {PageBase} from 'web/components/page-base'
 import ClinicalRCTChart from 'web/components/widgets/ClinicalRCTChart'
 import VELA301 from 'web/components/widgets/vela-curves'
 
-export default function ProfilesPage() {
+export default function IndexPage() {
   return (
     <PageBase className={''} hideSidebar={true}>
-      <h1 className={'max-w-5xl text-2xl font-bold mb-4 mx-auto justify-center items-center text-center'}>
+      <h1
+        className={
+          'max-w-5xl text-2xl font-bold mb-4 mx-auto justify-center items-center text-center'
+        }
+      >
         Personalized Pre-Session Preparation to Improve Engagement in Early Autism Intervention: A
         Randomized Repeated-Measures Crossover Study
       </h1>

@@ -1,13 +1,7 @@
-import {HomeIcon, NewspaperIcon, QuestionMarkCircleIcon} from '@heroicons/react/24/outline'
-import {
-  GlobeAltIcon,
-  LinkIcon,
-  QuestionMarkCircleIcon as SolidQuestionIcon,
-} from '@heroicons/react/24/solid'
+import {HomeIcon, QuestionMarkCircleIcon} from '@heroicons/react/24/outline'
 import clsx from 'clsx'
 import {ReactNode, useState} from 'react'
 import {Toaster} from 'react-hot-toast'
-import {FaEnvelope} from 'react-icons/fa'
 import {Col} from 'web/components/layout/col'
 import {BottomNavBar} from 'web/components/nav/bottom-nav-bar'
 import {SkipLink} from 'web/components/skip-link'
@@ -80,42 +74,42 @@ export function PageBase(props: {
 }
 
 const Home = {key: 'nav.home', name: 'Home', href: '/', icon: HomeIcon}
-const faq = {
-  key: 'nav.faq',
-  name: 'FAQ',
-  href: '/faq',
-  icon: SolidQuestionIcon,
-}
+// const faq = {
+//   key: 'nav.faq',
+//   name: 'FAQ',
+//   href: '/faq',
+//   icon: SolidQuestionIcon,
+// }
 const About = {
   key: 'nav.about',
   name: 'About',
   href: '/about',
   icon: QuestionMarkCircleIcon,
 }
-const Social = {
-  key: 'nav.social',
-  name: 'Socials',
-  href: '/social',
-  icon: LinkIcon,
-}
-const Organization = {
-  key: 'nav.organization',
-  name: 'Organization',
-  href: '/organization',
-  icon: GlobeAltIcon,
-}
-const Contact = {
-  key: 'nav.contact',
-  name: 'Contact',
-  href: '/contact',
-  icon: FaEnvelope,
-}
-const News = {
-  key: 'nav.news',
-  name: "What's new",
-  href: '/news',
-  icon: NewspaperIcon,
-}
+// const Social = {
+//   key: 'nav.social',
+//   name: 'Socials',
+//   href: '/social',
+//   icon: LinkIcon,
+// }
+// const Organization = {
+//   key: 'nav.organization',
+//   name: 'Organization',
+//   href: '/organization',
+//   icon: GlobeAltIcon,
+// }
+// const Contact = {
+//   key: 'nav.contact',
+//   name: 'Contact',
+//   href: '/contact',
+//   icon: FaEnvelope,
+// }
+// const News = {
+//   key: 'nav.news',
+//   name: "What's new",
+//   href: '/news',
+//   icon: NewspaperIcon,
+// }
 
 const base = [About]
 
