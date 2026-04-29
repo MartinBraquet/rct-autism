@@ -6,7 +6,6 @@ import {Col} from 'web/components/layout/col'
 import {Row} from 'web/components/layout/row'
 import {CustomLink} from 'web/components/links'
 import {SectionHeader} from 'web/components/sections'
-import {useIsMobile} from 'web/hooks/use-is-mobile'
 
 const protocolUrl =
   'https://github.com/MartinBraquet/rct-autism/releases/download/v1.0.0/protocol.pdf'
@@ -213,7 +212,6 @@ const FAQS = [
 export default function IndexPage() {
   const revealRefs = useRef<(HTMLElement | null)[]>([])
   const chartsInitialized = useRef(false)
-  const isMobile = useIsMobile(1000)
   const [isMenuOpen, setIsMenuOpen] = React.useState(false)
 
   // Close menu when clicking outside
@@ -228,11 +226,9 @@ export default function IndexPage() {
       }
     }
 
-    if (isMobile) {
-      document.addEventListener('click', handleClickOutside)
-      return () => document.removeEventListener('click', handleClickOutside)
-    }
-  }, [isMenuOpen, isMobile])
+    document.addEventListener('click', handleClickOutside)
+    return () => document.removeEventListener('click', handleClickOutside)
+  }, [isMenuOpen])
 
   // Fonts
   useEffect(() => {
@@ -360,118 +356,63 @@ export default function IndexPage() {
           Maya Care and Grow · Study
         </span>
 
-        {isMobile ? (
-          <div style={{position: 'relative'}}>
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
+        <div style={{position: 'relative'}} className={'flex lg:hidden'}>
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              padding: '0.5rem',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '3px',
+            }}
+          >
+            <div
               style={{
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                padding: '0.5rem',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '3px',
+                width: '20px',
+                height: '2px',
+                background: '#3d5a45',
+                transition: 'transform 0.3s ease',
+                transform: isMenuOpen ? 'rotate(45deg) translate(5px, 5px)' : 'none',
+              }}
+            />
+            <div
+              style={{
+                width: '20px',
+                height: '2px',
+                background: '#3d5a45',
+                transition: 'opacity 0.3s ease',
+                opacity: isMenuOpen ? 0 : 1,
+              }}
+            />
+            <div
+              style={{
+                width: '20px',
+                height: '2px',
+                background: '#3d5a45',
+                transition: 'transform 0.3s ease',
+                transform: isMenuOpen ? 'rotate(-45deg) translate(7px, -6px)' : 'none',
+              }}
+            />
+          </button>
+
+          {isMenuOpen && (
+            <div
+              style={{
+                position: 'absolute',
+                top: '100%',
+                right: 0,
+                background: '#faf6f0',
+                border: '1px solid #e8dece',
+                borderRadius: '8px',
+                boxShadow: '0 8px 24px rgba(30,26,20,0.12)',
+                minWidth: '200px',
+                padding: '0.5rem 0',
+                marginTop: '0.5rem',
               }}
             >
-              <div
-                style={{
-                  width: '20px',
-                  height: '2px',
-                  background: '#3d5a45',
-                  transition: 'transform 0.3s ease',
-                  transform: isMenuOpen ? 'rotate(45deg) translate(5px, 5px)' : 'none',
-                }}
-              />
-              <div
-                style={{
-                  width: '20px',
-                  height: '2px',
-                  background: '#3d5a45',
-                  transition: 'opacity 0.3s ease',
-                  opacity: isMenuOpen ? 0 : 1,
-                }}
-              />
-              <div
-                style={{
-                  width: '20px',
-                  height: '2px',
-                  background: '#3d5a45',
-                  transition: 'transform 0.3s ease',
-                  transform: isMenuOpen ? 'rotate(-45deg) translate(7px, -6px)' : 'none',
-                }}
-              />
-            </button>
-
-            {isMenuOpen && (
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '100%',
-                  right: 0,
-                  background: '#faf6f0',
-                  border: '1px solid #e8dece',
-                  borderRadius: '8px',
-                  boxShadow: '0 8px 24px rgba(30,26,20,0.12)',
-                  minWidth: '200px',
-                  padding: '0.5rem 0',
-                  marginTop: '0.5rem',
-                }}
-              >
-                {[
-                  '#why',
-                  '#conditions',
-                  '#how',
-                  '#safety',
-                  '#simulations',
-                  '#results',
-                  '#resources',
-                  '#faq',
-                ].map((href, i) => (
-                  <a
-                    key={i}
-                    href={href}
-                    onClick={(e) => {
-                      e.preventDefault()
-                      setIsMenuOpen(false)
-                      const element = document.querySelector(href)
-                      if (element) {
-                        element.scrollIntoView({behavior: 'smooth', block: 'start'})
-                      }
-                    }}
-                    style={{
-                      display: 'block',
-                      padding: '0.75rem 1.5rem',
-                      fontSize: '0.875rem',
-                      fontWeight: 500,
-                      letterSpacing: '0.06em',
-                      textTransform: 'uppercase',
-                      color: '#7a7060',
-                      textDecoration: 'none',
-                      cursor: 'pointer',
-                      transition: 'background-color 0.2s ease',
-                    }}
-                    className={'hover:bg-gray-100'}
-                  >
-                    {
-                      [
-                        'Why',
-                        'Conditions',
-                        'How it Works',
-                        'Safety',
-                        'Simulations',
-                        'Results',
-                        'Resources',
-                        'FAQ',
-                      ][i]
-                    }
-                  </a>
-                ))}
-              </div>
-            )}
-          </div>
-        ) : (
-          <div style={{display: 'flex', gap: '2rem'}}>
             {[
               '#why',
               '#conditions',
@@ -487,21 +428,25 @@ export default function IndexPage() {
                 href={href}
                 onClick={(e) => {
                   e.preventDefault()
+                  setIsMenuOpen(false)
                   const element = document.querySelector(href)
                   if (element) {
                     element.scrollIntoView({behavior: 'smooth', block: 'start'})
                   }
                 }}
                 style={{
-                  fontSize: '0.75rem',
+                  display: 'block',
+                  padding: '0.75rem 1.5rem',
+                  fontSize: '0.875rem',
                   fontWeight: 500,
                   letterSpacing: '0.06em',
                   textTransform: 'uppercase',
                   color: '#7a7060',
                   textDecoration: 'none',
                   cursor: 'pointer',
+                  transition: 'background-color 0.2s ease',
                 }}
-                className={'hover:font-bold'}
+                className={'hover:bg-gray-100'}
               >
                 {
                   [
@@ -518,7 +463,56 @@ export default function IndexPage() {
               </a>
             ))}
           </div>
-        )}
+          )}
+        </div>
+        <div style={{gap: '2rem'}} className={'hidden lg:flex'}>
+          {[
+            '#why',
+            '#conditions',
+            '#how',
+            '#safety',
+            '#simulations',
+            '#results',
+            '#resources',
+            '#faq',
+          ].map((href, i) => (
+            <a
+              key={i}
+              href={href}
+              onClick={(e) => {
+                e.preventDefault()
+                const element = document.querySelector(href)
+                if (element) {
+                  element.scrollIntoView({behavior: 'smooth', block: 'start'})
+                }
+              }}
+              style={{
+                fontSize: '0.75rem',
+                fontWeight: 500,
+                letterSpacing: '0.06em',
+                textTransform: 'uppercase',
+                color: '#7a7060',
+                textDecoration: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease-in-out',
+              }}
+              className={'hover:underline hover:text-[#5a5040]'}
+            >
+              {
+                [
+                  'Why',
+                  'Conditions',
+                  'How it Works',
+                  'Safety',
+                  'Simulations',
+                  'Results',
+                  'Resources',
+                  'FAQ',
+                ][i]
+              }
+            </a>
+          ))}
+        </div>
       </nav>
 
       {/* ── HERO ────────────────────────────────────────── */}
