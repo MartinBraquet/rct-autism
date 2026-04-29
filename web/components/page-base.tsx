@@ -15,9 +15,8 @@ export function PageBase(props: {
   className?: string
   children?: ReactNode
   hideSidebar?: boolean
-  hideBottomBar?: boolean
 }) {
-  const {children, className, hideSidebar, hideBottomBar} = props
+  const {children, className, hideSidebar} = props
   const isMobile = useIsMobile()
 
   const bottomNavOptions = getBottomSignedOutNavigation()
@@ -63,7 +62,7 @@ export function PageBase(props: {
           {children}
         </main>
       </Col>
-      {!hideBottomBar && (
+      {!hideSidebar && (
         <BottomNavBar
           sidebarNavigationOptions={mobileSidebarOptions as any[]}
           navigationOptions={bottomNavOptions}
