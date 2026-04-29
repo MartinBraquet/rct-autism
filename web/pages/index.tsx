@@ -667,7 +667,7 @@ export default function IndexPage() {
             {/*</span>*/}
             <Image
               src={
-                'https://mayacaregrow.wordpress.com/wp-content/uploads/2026/04/peer-learning-riki.jpeg'
+                'https://ez8ozeuiadnifqq8.public.blob.vercel-storage.com/peer-learning-riki.jpeg'
               }
               width={600}
               height={600}
