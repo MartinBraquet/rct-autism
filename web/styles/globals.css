@@ -463,6 +463,39 @@ ul {
   text-decoration: underline;
 }
 
+/* The base state of the card */
+.resource-card {
+  padding: 2rem;
+  background-color: #faf6f0;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-decoration: none;
+  border: 1px solid transparent;
+
+  /* This ensures the hover effect is smooth, not jerky */
+  transition: transform 0.25s ease, background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* The hover state */
+.resource-card:hover {
+  background-color: #f3ede4;
+  transform: translateY(-4px);
+  border-color: #e8dece;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05); /* Optional: adds a soft shadow */
+}
+
+/* Bonus: Animate the arrow icon inside the card on hover */
+.resource-card:hover .cta-arrow {
+  transform: translateX(4px);
+}
+
+.cta-arrow {
+  margin-left: 8px;
+  transition: transform 0.2s ease;
+}
+
 .study-name-link {
   display: inline-flex;
   align-items: center;
@@ -470,7 +503,7 @@ ul {
   color: #b85c38;
   text-decoration: none;
   background-image: linear-gradient(#b85c38, #b85c38);
-  background-size: 0% 1.5px;
+  background-size: 0 1.5px;
   background-repeat: no-repeat;
   background-position: left bottom;
   transition: background-size 0.2s ease;

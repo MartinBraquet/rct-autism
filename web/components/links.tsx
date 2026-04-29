@@ -6,11 +6,13 @@ export const CustomLink = ({
   children,
   style,
   className,
+  linkIcon = <LinkIcon />,
 }: {
   href?: string
   children: React.ReactNode
   style?: React.CSSProperties
   className?: string
+  linkIcon?: React.ReactNode
 }) => {
   if (!href) return <>{children}</>
 
@@ -18,7 +20,7 @@ export const CustomLink = ({
   if (href.startsWith('/')) {
     return (
       <Link href={href} style={style} className={className}>
-        {children} <LinkIcon />
+        {children} {linkIcon}
       </Link>
     )
   }
@@ -26,7 +28,7 @@ export const CustomLink = ({
   // For external links, fall back to <a>
   return (
     <a href={href} target="_blank" rel="noopener noreferrer" style={style} className={className}>
-      {children} <LinkIcon />
+      {children} {linkIcon}
     </a>
   )
 }

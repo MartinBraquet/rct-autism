@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import React, {useEffect, useRef} from 'react'
+import {FiArrowRight, FiExternalLink, FiFileText, FiGithub} from 'react-icons/fi'
 import {initCharts, PowerCurve} from 'web/components/charts'
 import {FaqItem} from 'web/components/faq'
 import {Col} from 'web/components/layout/col'
@@ -9,6 +10,31 @@ import {SectionHeader} from 'web/components/sections'
 
 const protocolUrl =
   'https://github.com/MartinBraquet/rct-autism/releases/download/v1.0.0/protocol.pdf'
+
+// Define the content to keep the JSX clean
+const resources = [
+  {
+    title: 'Source Code',
+    desc: 'View the Bayesian model and simulation scripts on GitHub.',
+    icon: <FiGithub />,
+    href: 'https://github.com/MartinBraquet/rct-autism',
+    cta: 'View on GitHub',
+  },
+  {
+    title: 'OSF Preregistration',
+    desc: 'View our timestamped study plan to ensure unbiased reporting.',
+    icon: <FiExternalLink />,
+    href: 'https://osf.io/cwzm3',
+    cta: 'Visit OSF',
+  },
+  {
+    title: 'Study Protocol',
+    desc: 'Download the full PDF describing the clinical workflow.',
+    icon: <FiFileText />,
+    href: protocolUrl,
+    cta: 'Download PDF',
+  },
+]
 
 const CONDITIONS = [
   {
@@ -1517,7 +1543,6 @@ export default function IndexPage() {
           </div>
 
           <div
-            {...R()}
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
@@ -1525,57 +1550,60 @@ export default function IndexPage() {
               marginTop: '3rem',
             }}
           >
-            {/* Primary Research Links */}
-            <CustomLink
-              href="https://github.com/MartinBraquet/rct-autism"
-              className="hero-link"
-              style={{
-                padding: '1.5rem',
-                background: '#faf6f0',
-                borderRadius: '12px',
-                display: 'block',
-              }}
-            >
-              <span style={{fontSize: '1.2rem', marginRight: '8px'}}>💻</span>{' '}
-              <strong>Source Code</strong>
-              <p style={{fontSize: '0.8rem', color: '#7a7060', marginTop: '0.5rem'}}>
-                View the Bayesian model and simulation scripts on GitHub.
-              </p>
-            </CustomLink>
+            {resources.map((item, index) => (
+              <CustomLink
+                key={index}
+                href={item.href}
+                className="resource-card"
+                linkIcon={null}
+                style={{
+                  padding: '2rem',
+                  background: '#fffef9',
+                  borderRadius: '16px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  textDecoration: 'none',
+                  transition: 'all 0.2s ease-in-out',
+                  border: '1px solid rgba(61, 90, 69, 0.1)',
+                }}
+              >
+                <div>
+                  <div style={{color: '#8b4513', fontSize: '1.5rem', marginBottom: '1rem'}}>
+                    {item.icon}
+                  </div>
+                  <strong style={{fontSize: '1.1rem', color: '#1a1a1a', display: 'block'}}>
+                    {item.title}
+                  </strong>
+                  <p
+                    style={{
+                      fontSize: '0.9rem',
+                      color: '#7a7060',
+                      marginTop: '0.5rem',
+                      lineHeight: '1.5',
+                    }}
+                  >
+                    {item.desc}
+                  </p>
+                </div>
 
-            <CustomLink
-              href="https://osf.io/cwzm3"
-              className="hero-link"
-              style={{
-                padding: '1.5rem',
-                background: '#faf6f0',
-                borderRadius: '12px',
-                display: 'block',
-              }}
-            >
-              <span style={{fontSize: '1.2rem', marginRight: '8px'}}>📜</span>{' '}
-              <strong>OSF Preregistration</strong>
-              <p style={{fontSize: '0.8rem', color: '#7a7060', marginTop: '0.5rem'}}>
-                View our timestamped study plan to ensure unbiased reporting.
-              </p>
-            </CustomLink>
-
-            <CustomLink
-              href={protocolUrl}
-              className="hero-link"
-              style={{
-                padding: '1.5rem',
-                background: '#faf6f0',
-                borderRadius: '12px',
-                display: 'block',
-              }}
-            >
-              <span style={{fontSize: '1.2rem', marginRight: '8px'}}>📄</span>{' '}
-              <strong>Study Protocol</strong>
-              <p style={{fontSize: '0.8rem', color: '#7a7060', marginTop: '0.5rem'}}>
-                Download the full PDF describing the clinical workflow.
-              </p>
-            </CustomLink>
+                <div
+                  style={{
+                    marginTop: '1.5rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    color: '#8b4513',
+                    fontWeight: '600',
+                    fontSize: '0.85rem',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                  }}
+                >
+                  {item.cta}
+                  <FiArrowRight style={{marginLeft: '8px'}} />
+                </div>
+              </CustomLink>
+            ))}
           </div>
         </div>
       </section>
