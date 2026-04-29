@@ -1,5 +1,14 @@
 import React from 'react'
-import {CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis,} from 'recharts'
+import {
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts'
 import {useIsMobile} from 'web/hooks/use-is-mobile'
 
 const SESSIONS = [12, 16, 20, 24, 28, 32, 36]
@@ -40,7 +49,7 @@ export const PowerCurve = () => {
         data={data}
         margin={{
           top: 10,
-          right: isMobile ? 30 : 30,
+          right: isMobile ? 5 : 30,
           left: 0,
           bottom: isMobile ? 0 : 0,
         }}

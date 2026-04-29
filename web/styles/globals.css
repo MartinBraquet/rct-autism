@@ -463,6 +463,31 @@ ul {
   text-decoration: underline;
 }
 
+.study-name-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #b85c38;
+  text-decoration: none;
+  background-image: linear-gradient(#b85c38, #b85c38);
+  background-size: 0% 1.5px;
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  transition: background-size 0.2s ease;
+  padding-bottom: 1px;
+}
+.study-name-link:hover {
+  background-size: 100% 1.5px;
+}
+.study-name-link svg {
+  opacity: 1;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.study-name-link:hover svg {
+  opacity: 1;
+  transform: translate(3px, -3px);
+}
+
 .hero-link {
   color: #1e1a14 !important;
   text-decoration: none !important;

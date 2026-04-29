@@ -413,56 +413,56 @@ export default function IndexPage() {
                 marginTop: '0.5rem',
               }}
             >
-            {[
-              '#why',
-              '#conditions',
-              '#how',
-              '#safety',
-              '#simulations',
-              '#results',
-              '#resources',
-              '#faq',
-            ].map((href, i) => (
-              <a
-                key={i}
-                href={href}
-                onClick={(e) => {
-                  e.preventDefault()
-                  setIsMenuOpen(false)
-                  const element = document.querySelector(href)
-                  if (element) {
-                    element.scrollIntoView({behavior: 'smooth', block: 'start'})
+              {[
+                '#why',
+                '#conditions',
+                '#how',
+                '#safety',
+                '#simulations',
+                '#results',
+                '#resources',
+                '#faq',
+              ].map((href, i) => (
+                <a
+                  key={i}
+                  href={href}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    setIsMenuOpen(false)
+                    const element = document.querySelector(href)
+                    if (element) {
+                      element.scrollIntoView({behavior: 'smooth', block: 'start'})
+                    }
+                  }}
+                  style={{
+                    display: 'block',
+                    padding: '0.75rem 1.5rem',
+                    fontSize: '0.875rem',
+                    fontWeight: 500,
+                    letterSpacing: '0.06em',
+                    textTransform: 'uppercase',
+                    color: '#7a7060',
+                    textDecoration: 'none',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.2s ease',
+                  }}
+                  className={'hover:bg-gray-100'}
+                >
+                  {
+                    [
+                      'Why',
+                      'Conditions',
+                      'How it Works',
+                      'Safety',
+                      'Simulations',
+                      'Results',
+                      'Resources',
+                      'FAQ',
+                    ][i]
                   }
-                }}
-                style={{
-                  display: 'block',
-                  padding: '0.75rem 1.5rem',
-                  fontSize: '0.875rem',
-                  fontWeight: 500,
-                  letterSpacing: '0.06em',
-                  textTransform: 'uppercase',
-                  color: '#7a7060',
-                  textDecoration: 'none',
-                  cursor: 'pointer',
-                  transition: 'background-color 0.2s ease',
-                }}
-                className={'hover:bg-gray-100'}
-              >
-                {
-                  [
-                    'Why',
-                    'Conditions',
-                    'How it Works',
-                    'Safety',
-                    'Simulations',
-                    'Results',
-                    'Resources',
-                    'FAQ',
-                  ][i]
-                }
-              </a>
-            ))}
-          </div>
+                </a>
+              ))}
+            </div>
           )}
         </div>
         <div style={{gap: '2rem'}} className={'hidden lg:flex'}>
@@ -572,12 +572,11 @@ export default function IndexPage() {
             <div
               style={{
                 display: 'flex',
-                gap: '6rem',
                 marginTop: '3rem',
                 flexWrap: 'wrap',
                 animation: 'fadeUp 0.6s 0.3s ease both',
               }}
-              className={'justify-center'}
+              className={'justify-center gap-[3rem] lg:gap-[6rem]'}
             >
               {[
                 // [
@@ -588,7 +587,7 @@ export default function IndexPage() {
                 // ],
                 [
                   'Lead Researcher',
-                  <CustomLink href="https://martinbraquet.com" className={'hero-link'}>
+                  <CustomLink href="https://martinbraquet.com" className={'study-name-link'}>
                     Martin Braquet
                   </CustomLink>,
                 ],
@@ -596,7 +595,7 @@ export default function IndexPage() {
                   'Collaborator',
                   <CustomLink
                     href="https://mayacaregrow.wordpress.com/about/"
-                    className={'hero-link'}
+                    className={'study-name-link'}
                   >
                     Riki Dewan
                   </CustomLink>,
@@ -606,12 +605,18 @@ export default function IndexPage() {
                   key={label as string}
                   style={{display: 'flex', flexDirection: 'column', gap: '0.2rem'}}
                 >
-                  <span style={{fontSize: '0.7rem', color: '#bab2a0', textTransform: 'uppercase'}}>
+                  <span
+                    style={{
+                      fontSize: '12px',
+                      letterSpacing: '1.2px',
+                      fontWeight: 600,
+                      color: '#bab2a0',
+                      textTransform: 'uppercase',
+                    }}
+                  >
                     {label}
                   </span>
-                  <span style={{fontSize: '0.95rem', fontWeight: 500, color: '#1e1a14'}}>
-                    {value}
-                  </span>
+                  <span style={{fontSize: '1.1rem', fontWeight: 900}}>{value}</span>
                 </div>
               ))}
             </div>
@@ -694,7 +699,10 @@ export default function IndexPage() {
                 border: '1px solid #e8dece',
               }}
             >
-              <CustomLink href="https://mayacaregrow.wordpress.com" className={'hero-link'}>
+              <CustomLink
+                href="https://mayacaregrow.wordpress.com"
+                className={'study-name-link font-bold'}
+              >
                 Maya Care and Grow
               </CustomLink>
               <h4
@@ -749,6 +757,8 @@ export default function IndexPage() {
           </div>
         </div>
       </section>
+
+      <div style={{height: 1, background: '#e8dece', margin: '0 2rem'}} />
 
       {/* ── WHY ─────────────────────────────────────────── */}
       <section id="why" style={{padding: '90px 2rem'}}>
@@ -1033,7 +1043,7 @@ export default function IndexPage() {
       <div style={{height: 1, background: '#e8dece', margin: '0 2rem'}} />
 
       {/* ── ENGAGEMENT SCALE ─────────────────────────────── */}
-      <section style={{padding: '90px 2rem'}}>
+      <section style={{padding: '90px 2rem', background: '#fffef9'}}>
         <div style={{maxWidth: 1000, margin: '0 auto'}}>
           <div {...R()}>
             <SectionHeader
@@ -1046,18 +1056,22 @@ export default function IndexPage() {
             {...R()}
             style={{
               ...R().style,
+              background: '#faf6f0',
+              borderRadius: '16px',
+              border: '1px solid #e8dece',
               display: 'flex',
               flexDirection: 'column',
               gap: '0.6rem',
               marginTop: '2rem',
             }}
+            className={'py-[2rem] px-4 lg:px-[2rem]'}
           >
             {SCALE_ROWS.map((row) => (
               <div
                 key={row.range}
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: '3.5rem 1fr',
+                  gridTemplateColumns: '2rem 1fr',
                   alignItems: 'center',
                   gap: '0.75rem',
                 }}
@@ -1478,7 +1492,7 @@ export default function IndexPage() {
 
       <div style={{height: 1, background: '#e8dece', margin: '0 2rem'}} />
 
-      <section id="results" style={{padding: '90px 2rem'}}>
+      <section id="results" style={{padding: '90px 2rem', background: '#fffef9'}}>
         <div style={{maxWidth: 1000, margin: '0 auto'}}>
           <div {...R()}>
             <SectionHeader
@@ -1492,10 +1506,7 @@ export default function IndexPage() {
 
       <div style={{height: 1, background: '#e8dece', margin: '0 2rem'}} />
 
-      <section
-        id="resources"
-        style={{padding: '80px 2rem', background: '#fffef9', borderTop: '1px solid #e8dece'}}
-      >
+      <section id="resources" style={{padding: '90px 2rem'}}>
         <div style={{maxWidth: 1000, margin: '0 auto'}}>
           <div {...R()}>
             <SectionHeader
@@ -1569,8 +1580,10 @@ export default function IndexPage() {
         </div>
       </section>
 
+      <div style={{height: 1, background: '#e8dece', margin: '0 2rem'}} />
+
       {/* ── FAQ ─────────────────────────────────────────── */}
-      <section id="faq" style={{padding: '90px 2rem'}}>
+      <section id="faq" style={{padding: '90px 2rem', background: '#fffef9'}}>
         <div style={{maxWidth: 1000, margin: '0 auto'}}>
           <div {...R()}>
             <SectionHeader label="Questions & Answers" title="Frequently asked questions" />
@@ -1619,11 +1632,19 @@ export default function IndexPage() {
             gap: '1.5rem',
             fontSize: '0.8rem',
           }}
-          className={'custom-link'}
         >
-          <CustomLink href="https://github.com/MartinBraquet/rct-autism">GitHub</CustomLink>
-          <CustomLink href="https://osf.io/cwzm3">OSF Registry</CustomLink>
-          <CustomLink href={protocolUrl}>Protocol PDF</CustomLink>
+          <CustomLink
+            className={'study-name-link'}
+            href="https://github.com/MartinBraquet/rct-autism"
+          >
+            GitHub
+          </CustomLink>
+          <CustomLink className={'study-name-link'} href="https://osf.io/cwzm3">
+            OSF Registry
+          </CustomLink>
+          <CustomLink className={'study-name-link'} href={protocolUrl}>
+            Protocol PDF
+          </CustomLink>
         </div>
       </footer>
     </div>
