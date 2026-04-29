@@ -1,14 +1,6 @@
 import React from 'react'
-import {
-  CartesianGrid,
-  Legend,
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts'
+import {CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis,} from 'recharts'
+import {useIsMobile} from 'web/hooks/use-is-mobile'
 
 const SESSIONS = [12, 16, 20, 24, 28, 32, 36]
 const POWER_DATA = {
@@ -40,10 +32,19 @@ export const PowerCurve = () => {
     weak: +(powerData.one_winner_weak[i] * 100).toFixed(1),
     none: +(powerData.no_differential[i] * 100).toFixed(1),
   }))
+  const isMobile = useIsMobile()
 
   return (
     <ResponsiveContainer width="100%" height={350}>
-      <LineChart data={data} margin={{top: 10, right: 30, left: 0, bottom: 0}}>
+      <LineChart
+        data={data}
+        margin={{
+          top: 10,
+          right: isMobile ? 30 : 30,
+          left: 0,
+          bottom: isMobile ? 0 : 0,
+        }}
+      >
         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e8dece" />
         <XAxis
           dataKey="name"
@@ -78,9 +79,14 @@ export const PowerCurve = () => {
           }}
         />
         <Legend
+          layout={isMobile ? 'horizontal' : 'vertical'}
+          verticalAlign={isMobile ? 'bottom' : 'middle'}
+          align={isMobile ? 'center' : 'right'}
           iconType="rect"
           wrapperStyle={{
+            paddingLeft: isMobile ? '0px' : '40px',
             fontFamily: 'DM Sans',
+            fontSize: '12px',
             color: '#7a7060',
           }}
           formatter={(value) => {
