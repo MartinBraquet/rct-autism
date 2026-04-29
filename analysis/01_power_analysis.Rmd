@@ -73,6 +73,8 @@ print(glimpse(CONFIG))
 
 The following block executes the Monte Carlo simulation. We iterate through four potential child profiles: *Strong Winner*, *Weak Winner*, *Multiple Winners*, and *No Differential*.
 
+The results from this simulation are already stored in `results/resolution_curve.csv`.
+
 ```{r run-simulation, cache=TRUE}
 # This chunk is cached because Bayesian fitting is computationally expensive
 adaptive_results <- run_adaptive_sweep(

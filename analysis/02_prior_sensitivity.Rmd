@@ -57,6 +57,8 @@ SENS_CONFIG <- list(
 
 The following execution compares the probability of resolving treatment superiority under varying prior "strength."
 
+The results from this simulation are already stored in `results/prior_sensitivity.csv`.
+
 ```{r run-sensitivity, cache=TRUE}
 # This process is computationally intensive as it fits multiple models per simulation
 sensitivity_results <- run_prior_sensitivity(
