@@ -3,6 +3,8 @@
 This folder contains the reproducible research pipeline for the **Maya Care and Grow** randomized crossover trial. It
 includes the Bayesian adaptive power simulations, prior sensitivity analyses, and the main analysis framework.
 
+Most of the results are already stored in the [results](../results) folder.
+
 ## 1. Prerequisites
 
 To run these scripts, you need **R (>= 4.2)** and **RStudio**.
