@@ -215,13 +215,13 @@ plot_resolution_curve <- function(adaptive_results,
       linetype = guide_legend(ncol = 1)
     )
 
-  save_csv(curve_data_table, name = "resolution_curve")
+  save_csv(curve_data_table, name = "01_power_analysis")
 
   ts <- format(Sys.time(), "%Y-%m-%d_%H%M%S")
 
   if (save_pdf) {
     ggsave(
-      filename = here::here("results", "draft", paste0("resolution_curve_", ts, ".pdf")),
+      filename = here::here("results", "draft", paste0("01_power_analysis_", ts, ".pdf")),
       plot = p,
       device = cairo_pdf, # Ensures fonts are embedded correctly for journals
       width = 8, 
@@ -233,7 +233,7 @@ plot_resolution_curve <- function(adaptive_results,
 
   if (save_tikz) {
     tikz(
-      file = here::here("results", "draft", paste0("resolution_curve_", ts, ".tex")),
+      file = here::here("results", "draft", paste0("01_power_analysis_", ts, ".tex")),
       width = 7,      # Fits standard A4 text area width
       height = 3.2   # Keeps the 9:16-ish aspect ratio but compact
     )

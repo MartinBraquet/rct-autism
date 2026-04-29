@@ -278,7 +278,7 @@ sim_average <- function(results) {
   )
 
   # Save to CSV
-  save_csv(summary_results, name = "prior_sensitivity")
+  save_csv(summary_results, name = "02_prior_sensitivity")
 
   cat("\n--- Averaged Stopping Time Efficiency ---\n")
   cat(sprintf("Baseline: %.1f avg sessions\n", baseline_avg))

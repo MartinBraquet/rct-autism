@@ -1,6 +1,0 @@
-metric,value,threshold,passes
-overall_avg_agreement,87.25,80,TRUE
-delay_baseline,0,4,TRUE
-delay_low_sd,0.0114285714285742,4,TRUE
-delay_skeptical,0.46857142857143,4,TRUE
-delay_vague,-0.034285714285712,4,TRUE
