@@ -85,15 +85,14 @@ check_stopping_per_child <- function(fit,
         ))
 
         # ── Stopping criterion 2: AIPE ────────────────────────────────────────────
-        # The leading active arm (by P(best)) has a narrow enough 95% CrI that
-        # a "best available" recommendation is precise enough to be actionable,
-        # even when no arm clearly dominates (multiple_winners profile).
+        # The leading two active arms (by P(best)) have a large enough effect and a narrow enough
+        # effect difference that any of the two recommendations are actionable (multiple_winners profile).
         cri_1 <- as.numeric(quantile(arm_draws[[top_names_prep[1]]], 0.1))
         cri_2 <- as.numeric(quantile(arm_draws[[top_names_prep[2]]], 0.1))
         min_required_effect_both <- 0.5
         both_effective <- cri_1 > min_required_effect_both && cri_2 > min_required_effect_both
 
-        # 2. Are the top two essentially a tie? (AIPE on the difference)
+        # Are the top two essentially a tie? (AIPE on the difference, 80% CrI)
         diff_draws <- arm_draws[[top_names_prep[1]]] - arm_draws[[top_names_prep[2]]]
         cri_width <- as.numeric(quantile(diff_draws, 0.9) - quantile(diff_draws, 0.1))
         is_tie <- cri_width < aipe_width
@@ -113,8 +112,9 @@ check_stopping_per_child <- function(fit,
         print(as.numeric(quantile(arm_draws[[top_names_prep[3]]], 0.1)))
 
         # ── Stopping criterion 3: ROPE ────────────────────────────────────────────
-        # No Prep is the most probable best arm with confidence above the threshold.
+        # No Prep is the most probable best arm with confidence above 80%.
         # Interpretation: prep type does not matter for this child; No Prep is fine.
+
         # Define the ROPE range (the "Clinically Negligible" zone)
         rope_range <- c(-rope_no_prep_threshold, rope_no_prep_threshold)
 
