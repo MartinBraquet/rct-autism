@@ -40,37 +40,54 @@ set.seed(42)
 
 The main analysis checks the stopping conditions with the current data and assigns the recommended preparation to the resolved children.
 
+Descriptive analysis of child ratings per prep:
 ```{r}
-file_path <- here("data", "study_data.csv")
-study_data <- read_csv(file_path)
+boxplot_per_child()
 
-study_data <- study_data %>%
-  mutate(
-    baseline_state = factor(baseline_state, levels = c("tired", "neutral", "hyper")),
-    prep = factor(prep, levels = c("No Prep", "Calming", "Stimulating", "Child Choice")),
-    child_id = as.factor(child_id)
-  )
-study_data
-```
+file_path <- here("data", "sessions.csv")
+data <- read_csv(file_path)
+glimpse(data)
 
-```{r}
+mean_by_prep_child <- data %>%
+  group_by(child_id, prep) %>%
+  summarise(
+    mean_rating = mean(engagement, na.rm = TRUE),
+    n_sessions  = n(),
+    .groups = "drop"
+  ) %>%
+  arrange(child_id, prep) %>%
+  mutate(mean_rating = round(mean_rating, 2))
+
+save_csv(mean_by_prep_child, name = "ratings_per_child_and_prep")
+
+sessions_per_child <- data %>%
+  group_by(child_id) %>%
+  summarise(
+    mean_rating = mean(engagement, na.rm = TRUE),
+    n_sessions  = n(),
+    .groups = "drop"
+  ) %>%
+  arrange(child_id) %>%
+  mutate(mean_rating = round(mean_rating, 2))
+
+write.csv(sessions_per_child, here::here("results", "sessions_per_child.csv"), row.names = FALSE)
+
 chains <- 4
 fit <- fit_model_fresh(
-  study_data,
+  data,
   threads = threading(chains),
   chains = chains,
   iter = 2000
 )
-summary(fit)
-```
 
-```{r}
-chains <- 4
-results <- check_stopping_sequentially(
-  template_fit = fit,
-  data = study_data,
-  min_sessions = 0
-)
-child_status <- results$child_status
-child_status
+summary_table <- posterior_summary(fit) %>%
+  as.data.frame() %>%
+  rownames_to_column(var = "parameter")
+save_csv(summary_table, name = "fit_summary")
+
+write.csv(as_draws_df(fit), here::here("results", "draws.csv"), row.names = FALSE)
+
+results <- check_stopping_per_child(fit)
+print(results, n=100)
+save_csv(results, name = "stopping_checks")
 ```
