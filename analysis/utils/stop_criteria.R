@@ -65,6 +65,7 @@ check_stopping_per_child <- function(fit,
           ChildChoice = mean(winner_draw == 4)
         )
 
+        print("p_best:")
         print(p_best)
 
         best_name <- names(which.max(p_best))
@@ -87,10 +88,10 @@ check_stopping_per_child <- function(fit,
         # ── Stopping criterion 2: AIPE ────────────────────────────────────────────
         # The leading two active arms (by P(best)) have a large enough effect and a narrow enough
         # effect difference that any of the two recommendations are actionable (multiple_winners profile).
-        cri_1 <- as.numeric(quantile(arm_draws[[top_names_prep[1]]], 0.1))
-        cri_2 <- as.numeric(quantile(arm_draws[[top_names_prep[2]]], 0.1))
+        q_1 <- as.numeric(quantile(arm_draws[[top_names_prep[1]]], 0.1))
+        q_2 <- as.numeric(quantile(arm_draws[[top_names_prep[2]]], 0.1))
         min_required_effect_both <- 0.5
-        both_effective <- cri_1 > min_required_effect_both && cri_2 > min_required_effect_both
+        both_effective <- q_1 > min_required_effect_both && q_2 > min_required_effect_both
 
         # Are the top two essentially a tie? (AIPE on the difference, 80% CrI)
         diff_draws <- arm_draws[[top_names_prep[1]]] - arm_draws[[top_names_prep[2]]]
@@ -105,10 +106,10 @@ check_stopping_per_child <- function(fit,
         print("AIPE check")
         print(sprintf(
           "  Child %s: %s vs %s (CrI %.2f and %.2f, met = %s)",
-          cid, top_names[1], top_names[2], cri_1, cri_2, aipe_met
+          cid, top_names[1], top_names[2], q_1, q_2, aipe_met
         ))
-        print(cri_1)
-        print(cri_2)
+        print(q_1)
+        print(q_2)
         print(as.numeric(quantile(arm_draws[[top_names_prep[3]]], 0.1)))
 
         # ── Stopping criterion 3: ROPE ────────────────────────────────────────────
@@ -128,7 +129,7 @@ check_stopping_per_child <- function(fit,
 
         # STOP if ALL active preps are likely in the ROPE
         # (Meaning we are confident none of them work)
-        in_rope <- all(prop_in_rope > 0.80)
+        in_rope <- all(prop_in_rope > 0.9)
 
 
         # ── Resolve stop reason (priority: superiority > rope > aipe > continue) ──
@@ -155,10 +156,16 @@ check_stopping_per_child <- function(fit,
           child_id       = cid,
           best_condition = best_condition,
           p_best         = p_best_max,
-          p_no_prep      = p_best["NoPrep"],
-          cri_width      = cri_width,
+          condition      = best_name,
           superiority    = superiority,
+#           p_no_prep      = p_best["NoPrep"],
+          q_1 = q_1,
+          q_2 = q_2,
+          cri_width      = cri_width,
           aipe_met       = aipe_met,
+          p_cal_rope     = prop_in_rope["Calming"],
+          p_sti_rope     = prop_in_rope["Stimulating"],
+          p_cc_rope     = prop_in_rope["ChildChoice"],
           in_rope        = in_rope,
           stop_reason    = stop_reason
         )
