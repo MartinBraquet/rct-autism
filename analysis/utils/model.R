@@ -37,11 +37,14 @@ SHARED_PRIOR <- c(
 fit_model_fresh <- function(data, prior = SHARED_PRIOR, threads = NULL, chains = 2, iter = 2000, equation = NULL) {
 
   data$child_id <- as.factor(data$child_id)
-  data$prep     <- as.factor(data$prep)
-  data$session  <- as.factor(data$session)
+  data$prep     <- relevel(as.factor(data$prep), ref = "NoPrep")
   data$age      <- as.numeric(data$age)
   data$teacher  <- as.factor(data$teacher)
-  data$latent_score <- as.numeric(data$latent_score)
+
+#   print(levels(data$prep))
+
+#   data$session  <- as.factor(data$session)
+#   data$latent_score <- as.numeric(data$latent_score)
 
   print(data %>% ungroup() %>% str())
 #   print(levels(data$prep))
@@ -77,7 +80,7 @@ fit_model_fresh <- function(data, prior = SHARED_PRIOR, threads = NULL, chains =
   print(summary(template_fit))
 
   # Show R-hat values
-  print(rhat(template_fit))
+#   print(rhat(template_fit))
 
   if (any(rhat(template_fit) > 1.01, na.rm = TRUE)) {
     warning("R-hat values indicate potential convergence issues. Please check the model diagnostics.")
