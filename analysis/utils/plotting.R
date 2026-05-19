@@ -316,3 +316,21 @@ print_adaptive_summary <- function(summary_tbl) {
   cat(sprintf("    Max reached:   %.0f%% of children\n", summary_tbl$pct_max * 100))
   cat("══════════════════════════════════════════════════════════\n\n")
 }
+
+boxplot_per_child <- function() {
+  sessions <- read.csv(here::here("data", "sessions.csv"))
+  for (child in unique(sessions$child_id)) {
+    p <- sessions |>
+      filter(child_id == child) |>
+      ggplot(aes(x = prep, y = engagement, fill = prep)) +
+      geom_violin(alpha = 0.4, trim = FALSE) +
+      geom_boxplot(width = 0.2, outlier.shape = NA, alpha = 0.7) +
+      geom_jitter(width = 0.08, size = 1.5, alpha = 0.6) +
+      scale_fill_brewer(palette = "Set2") +
+      labs(title = paste("Child", child), x = "Prep type", y = "Rating") +
+      theme_bw() +
+      theme(legend.position = "none")
+
+    ggsave(here::here("results", "figures", paste0("child_", child, ".png")), p, width = 6, height = 4)
+  }
+}
