@@ -17,11 +17,6 @@ library(ggplot2)
 # Double-bar || keeps random intercept and slopes independent (no correlation
 # term), matching the data-generation structure.
 #
-# PRIORS (fully specified — no implicit defaults)
-#   β  ~ Normal(0, 1.5)   conservative for logit scale fixed effects
-#   ζₖ ~ Normal(0, 3)     wide enough to span ±4 logit units (thresholds)
-#   σᵤ ~ Exponential(1)   weakly regularising for random-effect SDs
-#
 # NOTE: LKJ prior is omitted because || removes the correlation structure.
 
 FORCE_REPRODUCIBILITY <- FALSE

@@ -13,6 +13,7 @@ library(tikzDevice)
 library(readr)
 
 source(here::here("analysis", "utils", "data.R"))
+source(here::here("analysis", "utils", "constants.R"))
 
 options(tikzDefaultEngine = "pdftex")
 options(tikzLatexPackages = c(
@@ -317,20 +318,234 @@ print_adaptive_summary <- function(summary_tbl) {
   cat("══════════════════════════════════════════════════════════\n\n")
 }
 
+# ── Shared helpers ─────────────────────────────────────────────────────────
+
+.forest_data_from_draws <- function(draw_list, condition_order) {
+  imap_dfr(draw_list, function(vals, label) {
+    tibble(
+      condition = label,
+      mean      = mean(vals),
+      lo95      = quantile(vals, 0.025),
+      hi95      = quantile(vals, 0.975),
+      lo80      = quantile(vals, 0.10),
+      hi80      = quantile(vals, 0.90),
+      p_pos     = mean(vals > 0)
+    )
+  }) |>
+    mutate(condition = factor(condition, levels = rev(condition_order)))
+}
+
+.render_forest_plot <- function(forest_data, x_label) {
+  ggplot(forest_data, aes(y = condition, x = mean)) +
+    geom_vline(xintercept = 0, linetype = "dashed", colour = "grey50", linewidth = 0.6) +
+    geom_linerange(aes(xmin = lo95, xmax = hi95), linewidth = 0.7, colour = "#2166ac") +
+    geom_linerange(aes(xmin = lo80, xmax = hi80), linewidth = 2.0, colour = "#2166ac") +
+    geom_point(size = 3.5, colour = "#2166ac") +
+    geom_text(
+      aes(x = hi95 + 0.08, label = sprintf("P(+) = %.0f\\%%", p_pos * 100)),
+      hjust = 0, size = 3.2, colour = "grey30"
+    ) +
+    scale_x_continuous(
+      name   = x_label,
+      expand = expansion(mult = c(0.05, 0.25))
+    ) +
+    labs(
+      y       = NULL,
+      caption = "Points = posterior mean; thick bar = 80\\% CrI; thin bar = 95\\% CrI."
+    ) +
+    theme_minimal(base_size = 13) +
+    theme(
+      panel.grid.major.y = element_blank(),
+      panel.grid.minor   = element_blank(),
+      plot.caption       = element_text(colour = "grey50", size = 9)
+    )
+}
+
+# ── Group-level forest plot ────────────────────────────────────────────────
+
+plot_forest_group_effects <- function(fit, save_tikz = FALSE, save_pdf = FALSE) {
+  draws <- as_draws_df(fit)
+
+  active <- PREP_PARAMS[paste0("b_", PREP_PARAMS) %in% names(draws)]
+
+  draw_list <- imap(active, function(stem, label) draws[[paste0("b_", stem)]])
+  names(draw_list) <- names(active)
+
+  forest_data <- .forest_data_from_draws(draw_list, names(active))
+
+  p <- .render_forest_plot(
+    forest_data,
+    x_label = "Effect on engagement vs.\\ No Preparation (points)"
+  )
+
+  save_csv(forest_data, name = "forest_group_effects")
+
+  ts <- format(Sys.time(), "%Y-%m-%d_%H%M%S")
+
+  ggsave(here::here("results", "draft", paste0(ts, "_forest_group_effects", ".png")), p, width = 6, height = 4)
+  ggsave(here::here("results", "forest_group_effects.png"), p, width = 6, height = 4)
+
+  if (save_pdf) {
+    ggsave(
+      filename = here::here("results", "draft", paste0(ts, "_forest_group_effects", ".pdf")),
+      plot     = p,
+      device   = cairo_pdf,
+      width    = 7,
+      height   = 6,
+      units    = "in",
+      dpi      = 300
+    )
+  }
+
+  if (save_tikz) {
+    tikz(
+      file   = here::here("results", "draft", paste0(ts, "_forest_group_effects", ".tex")),
+      width  = 6.5,
+      height = 2.4
+    )
+    print(p)
+    dev.off()
+  }
+
+  return(p)
+}
+
+# ── Per-child forest plots ─────────────────────────────────────────────────
+
+plot_forest_per_child <- function(fit, save_pdf = FALSE) {
+  draws    <- as_draws_df(fit)
+  children <- levels(as.factor(fit$data$child_id))
+
+  dir.create(here::here("results", "forest_plots"), showWarnings = FALSE, recursive = TRUE)
+
+  for (child in children) {
+    # brms sanitises level names in column headers (spaces → dots, etc.)
+    active <- PREP_PARAMS[paste0("b_", PREP_PARAMS) %in% names(draws)]
+
+    # individual posterior = group fixed effect + child random slope
+    draw_list <- imap(active, function(stem, label) {
+      fixed_col <- paste0("b_", stem)
+      rfx_col   <- paste0("r_child_id[", child, ",", stem, "]")
+      if (!rfx_col %in% names(draws)) {
+        warning("Random-effect column not found: ", rfx_col, " — using fixed effect only")
+        return(draws[[fixed_col]])
+      }
+      draws[[fixed_col]] + draws[[rfx_col]]
+    })
+    names(draw_list) <- names(active)
+
+    forest_data <- .forest_data_from_draws(draw_list, names(active))
+
+    p <- .render_forest_plot(
+      forest_data,
+      x_label = "Individual effect vs.\\ No Preparation (points)"
+    ) +
+      ggtitle(paste("Child", child))
+
+    if (save_pdf) {
+      ggsave(
+        filename = here::here("results", "forest_plots", paste0("child_", child, ".pdf")),
+        plot     = p,
+        device   = cairo_pdf,
+        width    = 6,
+        height   = 2.8,
+        units    = "in",
+        dpi      = 300
+      )
+    }
+
+    ggsave(
+      filename = here::here("results", "forest_plots", paste0("child_", child, ".png")),
+      plot     = p,
+      width    = 6,
+      height   = 2.8,
+      units    = "in",
+      dpi      = 150
+    )
+  }
+
+  invisible(NULL)
+}
+
+
 boxplot_per_child <- function() {
   sessions <- read.csv(here::here("data", "sessions.csv"))
+  sessions$prep <- factor(sessions$prep, levels = ALL_PREPS)
   for (child in unique(sessions$child_id)) {
     p <- sessions |>
       filter(child_id == child) |>
-      ggplot(aes(x = prep, y = engagement, fill = prep)) +
+      ggplot(aes(y = prep, x = engagement, fill = prep)) +
       geom_violin(alpha = 0.4, trim = FALSE) +
       geom_boxplot(width = 0.2, outlier.shape = NA, alpha = 0.7) +
       geom_jitter(width = 0.08, size = 1.5, alpha = 0.6) +
       scale_fill_brewer(palette = "Set2") +
-      labs(title = paste("Child", child), x = "Prep type", y = "Rating") +
+      labs(title = paste("Child", child), y = "Prep type", x = "Rating") +
       theme_bw() +
       theme(legend.position = "none")
 
     ggsave(here::here("results", "figures", paste0("child_", child, ".png")), p, width = 6, height = 4)
   }
+}
+
+# ── Posterior predictive checks ────────────────────────────────────────────
+#
+# Asks whether data simulated from the fitted model resemble the observed
+# engagement scores. Convergence diagnostics (R-hat/ESS/divergences in
+# model.R) only confirm the sampler explored the posterior — these check
+# whether the *model itself* fits. Relevant here because engagement is a
+# bounded mean of BRES-10 ratings fitted with a Gaussian likelihood, which
+# can predict out-of-range, symmetric, constant-variance outcomes.
+#
+# Produces (and saves to results/ppc/):
+#   - dens_overlay        : observed density vs. posterior-predictive draws
+#   - stat min/max/sd     : can the model reproduce range and spread?
+#   - intervals           : per-observation predictive intervals vs. observed
+#   - stat_grouped (mean) : per-child fit, the level driving stopping decisions
+plot_ppc <- function(fit, ndraws = 100, save_pdf = FALSE) {
+  out_dir <- here::here("results", "ppc")
+  dir.create(out_dir, showWarnings = FALSE, recursive = TRUE)
+
+  plots <- list(
+    dens_overlay = pp_check(fit, type = "dens_overlay", ndraws = ndraws) +
+      ggtitle("PPC: observed vs. predicted density"),
+    stat_min     = pp_check(fit, type = "stat", stat = "min", ndraws = ndraws) +
+      ggtitle("PPC: minimum engagement"),
+    stat_max     = pp_check(fit, type = "stat", stat = "max", ndraws = ndraws) +
+      ggtitle("PPC: maximum engagement"),
+    stat_sd      = pp_check(fit, type = "stat", stat = "sd", ndraws = ndraws) +
+      ggtitle("PPC: standard deviation"),
+    intervals    = pp_check(fit, type = "intervals", ndraws = ndraws) +
+      ggtitle("PPC: per-observation predictive intervals"),
+    stat_grouped = pp_check(
+      fit,
+      type = "stat_grouped", stat = "mean", group = "child_id", ndraws = ndraws
+    ) +
+      ggtitle("PPC: mean engagement per child")
+  )
+
+  for (name in names(plots)) {
+    ggsave(
+      filename = file.path(out_dir, paste0(name, ".png")),
+      plot     = plots[[name]],
+      width    = 7,
+      height   = 4.5,
+      units    = "in",
+      dpi      = 150
+    )
+
+    if (save_pdf) {
+      ggsave(
+        filename = file.path(out_dir, paste0(name, ".pdf")),
+        plot     = plots[[name]],
+        device   = cairo_pdf,
+        width    = 7,
+        height   = 4.5,
+        units    = "in",
+        dpi      = 300
+      )
+    }
+  }
+
+  cat(sprintf("\nPosterior predictive checks saved to: %s\n", out_dir))
+  invisible(plots)
 }

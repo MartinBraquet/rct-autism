@@ -95,6 +95,7 @@ sessions <- sessions |>
 
 # Compute rating col as average of three ratings
 sessions <- sessions |>
+#   mutate(engagement = rating_5)
   mutate(engagement = (rating_5 + rating_15 + rating_30) / 3)
 
 glimpse(sessions)
@@ -161,3 +162,40 @@ stopifnot(
 
 # Save to CSV
 write.csv(sessions, here::here("data", "sessions.csv"), row.names = FALSE)
+
+mean_by_prep_child <- sessions %>%
+  group_by(child_id, prep) %>%
+  summarise(
+    mean_rating = mean(engagement, na.rm = TRUE),
+    std_rating = sd(engagement, na.rm = TRUE),
+    n_sessions  = n(),
+    .groups = "drop"
+  ) %>%
+  arrange(child_id, prep) %>%
+  mutate(mean_rating = round(mean_rating, 2), std_rating = round(std_rating, 2))
+
+save_csv(mean_by_prep_child, name = "ratings_per_child_and_prep")
+
+sessions_per_child <- sessions %>%
+  group_by(child_id) %>%
+  summarise(
+    mean_rating = mean(engagement, na.rm = TRUE),
+    n_sessions  = n(),
+    .groups = "drop"
+  ) %>%
+  arrange(child_id) %>%
+  mutate(mean_rating = round(mean_rating, 2))
+
+write.csv(sessions_per_child, here::here("results", "sessions_per_child.csv"), row.names = FALSE)
+
+sessions_per_prep <- sessions %>%
+  group_by(prep) %>%
+  summarise(
+    mean_rating = mean(engagement, na.rm = TRUE),
+    std_rating = sd(engagement, na.rm = TRUE),
+    n_sessions  = n(),
+    .groups = "drop"
+  ) %>%
+  mutate(mean_rating = round(mean_rating, 2), std_rating = round(std_rating, 2))
+
+write.csv(sessions_per_prep, here::here("results", "sessions_per_prep.csv"), row.names = FALSE)

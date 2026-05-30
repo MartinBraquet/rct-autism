@@ -20,31 +20,6 @@ file_path <- here("data", "sessions.csv")
 data <- read_csv(file_path)
 glimpse(data)
 
-mean_by_prep_child <- data %>%
-  group_by(child_id, prep) %>%
-  summarise(
-    mean_rating = mean(engagement, na.rm = TRUE),
-    std_rating = sd(engagement, na.rm = TRUE),
-    n_sessions  = n(),
-    .groups = "drop"
-  ) %>%
-  arrange(child_id, prep) %>%
-  mutate(mean_rating = round(mean_rating, 2), std_rating = round(std_rating, 2))
-
-save_csv(mean_by_prep_child, name = "ratings_per_child_and_prep")
-
-sessions_per_child <- data %>%
-  group_by(child_id) %>%
-  summarise(
-    mean_rating = mean(engagement, na.rm = TRUE),
-    n_sessions  = n(),
-    .groups = "drop"
-  ) %>%
-  arrange(child_id) %>%
-  mutate(mean_rating = round(mean_rating, 2))
-
-write.csv(sessions_per_child, here::here("results", "sessions_per_child.csv"), row.names = FALSE)
-
 chains <- 4
 fit <- fit_model_fresh(
   data,
@@ -63,3 +38,6 @@ write.csv(as_draws_df(fit), here::here("results", "draws.csv"), row.names = FALS
 results <- check_stopping_per_child(fit)
 print(results, n=100)
 save_csv(results, name = "stopping_checks")
+
+plot_forest_group_effects(fit, save_tikz = FALSE)
+plot_forest_per_child(fit)

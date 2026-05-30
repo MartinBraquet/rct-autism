@@ -11,16 +11,11 @@ library(purrr)
 library(ggplot2)
 
 source(here::here("analysis", "utils", "model.R"))
+source(here::here("analysis", "utils", "constants.R"))
 source(here::here("analysis", "utils", "sim.R"))
 
 
 # ── Per-Child Stopping Criteria ───────────────────────────────────────────
-
-PREP_PARAMS <- c(
-  Calming      = "prepCalming",
-  Stimulating  = "prepStimulating",
-  ChildChoice  = "prepChildChoice"
-)
 
 check_stopping_per_child <- function(fit,
                                      prob_best_threshold = 0.9,
@@ -129,7 +124,7 @@ check_stopping_per_child <- function(fit,
 
         # STOP if ALL active preps are likely in the ROPE
         # (Meaning we are confident none of them work)
-        in_rope <- all(prop_in_rope > 0.9)
+        in_rope <- all(prop_in_rope > 0.95)
 
 
         # ── Resolve stop reason (priority: superiority > rope > aipe > continue) ──

@@ -91,3 +91,11 @@ results <- check_stopping_per_child(fit)
 print(results, n=100)
 save_csv(results, name = "stopping_checks")
 ```
+
+## Posterior predictive checks
+
+The convergence diagnostics in `fit_model_fresh()` (R-hat, ESS, divergences) only confirm the sampler explored the posterior reliably; they say nothing about whether the model *fits* the data. Engagement is a bounded mean of BRES-10 ratings modelled with a Gaussian likelihood, so we check whether data simulated from the fitted model reproduce the observed range, spread, and per-child means. Systematic mismatches (e.g. predicted values outside the valid range, or under-dispersion) would flag misspecification of the likelihood.
+
+```{r ppc}
+plot_ppc(fit)
+```
