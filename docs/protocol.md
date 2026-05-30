@@ -1,7 +1,7 @@
 **Project Title:** Personalized Pre-Session Preparation to Improve Engagement in Early Autism Intervention: A Bayesian Adaptive Randomized N-of-1 Trial
 **Setting:** Maya Care and Grow, Agartala  
 **Principal Investigator:** Martin Braquet  
-**Collaborator:** Lily (Founder, Maya Care and Grow)    
+**Collaborator:** Riki Dewan (Founder, Maya Care and Grow)    
 **Source**: [https://github.com/MartinBraquet/rct-autism](https://github.com/MartinBraquet/rct-autism)
 **Version:** 1.1
   
@@ -85,7 +85,7 @@ Stopping rules are checked once weekly (every Sunday). At each check, only child
 
 ## 4. Interventions
 
-Each child is assigned one fixed activity within each condition prior to study commencement to prevent activity-type confounding. All activities are standard components of existing therapeutic programming at the centre.
+Each child is assigned one fixed activity within each condition prior to study commencement to prevent activity-type confounding. All activities are standard components of existing learning at the centre.
 
 | Condition | Label              | Description                                                        | Fixed Activity Example   |
 | --------- | ------------------ | ------------------------------------------------------------------ | ------------------------ |
@@ -162,7 +162,7 @@ All covariate decisions for the primary analysis are pre-registered and evaluate
 
 **Age (continuous, mean-centred):** Age in years, mean-centred at 9 years (`age_model = age_years − 9`), so that the model intercept represents a typical 9-year-old. Children range from 3 to 14 years. The coefficient β_age is expected to be positive, as older children tend to have higher baseline engagement capacity.
 
-**Teacher identity (categorical):** Teacher is included as a fixed effect, with one teacher designated as the reference category. Teacher effects are expected to be substantial given the therapist-dependent nature of ABA-style intervention and the current experience gap between the lead practitioner and her five assistants. Six teachers (A–F) are currently active at the centre.
+**Teacher identity (categorical):** Teacher is included as a fixed effect, with one teacher designated as the reference category. Teacher effects are expected to be substantial given the practitioner-dependent nature of ABA-style intervention and the current experience gap between the lead practitioner and her five assistants. Six teachers (A–F) are currently active at the centre.
 
 ### 7.2 Recorded but Excluded Variables
 
@@ -355,7 +355,7 @@ This study involves minors with a developmental condition and is conducted accor
 
 **Ethical framework:** This study is conducted in accordance with the principles of the Declaration of Helsinki. Formal IRB or ethics committee review was not available in this resource-constrained setting. Written parental consent and ongoing practitioner oversight constitute the primary ethical safeguards.
 
-**Risk assessment:** All preparation activities (Clay Modelling, Jumping, Choice Board) are standard components of existing therapeutic programming at the centre. No novel interventions are introduced. The primary risk is opportunity cost: children assigned to a suboptimal preparation condition may receive marginally less effective preparation than if individually optimised from the outset. This risk is minimised by the adaptive stopping rule, which terminates Randomization as soon as a personal recommendation can be made with ≥ 90% posterior probability, or the equivalent AIPE or ROPE criteria are met.
+**Risk assessment:** All preparation activities (Clay Modelling, Jumping, Choice Board) are standard components of existing learning at the centre. No novel interventions are introduced. The primary risk is opportunity cost: children assigned to a suboptimal preparation condition may receive marginally less effective preparation than if individually optimised from the outset. This risk is minimised by the adaptive stopping rule, which terminates Randomization as soon as a personal recommendation can be made with ≥ 90% posterior probability, or the equivalent AIPE or ROPE criteria are met.
   
 ---  
 
