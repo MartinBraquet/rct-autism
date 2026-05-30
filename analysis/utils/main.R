@@ -12,8 +12,7 @@ source(here("analysis", "utils", "sensitivity.R"))
 
 set.seed(42)
 
-source(here("analysis", "utils", "parse_form_data.R"))
-
+# source(here("analysis", "utils", "etl.R"))
 # boxplot_per_child()
 
 file_path <- here("data", "sessions.csv")
