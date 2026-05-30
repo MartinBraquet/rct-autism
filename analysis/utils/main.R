@@ -12,9 +12,6 @@ source(here("analysis", "utils", "sensitivity.R"))
 
 set.seed(42)
 
-# source(here("analysis", "utils", "etl.R"))
-# boxplot_per_child()
-
 file_path <- here("data", "sessions.csv")
 data <- read_csv(file_path)
 glimpse(data)

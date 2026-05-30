@@ -6,6 +6,7 @@ library(here)
 library(googlesheets4)
 
 source(here::here("analysis", "utils", "data.R"))
+source(here::here("analysis", "utils", "plotting.R"))
 
 # ==================================================================
 # EXTRACT — pull raw form responses from the private Google Sheet
@@ -236,3 +237,8 @@ save_csv(sessions, name = "sessions")
 save_csv(mean_by_prep_child, name = "ratings_per_child_and_prep")
 save_csv(sessions_per_child, name = "sessions_per_child")
 save_csv(sessions_per_prep, name = "sessions_per_prep")
+
+# ==================================================================
+# REPORT — generate summaries, plots, etc.
+# ==================================================================
+boxplot_per_child()

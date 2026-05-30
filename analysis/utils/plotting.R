@@ -416,7 +416,7 @@ plot_forest_per_child <- function(fit, save_pdf = FALSE) {
   draws    <- as_draws_df(fit)
   children <- levels(as.factor(fit$data$child_id))
 
-  dir.create(here::here("results", "forest_plots"), showWarnings = FALSE, recursive = TRUE)
+  dir.create(here::here("results", "posterior_plots"), showWarnings = FALSE, recursive = TRUE)
 
   for (child in children) {
     # brms sanitises level names in column headers (spaces → dots, etc.)
@@ -444,7 +444,7 @@ plot_forest_per_child <- function(fit, save_pdf = FALSE) {
 
     if (save_pdf) {
       ggsave(
-        filename = here::here("results", "forest_plots", paste0("child_", child, ".pdf")),
+        filename = here::here("results", "posterior_plots", paste0("child_", child, ".pdf")),
         plot     = p,
         device   = cairo_pdf,
         width    = 6,
@@ -455,7 +455,7 @@ plot_forest_per_child <- function(fit, save_pdf = FALSE) {
     }
 
     ggsave(
-      filename = here::here("results", "forest_plots", paste0("child_", child, ".png")),
+      filename = here::here("results", "posterior_plots", paste0("child_", child, ".png")),
       plot     = p,
       width    = 6,
       height   = 2.8,
@@ -483,7 +483,7 @@ boxplot_per_child <- function() {
       theme_bw() +
       theme(legend.position = "none")
 
-    ggsave(here::here("results", "figures", paste0("child_", child, ".png")), p, width = 6, height = 4)
+    ggsave(here::here("results", "observation_plots", paste0("child_", child, ".png")), p, width = 6, height = 4)
   }
 }
 
