@@ -18,6 +18,6 @@ load_csv <- function(path) {
 save_csv <- function(data, name) {
   ts <- format(Sys.time(), "%Y-%m-%d_%H%M%S")
   path <- here::here("results", "draft", paste0(ts, "_", name, ".csv"))
-  write_csv(data, path)
+  write.csv(data, path)
   cat(sprintf("\nData saved to: %s\n", path))
 }
