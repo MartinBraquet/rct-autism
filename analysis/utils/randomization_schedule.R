@@ -71,8 +71,8 @@ wide_df <- long_df %>%
   )
 
 # 5. Export to CSV
-write.csv(wide_df, here::here("data", "processed", "maya_care_randomization_schedule.csv"), row.names = FALSE)
+write.csv(wide_df, here::here("data", "processed", "randomization_schedule.csv"), row.names = FALSE)
 
 # Print a preview of the first few children and sessions
 print(head(wide_df[, 1:6]))
-cat("\nSuccess: Randomization schedule saved as 'maya_care_randomization_schedule.csv'")
+cat("\nSuccess: Randomization schedule saved as 'randomization_schedule.csv'")
