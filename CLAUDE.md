@@ -55,7 +55,7 @@ The `.Rmd` stages run in sequence and share `analysis/utils/`:
 
 ## Web app
 
-All web commands run **from the `web/` directory** with **yarn** (Node 20+). Note: `web/package.json` scripts use `next` directly (`yarn dev` runs on `0.0.0.0:3000`), while the root README/CONTRIBUTING describe the same `yarn dev` / `yarn lint` / `yarn typecheck` / `yarn build` workflow.
+All web commands run **from the `web/` directory** with **yarn** (Node 20+).
 
 ```bash
 cd web
@@ -72,4 +72,3 @@ Conventions (enforced in code review): kebab-case filenames, PascalCase componen
 ## Repo-wide conventions
 
 - A Husky `pre-commit` hook runs `lint-staged`: Prettier on all staged files, plus ESLint (fix + zero-warning check) on staged `web/**` TS/JS files.
-- Never commit to `main`; branch as `type/short-description` (`feat/`, `fix/`, `docs/`, `refactor/`, `test/`, `chore/`). Commits follow Conventional Commits (`type(scope): description`).
