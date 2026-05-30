@@ -226,9 +226,13 @@ sessions_per_prep <- sessions %>%
 # ==================================================================
 write.csv(sessions_named, here::here("data", "processed", "sessions_with_child_names.csv"), row.names = FALSE)
 write.csv(sessions, here::here("data", "sessions.csv"), row.names = FALSE)
-
 write.csv(mean_by_prep_child, here::here("data", "processed", "ratings_per_child_and_prep.csv"), row.names = FALSE)
-save_csv(mean_by_prep_child, name = "ratings_per_child_and_prep")
-
 write.csv(sessions_per_child, here::here("results", "sessions_per_child.csv"), row.names = FALSE)
 write.csv(sessions_per_prep, here::here("results", "sessions_per_prep.csv"), row.names = FALSE)
+
+# Timestamped snapshots of every written CSV (results/draft/) for audit trail.
+save_csv(sessions_named, name = "sessions_with_child_names")
+save_csv(sessions, name = "sessions")
+save_csv(mean_by_prep_child, name = "ratings_per_child_and_prep")
+save_csv(sessions_per_child, name = "sessions_per_child")
+save_csv(sessions_per_prep, name = "sessions_per_prep")
