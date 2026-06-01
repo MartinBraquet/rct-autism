@@ -34,6 +34,7 @@ write.csv(as_draws_df(fit), here::here("results", "draws.csv"), row.names = FALS
 results <- check_stopping_per_child(fit)
 print(results, n=100)
 save_csv(results, name = "stopping_checks")
+write.csv(results, here::here("results", "stopping_checks.csv"), row.names = FALSE)
 
 plot_forest_group_effects(fit, save_tikz = FALSE)
 plot_forest_per_child(fit)
