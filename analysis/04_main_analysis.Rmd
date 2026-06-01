@@ -43,10 +43,10 @@ The main analysis checks the stopping conditions with the current data and assig
 ## Steps
 
 1. Load latest data (etl.R)
-2. Check observation box plots
+2. Check observation box plots (in results/observation_plots)
 3. Run analysis (main.R)
-4. Check stopping conditions
-5. Check posterior forest plots
+4. Check stopping conditions (results/stopping_checks.csv)
+5. Check posterior forest plots (in results/posterior_plots)
 6. Assign recommended preparations
 
 Descriptive analysis of child ratings per prep:
