@@ -49,6 +49,11 @@ The main analysis checks the stopping conditions with the current data and assig
 5. Check posterior forest plots (in results/posterior_plots)
 6. Assign recommended preparations
 
+```{r}
+source("analysis/utils/etl.R")
+source("analysis/utils/main.R")
+```
+
 Descriptive analysis of child ratings per prep:
 ```{r}
 boxplot_per_child()
