@@ -64,7 +64,7 @@ check_stopping_per_child <- function(fit,
         print(p_best)
 
         best_name <- names(which.max(p_best))
-        p_best_max <- max(p_best)
+        best_p <- max(p_best)
 
         # Identify the top 2 names based on p_best
         top_names <- names(sort(p_best, decreasing = TRUE))
@@ -74,10 +74,10 @@ check_stopping_per_child <- function(fit,
         # ── Stopping criterion 1: SUPERIORITY ────────────────────────────────────
         # One active prep wins the posterior majority AND exceeds the threshold.
         # Explicitly excludes No Prep from triggering this arm.
-        superiority <- p_best_max >= prob_best_threshold
+        superiority <- best_p >= prob_best_threshold
         print(sprintf(
           "Superiority check for Child %s: best arm = %s (P=%.2f), met = %s",
-          cid, best_name, p_best_max, superiority
+          cid, best_name, best_p, superiority
         ))
 
         # ── Stopping criterion 2: AIPE ────────────────────────────────────────────
@@ -135,7 +135,7 @@ check_stopping_per_child <- function(fit,
           TRUE ~ "continue"
         )
 
-        best_condition <- case_when(
+        resolved_prep <- case_when(
           superiority ~ best_name,
           in_rope ~ "NoPrep",
           aipe_met ~ paste(sort(top_names_prep[1:2]), collapse = ","),
@@ -143,15 +143,15 @@ check_stopping_per_child <- function(fit,
         )
 
         print(sprintf(
-          "Final decision for Child %s: stop_reason = %s, best_condition = %s",
-          cid, stop_reason, best_condition
+          "Final decision for Child %s: stop_reason = %s, resolved_prep = %s",
+          cid, stop_reason, resolved_prep
         ))
 
         tibble(
           child_id       = cid,
-          best_condition = best_condition,
-          p_best         = p_best_max,
-          condition      = best_name,
+          resolved_prep  = resolved_prep,
+          best_p         = best_p,
+          best_prep      = best_name,
           superiority    = superiority,
 #           p_no_prep      = p_best["NoPrep"],
           q_1 = q_1,
@@ -160,7 +160,7 @@ check_stopping_per_child <- function(fit,
           aipe_met       = aipe_met,
           p_cal_rope     = prop_in_rope["Calming"],
           p_sti_rope     = prop_in_rope["Stimulating"],
-          p_cc_rope     = prop_in_rope["ChildChoice"],
+          p_cc_rope      = prop_in_rope["ChildChoice"],
           in_rope        = in_rope,
           stop_reason    = stop_reason
         )
@@ -327,21 +327,21 @@ check_stopping_sequentially <- function(
     tryCatch(
       {
         check_stopping_per_child(last_fit) |>
-          dplyr::select(child_id, best_condition, p_best)
+          dplyr::select(child_id, resolved_prep, best_p)
       },
       error = function(e) {
         tibble(
           child_id = factor(seq_len(n_children)),
-          best_condition = NA_character_,
-          p_best = NA_real_
+          resolved_prep = NA_character_,
+          best_p = NA_real_
         )
       }
     )
   } else {
     tibble(
       child_id = factor(seq_len(n_children)),
-      best_condition = NA_character_,
-      p_best = NA_real_
+      resolved_prep = NA_character_,
+      best_p = NA_real_
     )
   }
 
@@ -365,8 +365,8 @@ check_stopping_sequentially <- function(
 print_winners_list <- function(child_status) {
   winners <- child_status %>%
     arrange(child_id) %>%
-    dplyr::select(child_id, best_condition, p_best, stop_session, stop_reason, true_profile) %>%
-    filter(!is.na(best_condition))
+    dplyr::select(child_id, resolved_prep, best_p, stop_session, stop_reason, true_profile) %>%
+    filter(!is.na(resolved_prep))
 
   cat("\n")
   cat("══════════════════════════════════════════════════════════\n")
@@ -377,7 +377,7 @@ print_winners_list <- function(child_status) {
     row <- winners[i, ]
     cat(sprintf(
       "  Child %2s:  %-16s (P(best)=%.2f, stopped at session %2d via %s)\n",
-      row$child_id, row$best_condition, row$p_best,
+      row$child_id, row$resolved_prep, row$best_p,
       row$stop_session, row$stop_reason
     ))
   }
@@ -386,7 +386,7 @@ print_winners_list <- function(child_status) {
 
   # Summary by prep type
   prep_counts <- winners %>%
-    group_by(best_condition) %>%
+    group_by(resolved_prep) %>%
     summarise(n = n(), .groups = "drop") %>%
     arrange(desc(n))
 
@@ -396,7 +396,7 @@ print_winners_list <- function(child_status) {
     pct <- round(100 * row$n / nrow(winners), 1)
     cat(sprintf(
       "    %-16s: %2d children (%.1f%%)\n",
-      row$best_condition, row$n, pct
+      row$resolved_prep, row$n, pct
     ))
   }
   cat("\n")

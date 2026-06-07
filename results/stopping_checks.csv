@@ -1,4 +1,4 @@
-"child_id","best_condition","p_best","condition","superiority","q_1","q_2","cri_width","aipe_met","p_cal_rope","p_sti_rope","p_cc_rope","in_rope","stop_reason"
+"child_id","resolved_prep","best_p","best_prep","superiority","q_1","q_2","cri_width","aipe_met","p_cal_rope","p_sti_rope","p_cc_rope","in_rope","stop_reason"
 "1","NoPrep",0.375,"NoPrep",FALSE,-0.5024104159,-0.610943855,1.1622880048,FALSE,0.977,0.974,0.9845,TRUE,"rope"
 "2","NoPrep",0.37525,"NoPrep",FALSE,-0.562146228,-0.7546091457,1.3091179044,FALSE,0.984,0.95475,0.9795,TRUE,"rope"
 "3","NoPrep",0.339,"NoPrep",FALSE,-0.6236600643,-0.644076174,1.35509023451,FALSE,0.9735,0.96175,0.9545,TRUE,"rope"

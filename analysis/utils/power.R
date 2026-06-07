@@ -83,11 +83,11 @@ simulate_adaptive_one <- function(template_fit = NULL,
       by = "child_id"
     ) |>
     mutate(
-      correct = coalesce(str_detect(true_winners, fixed(as.character(best_condition))), FALSE)
+      correct = coalesce(str_detect(true_winners, fixed(as.character(resolved_prep))), FALSE)
     )
 
   cat("\nChild status at end of simulation:")
-  cols <- c("true_profile", "true_winners", "best_condition", "p_best", "correct", "stop_reason", "detected")
+  cols <- c("true_profile", "true_winners", "resolved_prep", "best_p", "correct", "stop_reason", "detected")
   print(child_status[, cols], n = n_children)
   print_winners_list(child_status)
 

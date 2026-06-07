@@ -61,26 +61,26 @@ prior_list <- list(
 
 
 
-# Check % agreement in best_condition assignments across priors
-check_best_condition_agreement <- function(sensitivity_results) {
-  # Extract best_condition for each child across all priors
-  best_conditions <- map_dfr(names(sensitivity_results), function(prior_name) {
+# Check % agreement in resolved_prep assignments across priors
+check_resolved_prep_agreement <- function(sensitivity_results) {
+  # Extract resolved_prep for each child across all priors
+  resolved_preps <- map_dfr(names(sensitivity_results), function(prior_name) {
     child_status_df <- sensitivity_results[[prior_name]]$child_status
     data.frame(
       child_id = child_status_df$child_id,
-      best_condition = child_status_df$best_condition,
+      resolved_prep = child_status_df$resolved_prep,
       prior = prior_name
     )
   })
 
   # Calculate agreement for each child
-  agreement_by_child <- best_conditions %>%
+  agreement_by_child <- resolved_preps %>%
     group_by(child_id) %>%
     summarize(
       n_conditions = n(),
-      unique_conditions = n_distinct(best_condition),
+      unique_conditions = n_distinct(resolved_prep),
       most_common = {
-        condition_table <- table(best_condition)
+        condition_table <- table(resolved_prep)
         if (length(condition_table) > 0) {
           names(sort(condition_table, decreasing = TRUE))[1]
         } else {
@@ -88,7 +88,7 @@ check_best_condition_agreement <- function(sensitivity_results) {
         }
       },
       agreement_count = {
-        condition_table <- table(best_condition)
+        condition_table <- table(resolved_prep)
         if (length(condition_table) > 0) {
           max(condition_table)
         } else {
@@ -100,7 +100,7 @@ check_best_condition_agreement <- function(sensitivity_results) {
     )
 
   # Overall agreement
-  total_assignments <- nrow(best_conditions)
+  total_assignments <- nrow(resolved_preps)
   children_with_perfect_agreement <- sum(agreement_by_child$agreement_pct == 100)
   overall_agreement <- (children_with_perfect_agreement / nrow(agreement_by_child)) * 100
 
@@ -136,7 +136,7 @@ check_best_condition_agreement <- function(sensitivity_results) {
   invisible(list(
     agreement_by_child = agreement_by_child,
     overall_agreement = overall_agreement,
-    detailed_assignments = best_conditions
+    detailed_assignments = resolved_preps
   ))
 }
 
@@ -217,7 +217,7 @@ sim_average <- function(results) {
 
   # Extract best condition agreement results
   all_agreements <- map(results, function(sim_result) {
-    sim_result$best_condition_agreement$agreement_by_child
+    sim_result$resolved_prep_agreement$agreement_by_child
   })
 
   # Average agreement by child across simulations
@@ -342,11 +342,11 @@ run_prior_sensitivity <- function(
       )
     }
 
-    best_condition_agreement <- check_best_condition_agreement(sensitivity_results)
+    resolved_prep_agreement <- check_resolved_prep_agreement(sensitivity_results)
     stopping_time_efficiency <- check_stopping_time_efficiency(sensitivity_results)
 
     list(
-      best_condition_agreement = best_condition_agreement,
+      resolved_prep_agreement = resolved_prep_agreement,
       stopping_time_efficiency = stopping_time_efficiency
     )
   }
@@ -406,12 +406,12 @@ covariate_sensitivity_single_sim = function(
   combined_results <- combined_results[order(combined_results$child_id), ]
   print(combined_results, n = nrow(combined_results))
   
-  # Aggregate over child_id and check best_condition consistency
+  # Aggregate over child_id and check resolved_prep consistency
   consistency_check <- combined_results %>%
     group_by(child_id) %>%
     summarise(
-      baseline_best_condition = best_condition[fit_name == "baseline"],
-      valid_decisions = list(best_condition[!is.na(best_condition)]),
+      baseline_resolved_prep = resolved_prep[fit_name == "baseline"],
+      valid_decisions = list(resolved_prep[!is.na(resolved_prep)]),
       has_any_decision = length(valid_decisions[[1]]) > 0,
       all_sets = list(strsplit(as.character(valid_decisions[[1]]), ",\\s*")),
       common_winners = if(has_any_decision) {
@@ -428,7 +428,7 @@ covariate_sensitivity_single_sim = function(
   # Summary of consistency
   n_consistent <- sum(consistency_check$is_consistent, na.rm = TRUE)
   n_total <- nrow(consistency_check)
-  cat(sprintf("\nConsistency Summary: %d/%d children have consistent best_condition across fits (%.1f%%)\n", 
+  cat(sprintf("\nConsistency Summary: %d/%d children have consistent resolved_prep across fits (%.1f%%)\n",
               n_consistent, n_total, 100 * n_consistent / n_total))
   
   # Return both combined_results and consistency_check
