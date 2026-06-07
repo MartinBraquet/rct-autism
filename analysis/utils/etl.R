@@ -182,12 +182,12 @@ stopifnot(
 cols_required <- c("date", "child_id", "teacher", "prep",
                    "baseline_state", "rating_5", "rating_15", "rating_30")
 
-missing_counts <- sessions |>
-  summarise(across(all_of(cols_required), ~ sum(is.na(.))))
+missing_rows <- sessions |>
+  filter(if_any(all_of(cols_required), is.na))
 
 stopifnot(
-  "Missing values found in required columns — see missing_counts for details" =
-    all(missing_counts == 0)
+  "Missing values found in required columns — see missing_rows for details" =
+    nrow(missing_rows) == 0
 )
 
 # --- Derive summary tables ---------------------------------------
