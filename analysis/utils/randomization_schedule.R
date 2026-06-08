@@ -7,8 +7,8 @@ library(dplyr)
 
 # 1. Setup Parameters
 set.seed(42) # Set seed for reproducibility
-n_children <- 30
-n_blocks <- 8
+n_children <- 50
+n_blocks <- 12
 block_size <- 4
 total_sessions <- n_blocks * block_size
 preps <- c("Stimulating", "Calming", "Child Choice", "No Prep")
@@ -75,4 +75,4 @@ write.csv(wide_df, here::here("data", "processed", "randomization_schedule.csv")
 
 # Print a preview of the first few children and sessions
 print(head(wide_df[, 1:6]))
-cat("\nSuccess: Randomization schedule saved as 'randomization_schedule.csv'")
+cat("\nSuccess: Randomization schedule saved as 'data/processed/randomization_schedule.csv'")
