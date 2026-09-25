@@ -7,6 +7,13 @@ import {Col} from 'web/components/layout/col'
 import {Row} from 'web/components/layout/row'
 import {CustomLink} from 'web/components/links'
 import {SectionHeader} from 'web/components/sections'
+import {ChildResults} from 'web/components/study-results/child-results'
+import {GroupResults} from 'web/components/study-results/group-results'
+import {RESULTS} from 'web/components/study-results/results-data'
+import {ResultsDiscussion} from 'web/components/study-results/results-discussion'
+
+const formatDay = (d: string) =>
+  new Date(d).toLocaleDateString('en-GB', {day: 'numeric', month: 'long', timeZone: 'UTC'})
 
 const protocolUrl =
   'https://github.com/MartinBraquet/rct-autism/releases/download/v1.0.0/protocol.pdf'
@@ -446,6 +453,7 @@ export default function IndexPage() {
                 '#safety',
                 '#simulations',
                 '#results',
+                '#discussion',
                 '#resources',
                 '#faq',
               ].map((href, i) => (
@@ -482,6 +490,7 @@ export default function IndexPage() {
                       'Safety',
                       'Simulations',
                       'Results',
+                      'Discussion',
                       'Resources',
                       'FAQ',
                     ][i]
@@ -499,6 +508,7 @@ export default function IndexPage() {
             '#safety',
             '#simulations',
             '#results',
+            '#discussion',
             '#resources',
             '#faq',
           ].map((href, i) => (
@@ -532,6 +542,7 @@ export default function IndexPage() {
                   'Safety',
                   'Simulations',
                   'Results',
+                  'Discussion',
                   'Resources',
                   'FAQ',
                 ][i]
@@ -585,9 +596,12 @@ export default function IndexPage() {
                 animation: 'fadeUp 0.6s 0.2s ease both',
               }}
             >
-              We're studying how a short 10-minute warm-up before a learning session can help
-              children with autism engage more — and finding the right warm-up{' '}
-              <em>for each individual child</em>.
+              We studied whether a short 10-minute warm-up before a learning session helps children
+              with autism engage more — and tried to find the right warm-up{' '}
+              <em>for each individual child</em>. The study is now complete.{' '}
+              <a href="#results" style={{color: '#3d5a45', fontWeight: 600}}>
+                Read the results →
+              </a>
             </p>
             {/*<div style={{ marginTop: "4rem", display: "flex", alignItems: "center", gap: "0.75rem", fontSize: "0.75rem", letterSpacing: "0.08em", textTransform: "uppercase", color: "#bab2a0", animation: "fadeUp 0.6s 0.4s ease both" }}>*/}
             {/*  <div style={{ width: 40, height: 1, background: "#bab2a0", animation: "scrollLine 2s ease infinite" }} />*/}
@@ -1523,9 +1537,42 @@ export default function IndexPage() {
           <div {...R()}>
             <SectionHeader
               label="Results"
-              title="Predictive Power & Personalized Insights"
-              body="Data collection is in progress — we'll update this section in June."
+              title="No preparation effect detected"
+              body={`Data collection ran from ${formatDay(RESULTS.first_date)} to ${formatDay(RESULTS.last_date)}, 2026, with ${RESULTS.n_children} children and ${RESULTS.n_sessions} rated sessions. Neither the group as a whole nor any individual child showed a detectable benefit from any of the three warm-ups.`}
             />
+          </div>
+          <div {...R()} style={{marginTop: '3rem'}}>
+            <GroupResults />
+          </div>
+        </div>
+      </section>
+
+      <div style={{height: 1, background: '#e8dece', margin: '0 2rem'}} />
+
+      <section id="individual-results" style={{padding: '90px 2rem', background: '#faf6f0'}}>
+        <div style={{maxWidth: 1000, margin: '0 auto'}}>
+          <div {...R()}>
+            <SectionHeader
+              label="Individual Results"
+              title="Child by child"
+              body="The study was designed to find the best warm-up for each child. Use the arrows to browse all children, identified by anonymous number."
+            />
+          </div>
+          <div {...R()} style={{marginTop: '3rem'}}>
+            <ChildResults />
+          </div>
+        </div>
+      </section>
+
+      <div style={{height: 1, background: '#e8dece', margin: '0 2rem'}} />
+
+      <section id="discussion" style={{padding: '90px 2rem', background: '#fffef9'}}>
+        <div style={{maxWidth: 1000, margin: '0 auto'}}>
+          <div {...R()}>
+            <SectionHeader label="Discussion" title="Why we didn't detect an effect" />
+          </div>
+          <div {...R()}>
+            <ResultsDiscussion />
           </div>
         </div>
       </section>

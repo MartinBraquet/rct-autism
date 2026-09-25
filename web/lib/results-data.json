@@ -1,0 +1,3667 @@
+{
+  "generated": "2026-09-25",
+  "rope": 1,
+  "n_children": 31,
+  "n_sessions": 292,
+  "first_date": "2026-04-20",
+  "last_date": "2026-06-10",
+  "n_teachers": 5,
+  "group": {
+    "intercept": {
+      "mean": 5.149,
+      "lo95": 4.084,
+      "hi95": 6.283,
+      "lo80": 4.435,
+      "hi80": 5.871,
+      "p_positive": 1,
+      "p_rope": 0
+    },
+    "sigma": {
+      "mean": 1.491,
+      "lo95": 1.364,
+      "hi95": 1.634,
+      "lo80": 1.404,
+      "hi80": 1.579,
+      "p_positive": 1,
+      "p_rope": 0
+    },
+    "sd_child_intercept": {
+      "mean": 1.517,
+      "lo95": 1.081,
+      "hi95": 2.072,
+      "lo80": 1.218,
+      "hi80": 1.849,
+      "p_positive": 1,
+      "p_rope": 0.007
+    },
+    "effects": {
+      "ChildChoice": {
+        "mean": 0.032,
+        "lo95": -0.504,
+        "hi95": 0.604,
+        "lo80": -0.308,
+        "hi80": 0.396,
+        "p_positive": 0.534,
+        "p_rope": 0.999
+      },
+      "Stimulating": {
+        "mean": 0.138,
+        "lo95": -0.366,
+        "hi95": 0.633,
+        "lo80": -0.191,
+        "hi80": 0.463,
+        "p_positive": 0.713,
+        "p_rope": 1
+      },
+      "Calming": {
+        "mean": -0.238,
+        "lo95": -0.736,
+        "hi95": 0.261,
+        "lo80": -0.567,
+        "hi80": 0.088,
+        "p_positive": 0.173,
+        "p_rope": 0.998
+      }
+    },
+    "child_sd": {
+      "ChildChoice": {
+        "mean": 0.411,
+        "lo95": 0.012,
+        "hi95": 1.182,
+        "lo80": 0.056,
+        "hi80": 0.847,
+        "p_positive": 1,
+        "p_rope": 0.949
+      },
+      "Stimulating": {
+        "mean": 0.254,
+        "lo95": 0.008,
+        "hi95": 0.747,
+        "lo80": 0.037,
+        "hi80": 0.532,
+        "p_positive": 1,
+        "p_rope": 0.997
+      },
+      "Calming": {
+        "mean": 0.246,
+        "lo95": 0.008,
+        "hi95": 0.75,
+        "lo80": 0.036,
+        "hi80": 0.525,
+        "p_positive": 1,
+        "p_rope": 0.995
+      }
+    },
+    "raw": {
+      "ChildChoice": {
+        "n": 63,
+        "mean": 5.27,
+        "sd": 2.15
+      },
+      "Stimulating": {
+        "n": 81,
+        "mean": 5.51,
+        "sd": 2.05
+      },
+      "Calming": {
+        "n": 73,
+        "mean": 5.16,
+        "sd": 2.05
+      },
+      "NoPrep": {
+        "n": 75,
+        "mean": 5.24,
+        "sd": 2
+      }
+    }
+  },
+  "stop_counts": {
+    "continue": 24,
+    "rope": 7
+  },
+  "quality": {
+    "share_rated_over_1h": 0.349,
+    "share_rated_over_3h": 0.257,
+    "share_identical_ratings": 0.363,
+    "share_under_12_sessions": 0.645
+  },
+  "children": [
+    {
+      "id": 1,
+      "n_sessions": 29,
+      "first_date": "2026-04-21",
+      "last_date": "2026-06-10",
+      "stop_reason": "rope",
+      "best_prep": "Stimulating",
+      "effects": {
+        "ChildChoice": {
+          "mean": 0.069,
+          "lo95": -0.755,
+          "hi95": 0.968,
+          "lo80": -0.428,
+          "hi80": 0.603,
+          "p_positive": 0.552,
+          "p_rope": 0.972
+        },
+        "Stimulating": {
+          "mean": 0.091,
+          "lo95": -0.643,
+          "hi95": 0.767,
+          "lo80": -0.336,
+          "hi80": 0.513,
+          "p_positive": 0.618,
+          "p_rope": 0.987
+        },
+        "Calming": {
+          "mean": -0.288,
+          "lo95": -0.985,
+          "hi95": 0.344,
+          "lo80": -0.713,
+          "hi80": 0.111,
+          "p_positive": 0.18,
+          "p_rope": 0.977
+        }
+      },
+      "p_best": {
+        "ChildChoice": 0.363,
+        "Stimulating": 0.392,
+        "Calming": 0.044,
+        "NoPrep": 0.2
+      },
+      "raw": {
+        "ChildChoice": {
+          "n": 6,
+          "mean": 7.28,
+          "sd": 0.9
+        },
+        "Stimulating": {
+          "n": 8,
+          "mean": 7.08,
+          "sd": 1.29
+        },
+        "Calming": {
+          "n": 9,
+          "mean": 6.59,
+          "sd": 1.01
+        },
+        "NoPrep": {
+          "n": 6,
+          "mean": 7.83,
+          "sd": 0.86
+        }
+      },
+      "sessions": [
+        {
+          "date": "2026-04-21",
+          "prep": "Stimulating",
+          "engagement": 8
+        },
+        {
+          "date": "2026-04-22",
+          "prep": "NoPrep",
+          "engagement": 9.33
+        },
+        {
+          "date": "2026-04-23",
+          "prep": "ChildChoice",
+          "engagement": 8
+        },
+        {
+          "date": "2026-04-25",
+          "prep": "Calming",
+          "engagement": 6.67
+        },
+        {
+          "date": "2026-04-27",
+          "prep": "Stimulating",
+          "engagement": 6
+        },
+        {
+          "date": "2026-04-28",
+          "prep": "ChildChoice",
+          "engagement": 8
+        },
+        {
+          "date": "2026-04-30",
+          "prep": "NoPrep",
+          "engagement": 8.33
+        },
+        {
+          "date": "2026-05-02",
+          "prep": "ChildChoice",
+          "engagement": 7.33
+        },
+        {
+          "date": "2026-05-04",
+          "prep": "Calming",
+          "engagement": 6
+        },
+        {
+          "date": "2026-05-07",
+          "prep": "NoPrep",
+          "engagement": 7.33
+        },
+        {
+          "date": "2026-05-11",
+          "prep": "Calming",
+          "engagement": 5.33
+        },
+        {
+          "date": "2026-05-12",
+          "prep": "ChildChoice",
+          "engagement": 8
+        },
+        {
+          "date": "2026-05-13",
+          "prep": "Calming",
+          "engagement": 5.33
+        },
+        {
+          "date": "2026-05-14",
+          "prep": "Stimulating",
+          "engagement": 8
+        },
+        {
+          "date": "2026-05-15",
+          "prep": "Stimulating",
+          "engagement": 5
+        },
+        {
+          "date": "2026-05-16",
+          "prep": "ChildChoice",
+          "engagement": 6.33
+        },
+        {
+          "date": "2026-05-21",
+          "prep": "Calming",
+          "engagement": 7
+        },
+        {
+          "date": "2026-05-22",
+          "prep": "NoPrep",
+          "engagement": 7.67
+        },
+        {
+          "date": "2026-05-26",
+          "prep": "Stimulating",
+          "engagement": 5.67
+        },
+        {
+          "date": "2026-05-28",
+          "prep": "Calming",
+          "engagement": 6
+        },
+        {
+          "date": "2026-06-01",
+          "prep": "ChildChoice",
+          "engagement": 6
+        },
+        {
+          "date": "2026-06-02",
+          "prep": "NoPrep",
+          "engagement": 7.33
+        },
+        {
+          "date": "2026-06-03",
+          "prep": "Calming",
+          "engagement": 8
+        },
+        {
+          "date": "2026-06-04",
+          "prep": "Calming",
+          "engagement": 7
+        },
+        {
+          "date": "2026-06-05",
+          "prep": "Stimulating",
+          "engagement": 8
+        },
+        {
+          "date": "2026-06-06",
+          "prep": "NoPrep",
+          "engagement": 7
+        },
+        {
+          "date": "2026-06-08",
+          "prep": "Stimulating",
+          "engagement": 8
+        },
+        {
+          "date": "2026-06-09",
+          "prep": "Calming",
+          "engagement": 8
+        },
+        {
+          "date": "2026-06-10",
+          "prep": "Stimulating",
+          "engagement": 8
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "n_sessions": 18,
+      "first_date": "2026-05-07",
+      "last_date": "2026-06-10",
+      "stop_reason": "rope",
+      "best_prep": "ChildChoice",
+      "effects": {
+        "ChildChoice": {
+          "mean": 0.057,
+          "lo95": -0.82,
+          "hi95": 1.051,
+          "lo80": -0.461,
+          "hi80": 0.601,
+          "p_positive": 0.541,
+          "p_rope": 0.958
+        },
+        "Stimulating": {
+          "mean": 0.001,
+          "lo95": -0.906,
+          "hi95": 0.647,
+          "lo80": -0.497,
+          "hi80": 0.437,
+          "p_positive": 0.552,
+          "p_rope": 0.981
+        },
+        "Calming": {
+          "mean": -0.187,
+          "lo95": -0.853,
+          "hi95": 0.604,
+          "lo80": -0.613,
+          "hi80": 0.266,
+          "p_positive": 0.26,
+          "p_rope": 0.983
+        }
+      },
+      "p_best": {
+        "ChildChoice": 0.359,
+        "Stimulating": 0.326,
+        "Calming": 0.108,
+        "NoPrep": 0.206
+      },
+      "raw": {
+        "ChildChoice": {
+          "n": 4,
+          "mean": 4.67,
+          "sd": 0.94
+        },
+        "Stimulating": {
+          "n": 6,
+          "mean": 3.94,
+          "sd": 1.57
+        },
+        "Calming": {
+          "n": 4,
+          "mean": 4.75,
+          "sd": 1.13
+        },
+        "NoPrep": {
+          "n": 4,
+          "mean": 4.92,
+          "sd": 0.79
+        }
+      },
+      "sessions": [
+        {
+          "date": "2026-05-07",
+          "prep": "Calming",
+          "engagement": 4.33
+        },
+        {
+          "date": "2026-05-08",
+          "prep": "Stimulating",
+          "engagement": 5
+        },
+        {
+          "date": "2026-05-11",
+          "prep": "Stimulating",
+          "engagement": 4.33
+        },
+        {
+          "date": "2026-05-12",
+          "prep": "Calming",
+          "engagement": 4.67
+        },
+        {
+          "date": "2026-05-13",
+          "prep": "NoPrep",
+          "engagement": 4.33
+        },
+        {
+          "date": "2026-05-14",
+          "prep": "ChildChoice",
+          "engagement": 6
+        },
+        {
+          "date": "2026-05-15",
+          "prep": "Stimulating",
+          "engagement": 2
+        },
+        {
+          "date": "2026-05-21",
+          "prep": "Stimulating",
+          "engagement": 2
+        },
+        {
+          "date": "2026-05-25",
+          "prep": "Stimulating",
+          "engagement": 5.67
+        },
+        {
+          "date": "2026-05-26",
+          "prep": "Calming",
+          "engagement": 6.33
+        },
+        {
+          "date": "2026-05-28",
+          "prep": "ChildChoice",
+          "engagement": 4
+        },
+        {
+          "date": "2026-05-29",
+          "prep": "NoPrep",
+          "engagement": 6
+        },
+        {
+          "date": "2026-06-03",
+          "prep": "ChildChoice",
+          "engagement": 4.67
+        },
+        {
+          "date": "2026-06-04",
+          "prep": "Calming",
+          "engagement": 3.67
+        },
+        {
+          "date": "2026-06-05",
+          "prep": "NoPrep",
+          "engagement": 5
+        },
+        {
+          "date": "2026-06-08",
+          "prep": "ChildChoice",
+          "engagement": 4
+        },
+        {
+          "date": "2026-06-09",
+          "prep": "Stimulating",
+          "engagement": 4.67
+        },
+        {
+          "date": "2026-06-10",
+          "prep": "NoPrep",
+          "engagement": 4.33
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "n_sessions": 9,
+      "first_date": "2026-04-22",
+      "last_date": "2026-06-10",
+      "stop_reason": "continue",
+      "best_prep": "Stimulating",
+      "effects": {
+        "ChildChoice": {
+          "mean": 0.029,
+          "lo95": -1.166,
+          "hi95": 1.278,
+          "lo80": -0.61,
+          "hi80": 0.651,
+          "p_positive": 0.516,
+          "p_rope": 0.918
+        },
+        "Stimulating": {
+          "mean": 0.094,
+          "lo95": -0.703,
+          "hi95": 0.794,
+          "lo80": -0.364,
+          "hi80": 0.529,
+          "p_positive": 0.625,
+          "p_rope": 0.986
+        },
+        "Calming": {
+          "mean": -0.19,
+          "lo95": -0.959,
+          "hi95": 0.727,
+          "lo80": -0.656,
+          "hi80": 0.285,
+          "p_positive": 0.277,
+          "p_rope": 0.967
+        }
+      },
+      "p_best": {
+        "ChildChoice": 0.328,
+        "Stimulating": 0.394,
+        "Calming": 0.102,
+        "NoPrep": 0.176
+      },
+      "raw": {
+        "ChildChoice": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        },
+        "Stimulating": {
+          "n": 4,
+          "mean": 6.42,
+          "sd": 1.83
+        },
+        "Calming": {
+          "n": 1,
+          "mean": 7.67,
+          "sd": null
+        },
+        "NoPrep": {
+          "n": 4,
+          "mean": 7,
+          "sd": 0.72
+        }
+      },
+      "sessions": [
+        {
+          "date": "2026-04-22",
+          "prep": "Stimulating",
+          "engagement": 4.67
+        },
+        {
+          "date": "2026-04-24",
+          "prep": "NoPrep",
+          "engagement": 7.67
+        },
+        {
+          "date": "2026-05-08",
+          "prep": "Stimulating",
+          "engagement": 5
+        },
+        {
+          "date": "2026-05-11",
+          "prep": "Calming",
+          "engagement": 7.67
+        },
+        {
+          "date": "2026-05-13",
+          "prep": "NoPrep",
+          "engagement": 7
+        },
+        {
+          "date": "2026-05-15",
+          "prep": "NoPrep",
+          "engagement": 6
+        },
+        {
+          "date": "2026-06-01",
+          "prep": "Stimulating",
+          "engagement": 8
+        },
+        {
+          "date": "2026-06-08",
+          "prep": "NoPrep",
+          "engagement": 7.33
+        },
+        {
+          "date": "2026-06-10",
+          "prep": "Stimulating",
+          "engagement": 8
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "n_sessions": 2,
+      "first_date": "2026-04-20",
+      "last_date": "2026-04-24",
+      "stop_reason": "continue",
+      "best_prep": "ChildChoice",
+      "effects": {
+        "ChildChoice": {
+          "mean": 0.208,
+          "lo95": -0.77,
+          "hi95": 1.677,
+          "lo80": -0.397,
+          "hi80": 0.915,
+          "p_positive": 0.616,
+          "p_rope": 0.903
+        },
+        "Stimulating": {
+          "mean": 0.097,
+          "lo95": -0.756,
+          "hi95": 0.825,
+          "lo80": -0.372,
+          "hi80": 0.541,
+          "p_positive": 0.63,
+          "p_rope": 0.976
+        },
+        "Calming": {
+          "mean": -0.23,
+          "lo95": -1.007,
+          "hi95": 0.575,
+          "lo80": -0.674,
+          "hi80": 0.238,
+          "p_positive": 0.232,
+          "p_rope": 0.966
+        }
+      },
+      "p_best": {
+        "ChildChoice": 0.418,
+        "Stimulating": 0.358,
+        "Calming": 0.079,
+        "NoPrep": 0.145
+      },
+      "raw": {
+        "ChildChoice": {
+          "n": 1,
+          "mean": 7.33,
+          "sd": null
+        },
+        "Stimulating": {
+          "n": 1,
+          "mean": 4.67,
+          "sd": null
+        },
+        "Calming": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        },
+        "NoPrep": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        }
+      },
+      "sessions": [
+        {
+          "date": "2026-04-20",
+          "prep": "ChildChoice",
+          "engagement": 7.33
+        },
+        {
+          "date": "2026-04-24",
+          "prep": "Stimulating",
+          "engagement": 4.67
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "n_sessions": 1,
+      "first_date": "2026-04-22",
+      "last_date": "2026-04-22",
+      "stop_reason": "continue",
+      "best_prep": "Stimulating",
+      "effects": {
+        "ChildChoice": {
+          "mean": 0.034,
+          "lo95": -1.205,
+          "hi95": 1.318,
+          "lo80": -0.625,
+          "hi80": 0.675,
+          "p_positive": 0.524,
+          "p_rope": 0.912
+        },
+        "Stimulating": {
+          "mean": 0.14,
+          "lo95": -0.705,
+          "hi95": 1.024,
+          "lo80": -0.332,
+          "hi80": 0.603,
+          "p_positive": 0.655,
+          "p_rope": 0.966
+        },
+        "Calming": {
+          "mean": -0.186,
+          "lo95": -0.938,
+          "hi95": 0.698,
+          "lo80": -0.627,
+          "hi80": 0.29,
+          "p_positive": 0.277,
+          "p_rope": 0.97
+        }
+      },
+      "p_best": {
+        "ChildChoice": 0.307,
+        "Stimulating": 0.43,
+        "Calming": 0.101,
+        "NoPrep": 0.162
+      },
+      "raw": {
+        "ChildChoice": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        },
+        "Stimulating": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        },
+        "Calming": {
+          "n": 1,
+          "mean": 8,
+          "sd": null
+        },
+        "NoPrep": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        }
+      },
+      "sessions": [
+        {
+          "date": "2026-04-22",
+          "prep": "Calming",
+          "engagement": 8
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "n_sessions": 11,
+      "first_date": "2026-04-21",
+      "last_date": "2026-06-06",
+      "stop_reason": "rope",
+      "best_prep": "Stimulating",
+      "effects": {
+        "ChildChoice": {
+          "mean": 0.065,
+          "lo95": -0.822,
+          "hi95": 1.087,
+          "lo80": -0.467,
+          "hi80": 0.622,
+          "p_positive": 0.547,
+          "p_rope": 0.953
+        },
+        "Stimulating": {
+          "mean": 0.134,
+          "lo95": -0.64,
+          "hi95": 0.875,
+          "lo80": -0.314,
+          "hi80": 0.571,
+          "p_positive": 0.667,
+          "p_rope": 0.98
+        },
+        "Calming": {
+          "mean": -0.268,
+          "lo95": -1.136,
+          "hi95": 0.482,
+          "lo80": -0.729,
+          "hi80": 0.187,
+          "p_positive": 0.215,
+          "p_rope": 0.959
+        }
+      },
+      "p_best": {
+        "ChildChoice": 0.332,
+        "Stimulating": 0.438,
+        "Calming": 0.067,
+        "NoPrep": 0.164
+      },
+      "raw": {
+        "ChildChoice": {
+          "n": 4,
+          "mean": 4.92,
+          "sd": 1.48
+        },
+        "Stimulating": {
+          "n": 2,
+          "mean": 4.83,
+          "sd": 2.12
+        },
+        "Calming": {
+          "n": 1,
+          "mean": 4,
+          "sd": null
+        },
+        "NoPrep": {
+          "n": 4,
+          "mean": 4.58,
+          "sd": 0.57
+        }
+      },
+      "sessions": [
+        {
+          "date": "2026-04-21",
+          "prep": "ChildChoice",
+          "engagement": 6
+        },
+        {
+          "date": "2026-04-23",
+          "prep": "ChildChoice",
+          "engagement": 4
+        },
+        {
+          "date": "2026-04-30",
+          "prep": "NoPrep",
+          "engagement": 4
+        },
+        {
+          "date": "2026-05-02",
+          "prep": "Calming",
+          "engagement": 4
+        },
+        {
+          "date": "2026-05-07",
+          "prep": "NoPrep",
+          "engagement": 5.33
+        },
+        {
+          "date": "2026-05-12",
+          "prep": "Stimulating",
+          "engagement": 6.33
+        },
+        {
+          "date": "2026-05-16",
+          "prep": "NoPrep",
+          "engagement": 4.33
+        },
+        {
+          "date": "2026-05-21",
+          "prep": "NoPrep",
+          "engagement": 4.67
+        },
+        {
+          "date": "2026-05-23",
+          "prep": "ChildChoice",
+          "engagement": 6.33
+        },
+        {
+          "date": "2026-06-04",
+          "prep": "ChildChoice",
+          "engagement": 3.33
+        },
+        {
+          "date": "2026-06-06",
+          "prep": "Stimulating",
+          "engagement": 3.33
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "n_sessions": 3,
+      "first_date": "2026-04-27",
+      "last_date": "2026-05-11",
+      "stop_reason": "continue",
+      "best_prep": "Stimulating",
+      "effects": {
+        "ChildChoice": {
+          "mean": -0.039,
+          "lo95": -1.296,
+          "hi95": 1.015,
+          "lo80": -0.659,
+          "hi80": 0.588,
+          "p_positive": 0.482,
+          "p_rope": 0.926
+        },
+        "Stimulating": {
+          "mean": 0.136,
+          "lo95": -0.686,
+          "hi95": 0.951,
+          "lo80": -0.338,
+          "hi80": 0.605,
+          "p_positive": 0.653,
+          "p_rope": 0.971
+        },
+        "Calming": {
+          "mean": -0.237,
+          "lo95": -1.095,
+          "hi95": 0.637,
+          "lo80": -0.698,
+          "hi80": 0.232,
+          "p_positive": 0.238,
+          "p_rope": 0.958
+        }
+      },
+      "p_best": {
+        "ChildChoice": 0.289,
+        "Stimulating": 0.446,
+        "Calming": 0.09,
+        "NoPrep": 0.176
+      },
+      "raw": {
+        "ChildChoice": {
+          "n": 1,
+          "mean": 3.67,
+          "sd": null
+        },
+        "Stimulating": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        },
+        "Calming": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        },
+        "NoPrep": {
+          "n": 2,
+          "mean": 5,
+          "sd": 0.47
+        }
+      },
+      "sessions": [
+        {
+          "date": "2026-04-27",
+          "prep": "NoPrep",
+          "engagement": 5.33
+        },
+        {
+          "date": "2026-05-06",
+          "prep": "NoPrep",
+          "engagement": 4.67
+        },
+        {
+          "date": "2026-05-11",
+          "prep": "ChildChoice",
+          "engagement": 3.67
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "n_sessions": 28,
+      "first_date": "2026-04-20",
+      "last_date": "2026-06-10",
+      "stop_reason": "rope",
+      "best_prep": "Stimulating",
+      "effects": {
+        "ChildChoice": {
+          "mean": 0.02,
+          "lo95": -0.791,
+          "hi95": 0.869,
+          "lo80": -0.459,
+          "hi80": 0.513,
+          "p_positive": 0.51,
+          "p_rope": 0.978
+        },
+        "Stimulating": {
+          "mean": 0.262,
+          "lo95": -0.389,
+          "hi95": 1.083,
+          "lo80": -0.159,
+          "hi80": 0.72,
+          "p_positive": 0.773,
+          "p_rope": 0.964
+        },
+        "Calming": {
+          "mean": -0.241,
+          "lo95": -0.911,
+          "hi95": 0.456,
+          "lo80": -0.648,
+          "hi80": 0.178,
+          "p_positive": 0.213,
+          "p_rope": 0.983
+        }
+      },
+      "p_best": {
+        "ChildChoice": 0.24,
+        "Stimulating": 0.583,
+        "Calming": 0.048,
+        "NoPrep": 0.129
+      },
+      "raw": {
+        "ChildChoice": {
+          "n": 7,
+          "mean": 5.29,
+          "sd": 2.46
+        },
+        "Stimulating": {
+          "n": 6,
+          "mean": 6.17,
+          "sd": 1.77
+        },
+        "Calming": {
+          "n": 8,
+          "mean": 5.12,
+          "sd": 1.68
+        },
+        "NoPrep": {
+          "n": 7,
+          "mean": 4.86,
+          "sd": 1.23
+        }
+      },
+      "sessions": [
+        {
+          "date": "2026-04-20",
+          "prep": "ChildChoice",
+          "engagement": 8.67
+        },
+        {
+          "date": "2026-04-21",
+          "prep": "Stimulating",
+          "engagement": 9.33
+        },
+        {
+          "date": "2026-04-22",
+          "prep": "Calming",
+          "engagement": 8
+        },
+        {
+          "date": "2026-04-23",
+          "prep": "NoPrep",
+          "engagement": 4
+        },
+        {
+          "date": "2026-04-24",
+          "prep": "Calming",
+          "engagement": 6.33
+        },
+        {
+          "date": "2026-04-25",
+          "prep": "Calming",
+          "engagement": 2.33
+        },
+        {
+          "date": "2026-04-27",
+          "prep": "NoPrep",
+          "engagement": 3.33
+        },
+        {
+          "date": "2026-04-28",
+          "prep": "ChildChoice",
+          "engagement": 6.67
+        },
+        {
+          "date": "2026-04-29",
+          "prep": "Stimulating",
+          "engagement": 6
+        },
+        {
+          "date": "2026-04-30",
+          "prep": "NoPrep",
+          "engagement": 5.33
+        },
+        {
+          "date": "2026-05-01",
+          "prep": "ChildChoice",
+          "engagement": 5.67
+        },
+        {
+          "date": "2026-05-02",
+          "prep": "ChildChoice",
+          "engagement": 1
+        },
+        {
+          "date": "2026-05-04",
+          "prep": "Calming",
+          "engagement": 5.67
+        },
+        {
+          "date": "2026-05-05",
+          "prep": "Stimulating",
+          "engagement": 5
+        },
+        {
+          "date": "2026-05-06",
+          "prep": "Calming",
+          "engagement": 5.33
+        },
+        {
+          "date": "2026-05-07",
+          "prep": "Stimulating",
+          "engagement": 4.67
+        },
+        {
+          "date": "2026-05-08",
+          "prep": "ChildChoice",
+          "engagement": 3.33
+        },
+        {
+          "date": "2026-05-11",
+          "prep": "NoPrep",
+          "engagement": 4.33
+        },
+        {
+          "date": "2026-05-28",
+          "prep": "Calming",
+          "engagement": 4
+        },
+        {
+          "date": "2026-05-29",
+          "prep": "Calming",
+          "engagement": 4.33
+        },
+        {
+          "date": "2026-06-01",
+          "prep": "ChildChoice",
+          "engagement": 5.67
+        },
+        {
+          "date": "2026-06-03",
+          "prep": "Calming",
+          "engagement": 5
+        },
+        {
+          "date": "2026-06-04",
+          "prep": "NoPrep",
+          "engagement": 4.33
+        },
+        {
+          "date": "2026-06-05",
+          "prep": "ChildChoice",
+          "engagement": 6
+        },
+        {
+          "date": "2026-06-06",
+          "prep": "Stimulating",
+          "engagement": 7
+        },
+        {
+          "date": "2026-06-08",
+          "prep": "Stimulating",
+          "engagement": 5
+        },
+        {
+          "date": "2026-06-09",
+          "prep": "NoPrep",
+          "engagement": 5.67
+        },
+        {
+          "date": "2026-06-10",
+          "prep": "NoPrep",
+          "engagement": 7
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "n_sessions": 19,
+      "first_date": "2026-04-20",
+      "last_date": "2026-06-10",
+      "stop_reason": "rope",
+      "best_prep": "Stimulating",
+      "effects": {
+        "ChildChoice": {
+          "mean": 0.01,
+          "lo95": -0.922,
+          "hi95": 0.941,
+          "lo80": -0.532,
+          "hi80": 0.56,
+          "p_positive": 0.503,
+          "p_rope": 0.962
+        },
+        "Stimulating": {
+          "mean": 0.054,
+          "lo95": -0.781,
+          "hi95": 0.704,
+          "lo80": -0.407,
+          "hi80": 0.482,
+          "p_positive": 0.597,
+          "p_rope": 0.986
+        },
+        "Calming": {
+          "mean": -0.198,
+          "lo95": -0.876,
+          "hi95": 0.559,
+          "lo80": -0.621,
+          "hi80": 0.223,
+          "p_positive": 0.264,
+          "p_rope": 0.984
+        }
+      },
+      "p_best": {
+        "ChildChoice": 0.323,
+        "Stimulating": 0.389,
+        "Calming": 0.092,
+        "NoPrep": 0.196
+      },
+      "raw": {
+        "ChildChoice": {
+          "n": 4,
+          "mean": 5,
+          "sd": 1.25
+        },
+        "Stimulating": {
+          "n": 4,
+          "mean": 4.42,
+          "sd": 0.83
+        },
+        "Calming": {
+          "n": 6,
+          "mean": 5.06,
+          "sd": 1.22
+        },
+        "NoPrep": {
+          "n": 5,
+          "mean": 5.07,
+          "sd": 1.85
+        }
+      },
+      "sessions": [
+        {
+          "date": "2026-04-20",
+          "prep": "NoPrep",
+          "engagement": 7.33
+        },
+        {
+          "date": "2026-04-22",
+          "prep": "ChildChoice",
+          "engagement": 6.67
+        },
+        {
+          "date": "2026-04-23",
+          "prep": "Stimulating",
+          "engagement": 4.33
+        },
+        {
+          "date": "2026-04-24",
+          "prep": "Calming",
+          "engagement": 7.33
+        },
+        {
+          "date": "2026-04-27",
+          "prep": "Stimulating",
+          "engagement": 3.33
+        },
+        {
+          "date": "2026-04-28",
+          "prep": "ChildChoice",
+          "engagement": 5
+        },
+        {
+          "date": "2026-04-30",
+          "prep": "Calming",
+          "engagement": 5
+        },
+        {
+          "date": "2026-05-14",
+          "prep": "NoPrep",
+          "engagement": 2.67
+        },
+        {
+          "date": "2026-05-15",
+          "prep": "Stimulating",
+          "engagement": 4.67
+        },
+        {
+          "date": "2026-05-21",
+          "prep": "Calming",
+          "engagement": 4
+        },
+        {
+          "date": "2026-05-22",
+          "prep": "ChildChoice",
+          "engagement": 3.67
+        },
+        {
+          "date": "2026-05-28",
+          "prep": "Calming",
+          "engagement": 5
+        },
+        {
+          "date": "2026-05-29",
+          "prep": "NoPrep",
+          "engagement": 6.33
+        },
+        {
+          "date": "2026-06-01",
+          "prep": "NoPrep",
+          "engagement": 4
+        },
+        {
+          "date": "2026-06-02",
+          "prep": "Calming",
+          "engagement": 4
+        },
+        {
+          "date": "2026-06-04",
+          "prep": "Calming",
+          "engagement": 5
+        },
+        {
+          "date": "2026-06-05",
+          "prep": "Stimulating",
+          "engagement": 5.33
+        },
+        {
+          "date": "2026-06-08",
+          "prep": "NoPrep",
+          "engagement": 5
+        },
+        {
+          "date": "2026-06-10",
+          "prep": "ChildChoice",
+          "engagement": 4.67
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "n_sessions": 5,
+      "first_date": "2026-04-22",
+      "last_date": "2026-05-16",
+      "stop_reason": "continue",
+      "best_prep": "Stimulating",
+      "effects": {
+        "ChildChoice": {
+          "mean": -0.073,
+          "lo95": -1.307,
+          "hi95": 0.934,
+          "lo80": -0.707,
+          "hi80": 0.513,
+          "p_positive": 0.458,
+          "p_rope": 0.927
+        },
+        "Stimulating": {
+          "mean": 0.151,
+          "lo95": -0.594,
+          "hi95": 0.961,
+          "lo80": -0.298,
+          "hi80": 0.603,
+          "p_positive": 0.669,
+          "p_rope": 0.976
+        },
+        "Calming": {
+          "mean": -0.187,
+          "lo95": -0.891,
+          "hi95": 0.658,
+          "lo80": -0.615,
+          "hi80": 0.259,
+          "p_positive": 0.264,
+          "p_rope": 0.978
+        }
+      },
+      "p_best": {
+        "ChildChoice": 0.25,
+        "Stimulating": 0.464,
+        "Calming": 0.098,
+        "NoPrep": 0.188
+      },
+      "raw": {
+        "ChildChoice": {
+          "n": 1,
+          "mean": 4.33,
+          "sd": null
+        },
+        "Stimulating": {
+          "n": 1,
+          "mean": 5.67,
+          "sd": null
+        },
+        "Calming": {
+          "n": 3,
+          "mean": 5.67,
+          "sd": 2.08
+        },
+        "NoPrep": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        }
+      },
+      "sessions": [
+        {
+          "date": "2026-04-22",
+          "prep": "Calming",
+          "engagement": 8
+        },
+        {
+          "date": "2026-05-02",
+          "prep": "Calming",
+          "engagement": 5
+        },
+        {
+          "date": "2026-05-06",
+          "prep": "Stimulating",
+          "engagement": 5.67
+        },
+        {
+          "date": "2026-05-13",
+          "prep": "Calming",
+          "engagement": 4
+        },
+        {
+          "date": "2026-05-16",
+          "prep": "ChildChoice",
+          "engagement": 4.33
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "n_sessions": 22,
+      "first_date": "2026-04-22",
+      "last_date": "2026-06-10",
+      "stop_reason": "rope",
+      "best_prep": "Stimulating",
+      "effects": {
+        "ChildChoice": {
+          "mean": 0.045,
+          "lo95": -0.821,
+          "hi95": 1.031,
+          "lo80": -0.465,
+          "hi80": 0.565,
+          "p_positive": 0.534,
+          "p_rope": 0.96
+        },
+        "Stimulating": {
+          "mean": 0.132,
+          "lo95": -0.543,
+          "hi95": 0.814,
+          "lo80": -0.283,
+          "hi80": 0.543,
+          "p_positive": 0.669,
+          "p_rope": 0.988
+        },
+        "Calming": {
+          "mean": -0.3,
+          "lo95": -1.037,
+          "hi95": 0.354,
+          "lo80": -0.741,
+          "hi80": 0.117,
+          "p_positive": 0.181,
+          "p_rope": 0.969
+        }
+      },
+      "p_best": {
+        "ChildChoice": 0.32,
+        "Stimulating": 0.451,
+        "Calming": 0.045,
+        "NoPrep": 0.184
+      },
+      "raw": {
+        "ChildChoice": {
+          "n": 4,
+          "mean": 4.17,
+          "sd": 1.9
+        },
+        "Stimulating": {
+          "n": 7,
+          "mean": 4.24,
+          "sd": 2.06
+        },
+        "Calming": {
+          "n": 5,
+          "mean": 3.53,
+          "sd": 2.19
+        },
+        "NoPrep": {
+          "n": 6,
+          "mean": 4.17,
+          "sd": 1.71
+        }
+      },
+      "sessions": [
+        {
+          "date": "2026-04-22",
+          "prep": "Stimulating",
+          "engagement": 7.33
+        },
+        {
+          "date": "2026-04-23",
+          "prep": "ChildChoice",
+          "engagement": 5
+        },
+        {
+          "date": "2026-04-24",
+          "prep": "Calming",
+          "engagement": 5.67
+        },
+        {
+          "date": "2026-04-27",
+          "prep": "Stimulating",
+          "engagement": 6.67
+        },
+        {
+          "date": "2026-04-30",
+          "prep": "ChildChoice",
+          "engagement": 6.33
+        },
+        {
+          "date": "2026-05-01",
+          "prep": "NoPrep",
+          "engagement": 5.33
+        },
+        {
+          "date": "2026-05-06",
+          "prep": "NoPrep",
+          "engagement": 5.67
+        },
+        {
+          "date": "2026-05-12",
+          "prep": "Stimulating",
+          "engagement": 4.33
+        },
+        {
+          "date": "2026-05-13",
+          "prep": "Calming",
+          "engagement": 6
+        },
+        {
+          "date": "2026-05-14",
+          "prep": "Stimulating",
+          "engagement": 3.67
+        },
+        {
+          "date": "2026-05-15",
+          "prep": "Calming",
+          "engagement": 2.33
+        },
+        {
+          "date": "2026-05-21",
+          "prep": "ChildChoice",
+          "engagement": 2
+        },
+        {
+          "date": "2026-05-22",
+          "prep": "Stimulating",
+          "engagement": 3
+        },
+        {
+          "date": "2026-05-27",
+          "prep": "NoPrep",
+          "engagement": 6
+        },
+        {
+          "date": "2026-05-28",
+          "prep": "Calming",
+          "engagement": 2.67
+        },
+        {
+          "date": "2026-06-02",
+          "prep": "Stimulating",
+          "engagement": 3
+        },
+        {
+          "date": "2026-06-03",
+          "prep": "NoPrep",
+          "engagement": 2
+        },
+        {
+          "date": "2026-06-04",
+          "prep": "NoPrep",
+          "engagement": 3.33
+        },
+        {
+          "date": "2026-06-05",
+          "prep": "Stimulating",
+          "engagement": 1.67
+        },
+        {
+          "date": "2026-06-08",
+          "prep": "Calming",
+          "engagement": 1
+        },
+        {
+          "date": "2026-06-09",
+          "prep": "ChildChoice",
+          "engagement": 3.33
+        },
+        {
+          "date": "2026-06-10",
+          "prep": "NoPrep",
+          "engagement": 2.67
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "n_sessions": 3,
+      "first_date": "2026-05-06",
+      "last_date": "2026-06-09",
+      "stop_reason": "continue",
+      "best_prep": "ChildChoice",
+      "effects": {
+        "ChildChoice": {
+          "mean": 0.232,
+          "lo95": -0.7,
+          "hi95": 1.751,
+          "lo80": -0.375,
+          "hi80": 0.976,
+          "p_positive": 0.633,
+          "p_rope": 0.899
+        },
+        "Stimulating": {
+          "mean": 0.148,
+          "lo95": -0.634,
+          "hi95": 0.963,
+          "lo80": -0.312,
+          "hi80": 0.601,
+          "p_positive": 0.672,
+          "p_rope": 0.971
+        },
+        "Calming": {
+          "mean": -0.241,
+          "lo95": -1.021,
+          "hi95": 0.563,
+          "lo80": -0.702,
+          "hi80": 0.209,
+          "p_positive": 0.236,
+          "p_rope": 0.966
+        }
+      },
+      "p_best": {
+        "ChildChoice": 0.414,
+        "Stimulating": 0.387,
+        "Calming": 0.067,
+        "NoPrep": 0.132
+      },
+      "raw": {
+        "ChildChoice": {
+          "n": 1,
+          "mean": 10,
+          "sd": null
+        },
+        "Stimulating": {
+          "n": 1,
+          "mean": 8.33,
+          "sd": null
+        },
+        "Calming": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        },
+        "NoPrep": {
+          "n": 1,
+          "mean": 8.67,
+          "sd": null
+        }
+      },
+      "sessions": [
+        {
+          "date": "2026-05-06",
+          "prep": "Stimulating",
+          "engagement": 8.33
+        },
+        {
+          "date": "2026-05-11",
+          "prep": "NoPrep",
+          "engagement": 8.67
+        },
+        {
+          "date": "2026-06-09",
+          "prep": "ChildChoice",
+          "engagement": 10
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "n_sessions": 12,
+      "first_date": "2026-04-22",
+      "last_date": "2026-06-10",
+      "stop_reason": "continue",
+      "best_prep": "ChildChoice",
+      "effects": {
+        "ChildChoice": {
+          "mean": 0.293,
+          "lo95": -0.566,
+          "hi95": 1.641,
+          "lo80": -0.296,
+          "hi80": 1.034,
+          "p_positive": 0.679,
+          "p_rope": 0.889
+        },
+        "Stimulating": {
+          "mean": 0.102,
+          "lo95": -0.703,
+          "hi95": 0.812,
+          "lo80": -0.348,
+          "hi80": 0.541,
+          "p_positive": 0.635,
+          "p_rope": 0.984
+        },
+        "Calming": {
+          "mean": -0.282,
+          "lo95": -1.075,
+          "hi95": 0.452,
+          "lo80": -0.742,
+          "hi80": 0.148,
+          "p_positive": 0.192,
+          "p_rope": 0.965
+        }
+      },
+      "p_best": {
+        "ChildChoice": 0.496,
+        "Stimulating": 0.322,
+        "Calming": 0.049,
+        "NoPrep": 0.134
+      },
+      "raw": {
+        "ChildChoice": {
+          "n": 2,
+          "mean": 6,
+          "sd": 0.47
+        },
+        "Stimulating": {
+          "n": 4,
+          "mean": 4.25,
+          "sd": 1.97
+        },
+        "Calming": {
+          "n": 3,
+          "mean": 3.44,
+          "sd": 2.22
+        },
+        "NoPrep": {
+          "n": 3,
+          "mean": 3.67,
+          "sd": 1.53
+        }
+      },
+      "sessions": [
+        {
+          "date": "2026-04-22",
+          "prep": "Calming",
+          "engagement": 5.33
+        },
+        {
+          "date": "2026-04-27",
+          "prep": "NoPrep",
+          "engagement": 2
+        },
+        {
+          "date": "2026-05-01",
+          "prep": "Stimulating",
+          "engagement": 4
+        },
+        {
+          "date": "2026-05-08",
+          "prep": "Stimulating",
+          "engagement": 5
+        },
+        {
+          "date": "2026-05-11",
+          "prep": "Calming",
+          "engagement": 4
+        },
+        {
+          "date": "2026-05-13",
+          "prep": "ChildChoice",
+          "engagement": 6.33
+        },
+        {
+          "date": "2026-05-15",
+          "prep": "Stimulating",
+          "engagement": 1.67
+        },
+        {
+          "date": "2026-05-29",
+          "prep": "NoPrep",
+          "engagement": 5
+        },
+        {
+          "date": "2026-06-01",
+          "prep": "NoPrep",
+          "engagement": 4
+        },
+        {
+          "date": "2026-06-03",
+          "prep": "Stimulating",
+          "engagement": 6.33
+        },
+        {
+          "date": "2026-06-08",
+          "prep": "Calming",
+          "engagement": 1
+        },
+        {
+          "date": "2026-06-10",
+          "prep": "ChildChoice",
+          "engagement": 5.67
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "n_sessions": 5,
+      "first_date": "2026-04-27",
+      "last_date": "2026-06-10",
+      "stop_reason": "continue",
+      "best_prep": "ChildChoice",
+      "effects": {
+        "ChildChoice": {
+          "mean": 0.406,
+          "lo95": -0.581,
+          "hi95": 2.296,
+          "lo80": -0.271,
+          "hi80": 1.319,
+          "p_positive": 0.699,
+          "p_rope": 0.833
+        },
+        "Stimulating": {
+          "mean": 0.139,
+          "lo95": -0.751,
+          "hi95": 1.015,
+          "lo80": -0.339,
+          "hi80": 0.607,
+          "p_positive": 0.663,
+          "p_rope": 0.963
+        },
+        "Calming": {
+          "mean": -0.227,
+          "lo95": -1.04,
+          "hi95": 0.639,
+          "lo80": -0.69,
+          "hi80": 0.238,
+          "p_positive": 0.247,
+          "p_rope": 0.96
+        }
+      },
+      "p_best": {
+        "ChildChoice": 0.498,
+        "Stimulating": 0.33,
+        "Calming": 0.065,
+        "NoPrep": 0.107
+      },
+      "raw": {
+        "ChildChoice": {
+          "n": 1,
+          "mean": 8,
+          "sd": null
+        },
+        "Stimulating": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        },
+        "Calming": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        },
+        "NoPrep": {
+          "n": 4,
+          "mean": 2.83,
+          "sd": 2.05
+        }
+      },
+      "sessions": [
+        {
+          "date": "2026-04-27",
+          "prep": "NoPrep",
+          "engagement": 1.33
+        },
+        {
+          "date": "2026-05-06",
+          "prep": "NoPrep",
+          "engagement": 1.33
+        },
+        {
+          "date": "2026-05-11",
+          "prep": "NoPrep",
+          "engagement": 5.67
+        },
+        {
+          "date": "2026-06-08",
+          "prep": "NoPrep",
+          "engagement": 3
+        },
+        {
+          "date": "2026-06-10",
+          "prep": "ChildChoice",
+          "engagement": 8
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "n_sessions": 15,
+      "first_date": "2026-04-22",
+      "last_date": "2026-06-09",
+      "stop_reason": "continue",
+      "best_prep": "Stimulating",
+      "effects": {
+        "ChildChoice": {
+          "mean": -0.156,
+          "lo95": -1.331,
+          "hi95": 0.742,
+          "lo80": -0.79,
+          "hi80": 0.407,
+          "p_positive": 0.395,
+          "p_rope": 0.931
+        },
+        "Stimulating": {
+          "mean": 0.103,
+          "lo95": -0.684,
+          "hi95": 0.806,
+          "lo80": -0.337,
+          "hi80": 0.529,
+          "p_positive": 0.636,
+          "p_rope": 0.984
+        },
+        "Calming": {
+          "mean": -0.179,
+          "lo95": -0.852,
+          "hi95": 0.623,
+          "lo80": -0.613,
+          "hi80": 0.27,
+          "p_positive": 0.274,
+          "p_rope": 0.982
+        }
+      },
+      "p_best": {
+        "ChildChoice": 0.209,
+        "Stimulating": 0.46,
+        "Calming": 0.117,
+        "NoPrep": 0.214
+      },
+      "raw": {
+        "ChildChoice": {
+          "n": 3,
+          "mean": 5.89,
+          "sd": 2.22
+        },
+        "Stimulating": {
+          "n": 4,
+          "mean": 6.42,
+          "sd": 1.42
+        },
+        "Calming": {
+          "n": 4,
+          "mean": 6.83,
+          "sd": 0.43
+        },
+        "NoPrep": {
+          "n": 4,
+          "mean": 7.42,
+          "sd": 0.69
+        }
+      },
+      "sessions": [
+        {
+          "date": "2026-04-22",
+          "prep": "Calming",
+          "engagement": 6.33
+        },
+        {
+          "date": "2026-04-24",
+          "prep": "Calming",
+          "engagement": 6.67
+        },
+        {
+          "date": "2026-04-29",
+          "prep": "NoPrep",
+          "engagement": 8
+        },
+        {
+          "date": "2026-04-30",
+          "prep": "ChildChoice",
+          "engagement": 7.33
+        },
+        {
+          "date": "2026-05-07",
+          "prep": "Calming",
+          "engagement": 7
+        },
+        {
+          "date": "2026-05-12",
+          "prep": "Calming",
+          "engagement": 7.33
+        },
+        {
+          "date": "2026-05-14",
+          "prep": "NoPrep",
+          "engagement": 7
+        },
+        {
+          "date": "2026-05-16",
+          "prep": "NoPrep",
+          "engagement": 8
+        },
+        {
+          "date": "2026-05-21",
+          "prep": "ChildChoice",
+          "engagement": 3.33
+        },
+        {
+          "date": "2026-05-28",
+          "prep": "Stimulating",
+          "engagement": 4.67
+        },
+        {
+          "date": "2026-05-29",
+          "prep": "NoPrep",
+          "engagement": 6.67
+        },
+        {
+          "date": "2026-06-02",
+          "prep": "Stimulating",
+          "engagement": 6
+        },
+        {
+          "date": "2026-06-04",
+          "prep": "Stimulating",
+          "engagement": 7
+        },
+        {
+          "date": "2026-06-05",
+          "prep": "ChildChoice",
+          "engagement": 7
+        },
+        {
+          "date": "2026-06-09",
+          "prep": "Stimulating",
+          "engagement": 8
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "n_sessions": 21,
+      "first_date": "2026-04-22",
+      "last_date": "2026-06-10",
+      "stop_reason": "rope",
+      "best_prep": "Stimulating",
+      "effects": {
+        "ChildChoice": {
+          "mean": 0.04,
+          "lo95": -0.852,
+          "hi95": 0.925,
+          "lo80": -0.465,
+          "hi80": 0.581,
+          "p_positive": 0.532,
+          "p_rope": 0.969
+        },
+        "Stimulating": {
+          "mean": 0.242,
+          "lo95": -0.393,
+          "hi95": 1.044,
+          "lo80": -0.176,
+          "hi80": 0.685,
+          "p_positive": 0.762,
+          "p_rope": 0.968
+        },
+        "Calming": {
+          "mean": -0.206,
+          "lo95": -0.886,
+          "hi95": 0.527,
+          "lo80": -0.627,
+          "hi80": 0.218,
+          "p_positive": 0.248,
+          "p_rope": 0.983
+        }
+      },
+      "p_best": {
+        "ChildChoice": 0.274,
+        "Stimulating": 0.53,
+        "Calming": 0.066,
+        "NoPrep": 0.129
+      },
+      "raw": {
+        "ChildChoice": {
+          "n": 5,
+          "mean": 8.27,
+          "sd": 0.76
+        },
+        "Stimulating": {
+          "n": 6,
+          "mean": 8.78,
+          "sd": 1.03
+        },
+        "Calming": {
+          "n": 5,
+          "mean": 8.07,
+          "sd": 0.55
+        },
+        "NoPrep": {
+          "n": 5,
+          "mean": 7.87,
+          "sd": 1.39
+        }
+      },
+      "sessions": [
+        {
+          "date": "2026-04-22",
+          "prep": "Stimulating",
+          "engagement": 9.33
+        },
+        {
+          "date": "2026-04-24",
+          "prep": "NoPrep",
+          "engagement": 7
+        },
+        {
+          "date": "2026-04-27",
+          "prep": "NoPrep",
+          "engagement": 8
+        },
+        {
+          "date": "2026-04-30",
+          "prep": "Stimulating",
+          "engagement": 9
+        },
+        {
+          "date": "2026-05-01",
+          "prep": "ChildChoice",
+          "engagement": 8.33
+        },
+        {
+          "date": "2026-05-06",
+          "prep": "ChildChoice",
+          "engagement": 8.67
+        },
+        {
+          "date": "2026-05-07",
+          "prep": "Calming",
+          "engagement": 9
+        },
+        {
+          "date": "2026-05-11",
+          "prep": "ChildChoice",
+          "engagement": 9
+        },
+        {
+          "date": "2026-05-12",
+          "prep": "NoPrep",
+          "engagement": 6.33
+        },
+        {
+          "date": "2026-05-13",
+          "prep": "Stimulating",
+          "engagement": 8.33
+        },
+        {
+          "date": "2026-05-15",
+          "prep": "ChildChoice",
+          "engagement": 8.33
+        },
+        {
+          "date": "2026-05-16",
+          "prep": "ChildChoice",
+          "engagement": 7
+        },
+        {
+          "date": "2026-05-21",
+          "prep": "Calming",
+          "engagement": 8
+        },
+        {
+          "date": "2026-06-01",
+          "prep": "Calming",
+          "engagement": 8
+        },
+        {
+          "date": "2026-06-02",
+          "prep": "Calming",
+          "engagement": 7.67
+        },
+        {
+          "date": "2026-06-03",
+          "prep": "Stimulating",
+          "engagement": 7
+        },
+        {
+          "date": "2026-06-04",
+          "prep": "Calming",
+          "engagement": 7.67
+        },
+        {
+          "date": "2026-06-05",
+          "prep": "Stimulating",
+          "engagement": 9
+        },
+        {
+          "date": "2026-06-08",
+          "prep": "NoPrep",
+          "engagement": 8
+        },
+        {
+          "date": "2026-06-09",
+          "prep": "Stimulating",
+          "engagement": 10
+        },
+        {
+          "date": "2026-06-10",
+          "prep": "NoPrep",
+          "engagement": 10
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "n_sessions": 13,
+      "first_date": "2026-04-25",
+      "last_date": "2026-06-06",
+      "stop_reason": "continue",
+      "best_prep": "Stimulating",
+      "effects": {
+        "ChildChoice": {
+          "mean": -0.322,
+          "lo95": -1.643,
+          "hi95": 0.527,
+          "lo80": -1.084,
+          "hi80": 0.278,
+          "p_positive": 0.29,
+          "p_rope": 0.882
+        },
+        "Stimulating": {
+          "mean": 0.184,
+          "lo95": -0.542,
+          "hi95": 0.988,
+          "lo80": -0.262,
+          "hi80": 0.638,
+          "p_positive": 0.699,
+          "p_rope": 0.973
+        },
+        "Calming": {
+          "mean": -0.281,
+          "lo95": -1.076,
+          "hi95": 0.424,
+          "lo80": -0.721,
+          "hi80": 0.145,
+          "p_positive": 0.198,
+          "p_rope": 0.967
+        }
+      },
+      "p_best": {
+        "ChildChoice": 0.121,
+        "Stimulating": 0.595,
+        "Calming": 0.068,
+        "NoPrep": 0.217
+      },
+      "raw": {
+        "ChildChoice": {
+          "n": 5,
+          "mean": 2.13,
+          "sd": 0.3
+        },
+        "Stimulating": {
+          "n": 2,
+          "mean": 4.17,
+          "sd": 0.71
+        },
+        "Calming": {
+          "n": 3,
+          "mean": 2.56,
+          "sd": 1.84
+        },
+        "NoPrep": {
+          "n": 3,
+          "mean": 4.11,
+          "sd": 1.02
+        }
+      },
+      "sessions": [
+        {
+          "date": "2026-04-25",
+          "prep": "Calming",
+          "engagement": 1.67
+        },
+        {
+          "date": "2026-04-30",
+          "prep": "NoPrep",
+          "engagement": 4.33
+        },
+        {
+          "date": "2026-05-02",
+          "prep": "Stimulating",
+          "engagement": 4.67
+        },
+        {
+          "date": "2026-05-05",
+          "prep": "NoPrep",
+          "engagement": 5
+        },
+        {
+          "date": "2026-05-07",
+          "prep": "NoPrep",
+          "engagement": 3
+        },
+        {
+          "date": "2026-05-12",
+          "prep": "ChildChoice",
+          "engagement": 2
+        },
+        {
+          "date": "2026-05-14",
+          "prep": "Stimulating",
+          "engagement": 3.67
+        },
+        {
+          "date": "2026-05-21",
+          "prep": "ChildChoice",
+          "engagement": 2.67
+        },
+        {
+          "date": "2026-05-28",
+          "prep": "ChildChoice",
+          "engagement": 2
+        },
+        {
+          "date": "2026-06-03",
+          "prep": "ChildChoice",
+          "engagement": 2
+        },
+        {
+          "date": "2026-06-04",
+          "prep": "ChildChoice",
+          "engagement": 2
+        },
+        {
+          "date": "2026-06-05",
+          "prep": "Calming",
+          "engagement": 1.33
+        },
+        {
+          "date": "2026-06-06",
+          "prep": "Calming",
+          "engagement": 4.67
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "n_sessions": 1,
+      "first_date": "2026-04-23",
+      "last_date": "2026-04-23",
+      "stop_reason": "continue",
+      "best_prep": "Stimulating",
+      "effects": {
+        "ChildChoice": {
+          "mean": 0.023,
+          "lo95": -1.238,
+          "hi95": 1.264,
+          "lo80": -0.59,
+          "hi80": 0.693,
+          "p_positive": 0.504,
+          "p_rope": 0.912
+        },
+        "Stimulating": {
+          "mean": 0.141,
+          "lo95": -0.704,
+          "hi95": 0.991,
+          "lo80": -0.328,
+          "hi80": 0.603,
+          "p_positive": 0.672,
+          "p_rope": 0.965
+        },
+        "Calming": {
+          "mean": -0.22,
+          "lo95": -0.996,
+          "hi95": 0.672,
+          "lo80": -0.684,
+          "hi80": 0.234,
+          "p_positive": 0.248,
+          "p_rope": 0.967
+        }
+      },
+      "p_best": {
+        "ChildChoice": 0.312,
+        "Stimulating": 0.442,
+        "Calming": 0.087,
+        "NoPrep": 0.158
+      },
+      "raw": {
+        "ChildChoice": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        },
+        "Stimulating": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        },
+        "Calming": {
+          "n": 1,
+          "mean": 6,
+          "sd": null
+        },
+        "NoPrep": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        }
+      },
+      "sessions": [
+        {
+          "date": "2026-04-23",
+          "prep": "Calming",
+          "engagement": 6
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "n_sessions": 7,
+      "first_date": "2026-04-22",
+      "last_date": "2026-06-06",
+      "stop_reason": "continue",
+      "best_prep": "Stimulating",
+      "effects": {
+        "ChildChoice": {
+          "mean": 0.034,
+          "lo95": -1.115,
+          "hi95": 1.314,
+          "lo80": -0.626,
+          "hi80": 0.698,
+          "p_positive": 0.514,
+          "p_rope": 0.912
+        },
+        "Stimulating": {
+          "mean": 0.192,
+          "lo95": -0.54,
+          "hi95": 1.047,
+          "lo80": -0.251,
+          "hi80": 0.654,
+          "p_positive": 0.71,
+          "p_rope": 0.967
+        },
+        "Calming": {
+          "mean": -0.354,
+          "lo95": -1.258,
+          "hi95": 0.343,
+          "lo80": -0.843,
+          "hi80": 0.097,
+          "p_positive": 0.162,
+          "p_rope": 0.938
+        }
+      },
+      "p_best": {
+        "ChildChoice": 0.312,
+        "Stimulating": 0.501,
+        "Calming": 0.032,
+        "NoPrep": 0.156
+      },
+      "raw": {
+        "ChildChoice": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        },
+        "Stimulating": {
+          "n": 5,
+          "mean": 4.53,
+          "sd": 2.3
+        },
+        "Calming": {
+          "n": 2,
+          "mean": 2.17,
+          "sd": 0.24
+        },
+        "NoPrep": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        }
+      },
+      "sessions": [
+        {
+          "date": "2026-04-22",
+          "prep": "Calming",
+          "engagement": 2
+        },
+        {
+          "date": "2026-05-02",
+          "prep": "Stimulating",
+          "engagement": 6.33
+        },
+        {
+          "date": "2026-05-06",
+          "prep": "Calming",
+          "engagement": 2.33
+        },
+        {
+          "date": "2026-05-16",
+          "prep": "Stimulating",
+          "engagement": 1
+        },
+        {
+          "date": "2026-05-29",
+          "prep": "Stimulating",
+          "engagement": 6.67
+        },
+        {
+          "date": "2026-06-05",
+          "prep": "Stimulating",
+          "engagement": 3.67
+        },
+        {
+          "date": "2026-06-06",
+          "prep": "Stimulating",
+          "engagement": 5
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "n_sessions": 12,
+      "first_date": "2026-04-21",
+      "last_date": "2026-06-10",
+      "stop_reason": "continue",
+      "best_prep": "Stimulating",
+      "effects": {
+        "ChildChoice": {
+          "mean": 0.092,
+          "lo95": -0.873,
+          "hi95": 1.173,
+          "lo80": -0.47,
+          "hi80": 0.679,
+          "p_positive": 0.565,
+          "p_rope": 0.944
+        },
+        "Stimulating": {
+          "mean": 0.147,
+          "lo95": -0.582,
+          "hi95": 0.897,
+          "lo80": -0.305,
+          "hi80": 0.584,
+          "p_positive": 0.671,
+          "p_rope": 0.982
+        },
+        "Calming": {
+          "mean": -0.396,
+          "lo95": -1.386,
+          "hi95": 0.292,
+          "lo80": -0.901,
+          "hi80": 0.055,
+          "p_positive": 0.134,
+          "p_rope": 0.925
+        }
+      },
+      "p_best": {
+        "ChildChoice": 0.366,
+        "Stimulating": 0.436,
+        "Calming": 0.026,
+        "NoPrep": 0.172
+      },
+      "raw": {
+        "ChildChoice": {
+          "n": 3,
+          "mean": 4.78,
+          "sd": 0.77
+        },
+        "Stimulating": {
+          "n": 4,
+          "mean": 4.75,
+          "sd": 2.18
+        },
+        "Calming": {
+          "n": 3,
+          "mean": 2.56,
+          "sd": 1.9
+        },
+        "NoPrep": {
+          "n": 2,
+          "mean": 5.67,
+          "sd": 0.94
+        }
+      },
+      "sessions": [
+        {
+          "date": "2026-04-21",
+          "prep": "Stimulating",
+          "engagement": 6.67
+        },
+        {
+          "date": "2026-04-24",
+          "prep": "ChildChoice",
+          "engagement": 4.33
+        },
+        {
+          "date": "2026-05-04",
+          "prep": "Stimulating",
+          "engagement": 6.33
+        },
+        {
+          "date": "2026-05-06",
+          "prep": "ChildChoice",
+          "engagement": 5.67
+        },
+        {
+          "date": "2026-05-11",
+          "prep": "NoPrep",
+          "engagement": 6.33
+        },
+        {
+          "date": "2026-05-13",
+          "prep": "ChildChoice",
+          "engagement": 4.33
+        },
+        {
+          "date": "2026-05-15",
+          "prep": "Calming",
+          "engagement": 2
+        },
+        {
+          "date": "2026-05-28",
+          "prep": "Calming",
+          "engagement": 4.67
+        },
+        {
+          "date": "2026-05-29",
+          "prep": "Stimulating",
+          "engagement": 2
+        },
+        {
+          "date": "2026-06-05",
+          "prep": "NoPrep",
+          "engagement": 5
+        },
+        {
+          "date": "2026-06-08",
+          "prep": "Calming",
+          "engagement": 1
+        },
+        {
+          "date": "2026-06-10",
+          "prep": "Stimulating",
+          "engagement": 4
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "n_sessions": 7,
+      "first_date": "2026-04-25",
+      "last_date": "2026-06-10",
+      "stop_reason": "continue",
+      "best_prep": "Stimulating",
+      "effects": {
+        "ChildChoice": {
+          "mean": 0.146,
+          "lo95": -0.829,
+          "hi95": 1.448,
+          "lo80": -0.439,
+          "hi80": 0.816,
+          "p_positive": 0.587,
+          "p_rope": 0.919
+        },
+        "Stimulating": {
+          "mean": 0.214,
+          "lo95": -0.473,
+          "hi95": 1.066,
+          "lo80": -0.227,
+          "hi80": 0.676,
+          "p_positive": 0.721,
+          "p_rope": 0.966
+        },
+        "Calming": {
+          "mean": -0.269,
+          "lo95": -1.052,
+          "hi95": 0.477,
+          "lo80": -0.72,
+          "hi80": 0.18,
+          "p_positive": 0.217,
+          "p_rope": 0.967
+        }
+      },
+      "p_best": {
+        "ChildChoice": 0.36,
+        "Stimulating": 0.46,
+        "Calming": 0.054,
+        "NoPrep": 0.126
+      },
+      "raw": {
+        "ChildChoice": {
+          "n": 1,
+          "mean": 7,
+          "sd": null
+        },
+        "Stimulating": {
+          "n": 2,
+          "mean": 7,
+          "sd": 0
+        },
+        "Calming": {
+          "n": 2,
+          "mean": 5.33,
+          "sd": 0.94
+        },
+        "NoPrep": {
+          "n": 2,
+          "mean": 5.33,
+          "sd": 0
+        }
+      },
+      "sessions": [
+        {
+          "date": "2026-04-25",
+          "prep": "Calming",
+          "engagement": 4.67
+        },
+        {
+          "date": "2026-05-12",
+          "prep": "Stimulating",
+          "engagement": 7
+        },
+        {
+          "date": "2026-05-16",
+          "prep": "Calming",
+          "engagement": 6
+        },
+        {
+          "date": "2026-06-03",
+          "prep": "NoPrep",
+          "engagement": 5.33
+        },
+        {
+          "date": "2026-06-06",
+          "prep": "NoPrep",
+          "engagement": 5.33
+        },
+        {
+          "date": "2026-06-09",
+          "prep": "ChildChoice",
+          "engagement": 7
+        },
+        {
+          "date": "2026-06-10",
+          "prep": "Stimulating",
+          "engagement": 7
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "n_sessions": 22,
+      "first_date": "2026-04-22",
+      "last_date": "2026-06-09",
+      "stop_reason": "continue",
+      "best_prep": "Stimulating",
+      "effects": {
+        "ChildChoice": {
+          "mean": -0.234,
+          "lo95": -1.328,
+          "hi95": 0.584,
+          "lo80": -0.912,
+          "hi80": 0.314,
+          "p_positive": 0.332,
+          "p_rope": 0.918
+        },
+        "Stimulating": {
+          "mean": 0.244,
+          "lo95": -0.405,
+          "hi95": 1.004,
+          "lo80": -0.177,
+          "hi80": 0.689,
+          "p_positive": 0.759,
+          "p_rope": 0.974
+        },
+        "Calming": {
+          "mean": -0.18,
+          "lo95": -0.851,
+          "hi95": 0.615,
+          "lo80": -0.609,
+          "hi80": 0.258,
+          "p_positive": 0.27,
+          "p_rope": 0.984
+        }
+      },
+      "p_best": {
+        "ChildChoice": 0.127,
+        "Stimulating": 0.62,
+        "Calming": 0.086,
+        "NoPrep": 0.167
+      },
+      "raw": {
+        "ChildChoice": {
+          "n": 5,
+          "mean": 3.93,
+          "sd": 1.94
+        },
+        "Stimulating": {
+          "n": 7,
+          "mean": 5.43,
+          "sd": 1.61
+        },
+        "Calming": {
+          "n": 6,
+          "mean": 4.83,
+          "sd": 1.75
+        },
+        "NoPrep": {
+          "n": 4,
+          "mean": 4.33,
+          "sd": 1.33
+        }
+      },
+      "sessions": [
+        {
+          "date": "2026-04-22",
+          "prep": "Calming",
+          "engagement": 6.67
+        },
+        {
+          "date": "2026-04-24",
+          "prep": "Calming",
+          "engagement": 5
+        },
+        {
+          "date": "2026-04-27",
+          "prep": "ChildChoice",
+          "engagement": 3.67
+        },
+        {
+          "date": "2026-04-30",
+          "prep": "Stimulating",
+          "engagement": 6.67
+        },
+        {
+          "date": "2026-05-06",
+          "prep": "Stimulating",
+          "engagement": 4
+        },
+        {
+          "date": "2026-05-07",
+          "prep": "Calming",
+          "engagement": 3.33
+        },
+        {
+          "date": "2026-05-09",
+          "prep": "NoPrep",
+          "engagement": 3.67
+        },
+        {
+          "date": "2026-05-11",
+          "prep": "ChildChoice",
+          "engagement": 4
+        },
+        {
+          "date": "2026-05-12",
+          "prep": "Stimulating",
+          "engagement": 2.67
+        },
+        {
+          "date": "2026-05-13",
+          "prep": "Calming",
+          "engagement": 2.67
+        },
+        {
+          "date": "2026-05-14",
+          "prep": "ChildChoice",
+          "engagement": 7
+        },
+        {
+          "date": "2026-05-16",
+          "prep": "NoPrep",
+          "engagement": 6.33
+        },
+        {
+          "date": "2026-05-21",
+          "prep": "Calming",
+          "engagement": 7
+        },
+        {
+          "date": "2026-05-25",
+          "prep": "Stimulating",
+          "engagement": 6.33
+        },
+        {
+          "date": "2026-05-27",
+          "prep": "Calming",
+          "engagement": 4.33
+        },
+        {
+          "date": "2026-05-28",
+          "prep": "Stimulating",
+          "engagement": 6.33
+        },
+        {
+          "date": "2026-05-29",
+          "prep": "NoPrep",
+          "engagement": 3.67
+        },
+        {
+          "date": "2026-06-01",
+          "prep": "ChildChoice",
+          "engagement": 3.33
+        },
+        {
+          "date": "2026-06-02",
+          "prep": "NoPrep",
+          "engagement": 3.67
+        },
+        {
+          "date": "2026-06-03",
+          "prep": "Stimulating",
+          "engagement": 5
+        },
+        {
+          "date": "2026-06-08",
+          "prep": "ChildChoice",
+          "engagement": 1.67
+        },
+        {
+          "date": "2026-06-09",
+          "prep": "Stimulating",
+          "engagement": 7
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "n_sessions": 4,
+      "first_date": "2026-05-07",
+      "last_date": "2026-05-21",
+      "stop_reason": "continue",
+      "best_prep": "Stimulating",
+      "effects": {
+        "ChildChoice": {
+          "mean": 0.03,
+          "lo95": -1.234,
+          "hi95": 1.283,
+          "lo80": -0.576,
+          "hi80": 0.67,
+          "p_positive": 0.514,
+          "p_rope": 0.916
+        },
+        "Stimulating": {
+          "mean": 0.085,
+          "lo95": -0.784,
+          "hi95": 0.797,
+          "lo80": -0.395,
+          "hi80": 0.526,
+          "p_positive": 0.627,
+          "p_rope": 0.977
+        },
+        "Calming": {
+          "mean": -0.217,
+          "lo95": -0.983,
+          "hi95": 0.654,
+          "lo80": -0.661,
+          "hi80": 0.238,
+          "p_positive": 0.25,
+          "p_rope": 0.97
+        }
+      },
+      "p_best": {
+        "ChildChoice": 0.328,
+        "Stimulating": 0.399,
+        "Calming": 0.099,
+        "NoPrep": 0.174
+      },
+      "raw": {
+        "ChildChoice": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        },
+        "Stimulating": {
+          "n": 1,
+          "mean": 2,
+          "sd": null
+        },
+        "Calming": {
+          "n": 1,
+          "mean": 3.33,
+          "sd": null
+        },
+        "NoPrep": {
+          "n": 2,
+          "mean": 3.5,
+          "sd": 2.12
+        }
+      },
+      "sessions": [
+        {
+          "date": "2026-05-07",
+          "prep": "Stimulating",
+          "engagement": 2
+        },
+        {
+          "date": "2026-05-12",
+          "prep": "Calming",
+          "engagement": 3.33
+        },
+        {
+          "date": "2026-05-16",
+          "prep": "NoPrep",
+          "engagement": 2
+        },
+        {
+          "date": "2026-05-21",
+          "prep": "NoPrep",
+          "engagement": 5
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "n_sessions": 9,
+      "first_date": "2026-05-07",
+      "last_date": "2026-06-09",
+      "stop_reason": "continue",
+      "best_prep": "Stimulating",
+      "effects": {
+        "ChildChoice": {
+          "mean": -0.204,
+          "lo95": -1.454,
+          "hi95": 0.724,
+          "lo80": -0.914,
+          "hi80": 0.379,
+          "p_positive": 0.37,
+          "p_rope": 0.908
+        },
+        "Stimulating": {
+          "mean": 0.157,
+          "lo95": -0.586,
+          "hi95": 0.936,
+          "lo80": -0.289,
+          "hi80": 0.61,
+          "p_positive": 0.678,
+          "p_rope": 0.976
+        },
+        "Calming": {
+          "mean": -0.164,
+          "lo95": -0.853,
+          "hi95": 0.696,
+          "lo80": -0.599,
+          "hi80": 0.296,
+          "p_positive": 0.282,
+          "p_rope": 0.982
+        }
+      },
+      "p_best": {
+        "ChildChoice": 0.18,
+        "Stimulating": 0.507,
+        "Calming": 0.116,
+        "NoPrep": 0.197
+      },
+      "raw": {
+        "ChildChoice": {
+          "n": 3,
+          "mean": 4.22,
+          "sd": 0.69
+        },
+        "Stimulating": {
+          "n": 3,
+          "mean": 5.22,
+          "sd": 0.38
+        },
+        "Calming": {
+          "n": 3,
+          "mean": 5.67,
+          "sd": 1.33
+        },
+        "NoPrep": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        }
+      },
+      "sessions": [
+        {
+          "date": "2026-05-07",
+          "prep": "Calming",
+          "engagement": 4.33
+        },
+        {
+          "date": "2026-05-12",
+          "prep": "Stimulating",
+          "engagement": 5.67
+        },
+        {
+          "date": "2026-05-14",
+          "prep": "Stimulating",
+          "engagement": 5
+        },
+        {
+          "date": "2026-05-21",
+          "prep": "ChildChoice",
+          "engagement": 5
+        },
+        {
+          "date": "2026-05-23",
+          "prep": "ChildChoice",
+          "engagement": 3.67
+        },
+        {
+          "date": "2026-05-26",
+          "prep": "Calming",
+          "engagement": 7
+        },
+        {
+          "date": "2026-06-02",
+          "prep": "Stimulating",
+          "engagement": 5
+        },
+        {
+          "date": "2026-06-06",
+          "prep": "Calming",
+          "engagement": 5.67
+        },
+        {
+          "date": "2026-06-09",
+          "prep": "ChildChoice",
+          "engagement": 4
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "n_sessions": 6,
+      "first_date": "2026-05-07",
+      "last_date": "2026-06-09",
+      "stop_reason": "continue",
+      "best_prep": "Stimulating",
+      "effects": {
+        "ChildChoice": {
+          "mean": 0.04,
+          "lo95": -1.128,
+          "hi95": 1.325,
+          "lo80": -0.603,
+          "hi80": 0.685,
+          "p_positive": 0.528,
+          "p_rope": 0.917
+        },
+        "Stimulating": {
+          "mean": 0.139,
+          "lo95": -0.702,
+          "hi95": 0.959,
+          "lo80": -0.338,
+          "hi80": 0.592,
+          "p_positive": 0.664,
+          "p_rope": 0.968
+        },
+        "Calming": {
+          "mean": -0.256,
+          "lo95": -1.015,
+          "hi95": 0.497,
+          "lo80": -0.706,
+          "hi80": 0.189,
+          "p_positive": 0.214,
+          "p_rope": 0.971
+        }
+      },
+      "p_best": {
+        "ChildChoice": 0.326,
+        "Stimulating": 0.446,
+        "Calming": 0.064,
+        "NoPrep": 0.164
+      },
+      "raw": {
+        "ChildChoice": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        },
+        "Stimulating": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        },
+        "Calming": {
+          "n": 2,
+          "mean": 4.5,
+          "sd": 3.54
+        },
+        "NoPrep": {
+          "n": 4,
+          "mean": 5.17,
+          "sd": 1.17
+        }
+      },
+      "sessions": [
+        {
+          "date": "2026-05-07",
+          "prep": "Calming",
+          "engagement": 2
+        },
+        {
+          "date": "2026-05-11",
+          "prep": "NoPrep",
+          "engagement": 4.33
+        },
+        {
+          "date": "2026-05-12",
+          "prep": "NoPrep",
+          "engagement": 6.33
+        },
+        {
+          "date": "2026-05-13",
+          "prep": "NoPrep",
+          "engagement": 4
+        },
+        {
+          "date": "2026-05-15",
+          "prep": "NoPrep",
+          "engagement": 6
+        },
+        {
+          "date": "2026-06-09",
+          "prep": "Calming",
+          "engagement": 7
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "n_sessions": 1,
+      "first_date": "2026-05-12",
+      "last_date": "2026-05-12",
+      "stop_reason": "continue",
+      "best_prep": "Stimulating",
+      "effects": {
+        "ChildChoice": {
+          "mean": 0.039,
+          "lo95": -1.133,
+          "hi95": 1.353,
+          "lo80": -0.581,
+          "hi80": 0.676,
+          "p_positive": 0.517,
+          "p_rope": 0.917
+        },
+        "Stimulating": {
+          "mean": 0.085,
+          "lo95": -0.821,
+          "hi95": 0.848,
+          "lo80": -0.397,
+          "hi80": 0.543,
+          "p_positive": 0.622,
+          "p_rope": 0.974
+        },
+        "Calming": {
+          "mean": -0.238,
+          "lo95": -1.128,
+          "hi95": 0.609,
+          "lo80": -0.73,
+          "hi80": 0.242,
+          "p_positive": 0.249,
+          "p_rope": 0.954
+        }
+      },
+      "p_best": {
+        "ChildChoice": 0.333,
+        "Stimulating": 0.391,
+        "Calming": 0.093,
+        "NoPrep": 0.182
+      },
+      "raw": {
+        "ChildChoice": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        },
+        "Stimulating": {
+          "n": 1,
+          "mean": 2.67,
+          "sd": null
+        },
+        "Calming": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        },
+        "NoPrep": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        }
+      },
+      "sessions": [
+        {
+          "date": "2026-05-12",
+          "prep": "Stimulating",
+          "engagement": 2.67
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "n_sessions": 1,
+      "first_date": "2026-06-10",
+      "last_date": "2026-06-10",
+      "stop_reason": "continue",
+      "best_prep": "Stimulating",
+      "effects": {
+        "ChildChoice": {
+          "mean": 0.035,
+          "lo95": -1.151,
+          "hi95": 1.324,
+          "lo80": -0.598,
+          "hi80": 0.694,
+          "p_positive": 0.516,
+          "p_rope": 0.91
+        },
+        "Stimulating": {
+          "mean": 0.105,
+          "lo95": -0.774,
+          "hi95": 0.879,
+          "lo80": -0.37,
+          "hi80": 0.561,
+          "p_positive": 0.64,
+          "p_rope": 0.977
+        },
+        "Calming": {
+          "mean": -0.24,
+          "lo95": -1.064,
+          "hi95": 0.582,
+          "lo80": -0.692,
+          "hi80": 0.221,
+          "p_positive": 0.234,
+          "p_rope": 0.96
+        }
+      },
+      "p_best": {
+        "ChildChoice": 0.325,
+        "Stimulating": 0.418,
+        "Calming": 0.087,
+        "NoPrep": 0.17
+      },
+      "raw": {
+        "ChildChoice": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        },
+        "Stimulating": {
+          "n": 1,
+          "mean": 4,
+          "sd": null
+        },
+        "Calming": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        },
+        "NoPrep": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        }
+      },
+      "sessions": [
+        {
+          "date": "2026-06-10",
+          "prep": "Stimulating",
+          "engagement": 4
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "n_sessions": 2,
+      "first_date": "2026-06-08",
+      "last_date": "2026-06-09",
+      "stop_reason": "continue",
+      "best_prep": "Stimulating",
+      "effects": {
+        "ChildChoice": {
+          "mean": 0.046,
+          "lo95": -1.191,
+          "hi95": 1.365,
+          "lo80": -0.582,
+          "hi80": 0.713,
+          "p_positive": 0.525,
+          "p_rope": 0.913
+        },
+        "Stimulating": {
+          "mean": 0.166,
+          "lo95": -0.577,
+          "hi95": 0.96,
+          "lo80": -0.286,
+          "hi80": 0.6,
+          "p_positive": 0.693,
+          "p_rope": 0.974
+        },
+        "Calming": {
+          "mean": -0.243,
+          "lo95": -1.058,
+          "hi95": 0.587,
+          "lo80": -0.711,
+          "hi80": 0.221,
+          "p_positive": 0.239,
+          "p_rope": 0.961
+        }
+      },
+      "p_best": {
+        "ChildChoice": 0.321,
+        "Stimulating": 0.458,
+        "Calming": 0.073,
+        "NoPrep": 0.147
+      },
+      "raw": {
+        "ChildChoice": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        },
+        "Stimulating": {
+          "n": 1,
+          "mean": 5.67,
+          "sd": null
+        },
+        "Calming": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        },
+        "NoPrep": {
+          "n": 1,
+          "mean": 4.33,
+          "sd": null
+        }
+      },
+      "sessions": [
+        {
+          "date": "2026-06-08",
+          "prep": "Stimulating",
+          "engagement": 5.67
+        },
+        {
+          "date": "2026-06-09",
+          "prep": "NoPrep",
+          "engagement": 4.33
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "n_sessions": 1,
+      "first_date": "2026-06-05",
+      "last_date": "2026-06-05",
+      "stop_reason": "continue",
+      "best_prep": "Stimulating",
+      "effects": {
+        "ChildChoice": {
+          "mean": 0.083,
+          "lo95": -0.979,
+          "hi95": 1.348,
+          "lo80": -0.532,
+          "hi80": 0.72,
+          "p_positive": 0.536,
+          "p_rope": 0.921
+        },
+        "Stimulating": {
+          "mean": 0.137,
+          "lo95": -0.688,
+          "hi95": 0.969,
+          "lo80": -0.318,
+          "hi80": 0.59,
+          "p_positive": 0.672,
+          "p_rope": 0.967
+        },
+        "Calming": {
+          "mean": -0.238,
+          "lo95": -1.048,
+          "hi95": 0.616,
+          "lo80": -0.702,
+          "hi80": 0.229,
+          "p_positive": 0.232,
+          "p_rope": 0.965
+        }
+      },
+      "p_best": {
+        "ChildChoice": 0.333,
+        "Stimulating": 0.428,
+        "Calming": 0.08,
+        "NoPrep": 0.159
+      },
+      "raw": {
+        "ChildChoice": {
+          "n": 1,
+          "mean": 5.67,
+          "sd": null
+        },
+        "Stimulating": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        },
+        "Calming": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        },
+        "NoPrep": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        }
+      },
+      "sessions": [
+        {
+          "date": "2026-06-05",
+          "prep": "ChildChoice",
+          "engagement": 5.67
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "n_sessions": 2,
+      "first_date": "2026-06-08",
+      "last_date": "2026-06-09",
+      "stop_reason": "continue",
+      "best_prep": "Stimulating",
+      "effects": {
+        "ChildChoice": {
+          "mean": -0.019,
+          "lo95": -1.236,
+          "hi95": 1.114,
+          "lo80": -0.659,
+          "hi80": 0.603,
+          "p_positive": 0.491,
+          "p_rope": 0.92
+        },
+        "Stimulating": {
+          "mean": 0.136,
+          "lo95": -0.725,
+          "hi95": 0.935,
+          "lo80": -0.335,
+          "hi80": 0.601,
+          "p_positive": 0.66,
+          "p_rope": 0.974
+        },
+        "Calming": {
+          "mean": -0.241,
+          "lo95": -1.077,
+          "hi95": 0.631,
+          "lo80": -0.726,
+          "hi80": 0.231,
+          "p_positive": 0.238,
+          "p_rope": 0.959
+        }
+      },
+      "p_best": {
+        "ChildChoice": 0.292,
+        "Stimulating": 0.445,
+        "Calming": 0.091,
+        "NoPrep": 0.173
+      },
+      "raw": {
+        "ChildChoice": {
+          "n": 1,
+          "mean": 2,
+          "sd": null
+        },
+        "Stimulating": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        },
+        "Calming": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        },
+        "NoPrep": {
+          "n": 1,
+          "mean": 1,
+          "sd": null
+        }
+      },
+      "sessions": [
+        {
+          "date": "2026-06-08",
+          "prep": "NoPrep",
+          "engagement": 1
+        },
+        {
+          "date": "2026-06-09",
+          "prep": "ChildChoice",
+          "engagement": 2
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "n_sessions": 1,
+      "first_date": "2026-06-09",
+      "last_date": "2026-06-09",
+      "stop_reason": "continue",
+      "best_prep": "Stimulating",
+      "effects": {
+        "ChildChoice": {
+          "mean": 0.036,
+          "lo95": -1.127,
+          "hi95": 1.314,
+          "lo80": -0.583,
+          "hi80": 0.671,
+          "p_positive": 0.521,
+          "p_rope": 0.913
+        },
+        "Stimulating": {
+          "mean": 0.143,
+          "lo95": -0.711,
+          "hi95": 0.977,
+          "lo80": -0.328,
+          "hi80": 0.616,
+          "p_positive": 0.666,
+          "p_rope": 0.969
+        },
+        "Calming": {
+          "mean": -0.235,
+          "lo95": -1.068,
+          "hi95": 0.624,
+          "lo80": -0.705,
+          "hi80": 0.227,
+          "p_positive": 0.242,
+          "p_rope": 0.96
+        }
+      },
+      "p_best": {
+        "ChildChoice": 0.313,
+        "Stimulating": 0.447,
+        "Calming": 0.083,
+        "NoPrep": 0.156
+      },
+      "raw": {
+        "ChildChoice": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        },
+        "Stimulating": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        },
+        "Calming": {
+          "n": 0,
+          "mean": null,
+          "sd": null
+        },
+        "NoPrep": {
+          "n": 1,
+          "mean": 1.33,
+          "sd": null
+        }
+      },
+      "sessions": [
+        {
+          "date": "2026-06-09",
+          "prep": "NoPrep",
+          "engagement": 1.33
+        }
+      ]
+    }
+  ]
+}
